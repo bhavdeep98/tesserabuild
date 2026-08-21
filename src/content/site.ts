@@ -19,7 +19,7 @@ export const brand = {
   name: 'Tessera',
   legalName: 'Tessera Build Inc',
   descriptor: 'The intelligence layer for homebuilders',
-  email: 'hello@tessera.ai',
+  email: 'sales@tesserabuild.ai',
 } as const;
 
 export const nav = [
