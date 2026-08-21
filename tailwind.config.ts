@@ -99,12 +99,25 @@ const config: Config = {
           from: { transform: 'translate3d(0, 0, 0)' },
           to: { transform: 'translate3d(-50%, 0, 0)' },
         },
+        // Dwell timer for the evidence carousel. Driven by CSS rather than a
+        // JS tick so pausing is a single animation-play-state flip.
+        'progress-fill': {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
+        // Slide entrance. Smaller travel than `rise-in` — the card stays put
+        // and only its contents move, so a large shift reads as a glitch.
+        'slide-in': {
+          from: { opacity: '0', transform: 'translate3d(0, 10px, 0)' },
+          to: { opacity: '1', transform: 'none' },
+        },
       },
       animation: {
         'rise-in': 'rise-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both',
         'tile-settle': 'tile-settle 0.9s cubic-bezier(0.16, 1, 0.3, 1) both',
         hover: 'hover 6s ease-in-out infinite',
         sweep: 'sweep 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite',
+        'slide-in': 'slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
       },
     },
   },

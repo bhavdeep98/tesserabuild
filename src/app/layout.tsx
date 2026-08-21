@@ -21,7 +21,7 @@ const display = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tessera.ai'),
+  metadataBase: new URL('https://tesserabuild.ai'),
   title: {
     default: 'Tessera — the intelligence layer for homebuilders',
     template: '%s — Tessera',

@@ -1,27 +1,17 @@
+import { EvidenceCarousel } from '@/components/sections/EvidenceCarousel';
 import { Section } from '@/components/ui/Section';
 import { gap } from '@/content/site';
 
 export function Gap() {
   return (
     <Section id="gap" eyebrow={gap.eyebrow} title={gap.title} lede={gap.lede}>
-      {/* Sourced industry cost. Every figure carries its attribution — the
-          credibility of this section depends entirely on that. */}
-      <dl className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {gap.stats.map((stat) => (
-          <div key={stat.label} className="card flex flex-col px-6 py-7">
-            <dt className="sr-only">{stat.label}</dt>
-            <dd className="flex h-full flex-col">
-              <p className="tabular font-display text-[clamp(1.75rem,2.6vw,2.25rem)] font-extrabold leading-none tracking-tight text-accent">
-                {stat.value}
-              </p>
-              <p className="mt-3 flex-1 text-[13.5px] leading-snug text-ink-2">{stat.label}</p>
-              <p className="mt-4 border-t border-line/[.08] pt-3 text-[11.5px] uppercase tracking-[0.1em] text-ink-3">
-                {stat.source}
-              </p>
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {/* The evidence rotates rather than sitting in a grid: one claim at a
+          time reads, and the count makes the depth of sourcing visible. */}
+      <p className="mt-10 max-w-prose text-[14.5px] leading-relaxed text-ink-3">
+        {gap.evidenceLede}
+      </p>
+
+      <EvidenceCarousel />
 
       <div className="mt-20">
         <h3 className="font-display text-display-sm text-ink">The handoff chain</h3>

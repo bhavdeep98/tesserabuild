@@ -36,7 +36,7 @@ export const cta = {
 } as const;
 
 export const hero = {
-  eyebrow: 'Tessera Labs · Release 01 · Kestrel',
+  eyebrow: 'Tessera Build · Release 01 · Kestrel',
   headline: {
     // Authored as explicit lines. Letting a 72px headline wrap on its own
     // produces a different, usually worse, break at every viewport width.
@@ -59,28 +59,130 @@ export const hero = {
 export const gap = {
   eyebrow: 'The problem',
   title: 'Where the money actually leaks',
+  // Deliberately does not restate "no system sees the whole path" — the hero
+  // and chainLede both make that point. This paragraph's only job is the money:
+  // the first two sentences are the quotable kernel, the third keeps the cascade.
   lede:
-    'Builders know how to build homes. Closing one is a coordination problem. The cost does not sit inside any single system — it accumulates in the handoffs, where a slipped inspection becomes a title delay, becomes a rate-lock extension, becomes a margin hit nobody priced until the week of close.',
-  stats: [
+    'Nobody misses a close date because a system broke. They miss it in the handoff between two systems that both worked. A slipped inspection becomes a title delay, becomes a rate-lock extension, becomes a margin hit found the week of close.',
+  // Rotating evidence. Every item carries a live link to its primary source —
+  // an unsourced number in this section costs more credibility than it buys.
+  //
+  // `kind` drives the accent tint only:
+  //   cost     — industry-wide cost of delay
+  //   earnings — public builder filings
+  //   silos    — industry naming the root cause
+  //
+  // `figure` is optional. Quantitative items lead with the number; qualitative
+  // ones lead with the quote itself, so nothing has to be invented to fill a slot.
+  evidenceLede: 'Every figure below is public and linked. None of it is our estimate.',
+  evidence: [
     {
-      value: '$10.8B',
-      label: 'Annual industry cost of longer build times',
-      source: 'NAHB / HBI, June 2025',
+      kind: 'cost',
+      figure: '$10.8B',
+      label: 'Annual economic impact of longer build times',
+      text: 'NAHB and HBI put the aggregate cost of construction delays tied to the skilled-labour shortage at $10.8 billion a year — $2.66 billion of that in carrying cost alone.',
+      source: 'NAHB / HBI Labor Market Report',
+      date: 'June 2025',
+      href: 'https://www.nahb.org/blog/2025/10/hbi-labor-market-report',
     },
     {
-      value: '16.3%',
-      label: 'New-home cancellation rate — the highest on record',
-      source: 'Redfin, December 2025',
+      kind: 'cost',
+      figure: '16.3%',
+      label: 'Signed purchase agreements cancelled',
+      text: 'Roughly 40,000 signed home purchase agreements were voided in December 2025 — the highest share since tracking began in 2017, up from 14.9% a year earlier.',
+      source: 'Redfin data, reported by CNBC',
+      date: 'January 2026',
+      href: 'https://www.cnbc.com/2026/01/27/homebuyers-backing-out-of-deals.html',
     },
     {
-      value: '9–10 mo',
-      label: 'Average build time, up roughly 2.5 months in a decade',
-      source: 'US Census / NAHB',
+      kind: 'cost',
+      figure: '9.1 mo',
+      label: 'Start to completion, single-family home',
+      text: 'Average build time has eased off its 10.1-month peak, but still runs roughly 2.5 months longer than it did a decade ago.',
+      source: 'Census Survey of Construction, via NAHB',
+      date: '2024 data',
+      href: 'https://eyeonhousing.org/2025/09/single-family-homes-are-built-faster-in-2024/',
     },
     {
-      value: '$500–700',
-      label: 'Carrying cost per day, per delayed home',
-      source: 'Assoc. of Professional Builders',
+      kind: 'cost',
+      figure: '~$670',
+      label: 'Carrying cost per day on a $750K build',
+      text: 'Every day a finished home sits unclosed carries real cost — before a single incentive or rate-lock extension enters the picture.',
+      source: 'Association of Professional Builders',
+      date: null,
+      href: 'https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay',
+    },
+    {
+      kind: 'earnings',
+      figure: '18%',
+      label: 'D.R. Horton cancellation rate',
+      text: 'At the largest homebuilder in the country, net income fell 30% to $594.8 million in the quarter, with cancellations running at 18%.',
+      source: 'D.R. Horton Q1 FY2026 results',
+      date: 'January 2026',
+      href: 'https://www.businesswire.com/news/home/20260120750275/en/',
+    },
+    {
+      kind: 'earnings',
+      figure: '~10%',
+      label: 'Of revenue spent on sales incentives',
+      text: 'D.R. Horton held cancellations at 16% the following quarter while earnings per diluted share slipped to $2.24 from $2.58, with incentives near a tenth of revenue.',
+      source: 'D.R. Horton Q2 FY2026 earnings call',
+      date: 'April 2026',
+      href: 'https://www.fool.com/earnings/call-transcripts/2026/04/21/dr-horton-dhi-q2-2026-earnings-transcript/',
+    },
+    {
+      kind: 'earnings',
+      figure: '−53%',
+      label: 'Lennar earnings per share, year over year',
+      text: 'Earnings per diluted share fell to $0.93 from $1.96. Gross margin on home sales dropped to 15.2% from 18.7%, with incentives around 14%.',
+      source: 'Lennar Q1 FY2026 results',
+      date: 'March 2026',
+      href: 'https://newsroom.lennar.com/2026-03-12-Lennar-Reports-First-Quarter-2026-Results',
+    },
+    {
+      kind: 'earnings',
+      figure: '12.9%',
+      label: 'Lennar incentive rate',
+      text: 'Still more than double a normal cycle. New orders fell 4% to 21,749 homes and full-year guidance was cut to 82,000–83,000.',
+      source: 'Lennar Q2 FY2026 results',
+      date: 'June 2026',
+      href: 'https://investors.lennar.com/press-releases/2026/06-11-2026-214520364',
+    },
+    {
+      kind: 'silos',
+      figure: null,
+      label: 'The trade press has already named the cause',
+      text: 'Silos kill margin. Builders are being told to remap workflows across tens of thousands of moving parts and handoffs.',
+      source: 'The Builder\u2019s Daily',
+      date: 'July 2025',
+      href: 'https://www.thebuildersdaily.com/silos-kill-margin-heres-how-homebuilders-can-fight-back/',
+    },
+    {
+      kind: 'silos',
+      figure: null,
+      label: 'Integration is no longer an advantage',
+      text: 'It has pivoted into homebuilding\u2019s survival skill. Disjointed systems create friction, and that friction lands in margin.',
+      source: 'The Builder\u2019s Daily',
+      date: 'April 2025',
+      href: 'https://www.thebuildersdaily.com/integration-has-pivoted-into-homebuildings-survival-skill/',
+    },
+    {
+      kind: 'silos',
+      figure: null,
+      label: 'The daily cost of not knowing',
+      text: 'Teams spend their time searching for answers instead of acting, because no system holds a real-time view of progress.',
+      source: 'Digs',
+      date: 'January 2026',
+      href: 'https://digs.com/post/from-siloed-systems-to-integrated-workflows-the-digital-transformation-of-homebuilding',
+    },
+    {
+      kind: 'silos',
+      figure: null,
+      label: 'It costs opportunities, not just days',
+      text: 'NAHB reports builders missing land and lot opportunities outright, because siloed systems are too inflexible to move at the speed of the deal.',
+      source: 'NAHB',
+      date: 'May 2025',
+      href: 'https://www.nahb.org/nahb-community/councils/20-clubs/pages/resources/20-clubs-sponsors/building-smarter-with-a-single-source-of-truth',
     },
   ],
   chainLede:
