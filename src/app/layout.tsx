@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: 'Tessera',
     title: 'Tessera — the intelligence layer for homebuilders',
     description:
-      'Builders know how to build homes. Closing is a coordination problem. Tessera reads every system in the transaction and tells you which homes will miss their date, and why.',
+      'Nobody misses a close date because a system broke. They miss it in the handoff between two systems that both worked. Tessera reads every system in the transaction and tells you which homes will miss their date, and why.',
   },
   robots: { index: true, follow: true },
 };
