@@ -349,12 +349,12 @@ export const team = {
     {
       name: 'Bhavdeep Singh Sachdeva',
       role: 'Chief Technology Officer',
-      former: 'Detection pipelines at AWS scale',
+      former: 'Five years shipping detection systems at AWS',
       initials: 'BS',
       image: '/founders/36461.png',
       body:
-        'Bhavdeep builds data pipelines that find the signal nobody flagged. He shipped functionality in Amazon GuardDuty and AWS Security Hub, applying the same discipline this product needs: ingest untidy events from many systems, correlate them, and surface the ones that matter before the damage lands. He has studied homebuilding through the operators who live in it, and built the platform end to end.',
-      pull: 'Same methodology as finding a vulnerable system. Different field.',
+        'Bhavdeep spent five years at Amazon Web Services building the data infrastructure behind GuardDuty and Security Hub — services that ingest billions of events across thousands of accounts and surface the handful that actually matter. He designed organizational-scale pipelines, Delta Lake architectures on EMR, and cross-region replication systems that had to be right every time. The problem Tessera solves is structurally identical: pull fragmented signals from many systems, correlate them in real time, and tell you which deals need attention before it is too late. He built this platform end to end.',
+      pull: 'The same engineering that detects threats across AWS now detects risk across your pipeline.',
     },
   ],
   bench:
