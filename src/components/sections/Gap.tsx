@@ -22,11 +22,11 @@ export function Gap() {
           playsInline
           aria-label="How the handoff chain works — explainer video"
         >
-          <source src="/videos/Tessera_Build_is_a_company_foc.mp4" type="video/mp4" />
+          <source src="/videos/can_we_use_this_as_the_logo_an.mp4" type="video/mp4" />
           <p className="text-[14px] text-ink-3">
             Your browser does not support embedded video.{' '}
             <a
-              href="/videos/Tessera_Build_is_a_company_foc.mp4"
+              href="/videos/can_we_use_this_as_the_logo_an.mp4"
               className="underline hover:text-accent"
             >
               Download the video
