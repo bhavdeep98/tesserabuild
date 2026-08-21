@@ -23,7 +23,7 @@ export const brand = {
 } as const;
 
 export const nav = [
-  { label: 'The gap', href: '#gap' },
+  { label: 'The problem', href: '#gap' },
   { label: 'What we believe', href: '#tenets' },
   { label: 'How it works', href: '#how' },
   { label: 'Kestrel', href: '#kestrel' },
