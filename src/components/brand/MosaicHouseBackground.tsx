@@ -157,14 +157,14 @@ export function MosaicHouseBackground() {
       const scrollable = document.documentElement.scrollHeight - window.innerHeight;
       const progress = scrollable > 0 ? clamp01(window.scrollY / scrollable) : 0;
 
-      // Stars converge between 0-40% scroll
-      const converge = reduceMotion ? 1 : ramp(progress, 0, 0.4);
-      // Stars fade out between 25-45% scroll
-      const starFade = 1 - ramp(progress, 0.25, 0.45);
-      // Image fades in between 20-42% scroll
-      const imageFade = ramp(progress, 0.2, 0.42);
-      // Everything retires after 55% scroll for clean contrast below
-      const presence = 1 - ramp(progress, 0.5, 0.65);
+      // Stars converge between 0-60% scroll (slower convergence)
+      const converge = reduceMotion ? 1 : ramp(progress, 0, 0.6);
+      // Stars fade out between 40-65% scroll
+      const starFade = 1 - ramp(progress, 0.4, 0.65);
+      // Image fades in between 35-60% scroll (slower reveal)
+      const imageFade = ramp(progress, 0.35, 0.6);
+      // Everything retires after 70% scroll for clean contrast below
+      const presence = 1 - ramp(progress, 0.7, 0.85);
 
       // Drive the cottage image opacity — hidden from DOM, drawn on canvas
       imageEl!.style.opacity = '0';
