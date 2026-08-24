@@ -441,11 +441,11 @@ export const team = {
     {
       name: 'Teresa Lynch',
       role: 'Founder & Chief Executive',
-      former: 'Former Vice President of Field Operations, Lennar',
+      former: 'Former VP of Field Operations, Lennar',
       initials: 'TL',
       image: '/founders/36462.png',
       body:
-        'Teresa ran field operations at Lennar \u2014 the second-largest homebuilder in the country, closing over 80,000 homes a year. Her job was the exact intersection this company exists to serve: the point where construction, mortgage, title, and finance have to converge on a single date, and where the cost of them failing to do so lands. She built high-performing teams across culturally diverse groups, established the guiding principles that kept cross-functional handoffs from slipping, and became known internally as a dot connector \u2014 the person who sees the dependency between departments before it becomes a missed close. Forbes featured her in a three-part leadership series on transparency, alignment, and execution. She left Lennar to build the system she always needed and never had: one layer that reads every system in the transaction and tells you the truth on day one.',
+        'Teresa ran field operations at Lennar \u2014 the second-largest homebuilder in the country, closing over 80,000 homes a year. Her job was the exact intersection this company exists to serve: the point where construction, mortgage, title, and finance have to converge on a single date. She was known internally as a dot connector \u2014 the person who sees the dependency between departments before it becomes a missed close. Forbes featured her in a three-part series on transparency, alignment, and execution in homebuilding. She left to build the system she always needed and never had.',
       pull: 'She did not study the workflow from the outside. She owned the outcome.',
     },
     {
