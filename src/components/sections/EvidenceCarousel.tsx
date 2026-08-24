@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { gap } from '@/content/site';
 
@@ -86,6 +86,32 @@ export function EvidenceCarousel() {
     }
   };
 
+  // Touch swipe support for mobile devices.
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    touchStartX.current = null;
+    touchStartY.current = null;
+
+    // Only register horizontal swipes where dx > dy (avoid hijacking scroll).
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+
+    if (dx < 0) {
+      goTo(index + 1);
+    } else {
+      goTo(index - 1);
+    }
+  };
+
   const item = items[index];
   const tint = TINT[item.kind] ?? TINT.cost;
 
@@ -96,6 +122,8 @@ export function EvidenceCarousel() {
       aria-label="Sourced industry evidence"
       className="mt-12"
       onKeyDown={onKeyDown}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
