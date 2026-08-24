@@ -459,8 +459,7 @@ export const team = {
       pull: 'The same engineering that detects threats across AWS now detects risk across your pipeline.',
     },
   ],
-  bench:
-    'Two further operators from the same world are with us and closely involved. We will introduce them when it is right for them, not when it is convenient for us.',
+  bench: '',
 } as const;
 
 /* ─────────────────────────────────────────────────────────────

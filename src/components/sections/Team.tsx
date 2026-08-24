@@ -44,7 +44,9 @@ export function Team() {
         ))}
       </div>
 
-      <p className="mt-10 max-w-prose text-[14.5px] leading-relaxed text-ink-3">{team.bench}</p>
+      {team.bench ? (
+        <p className="mt-10 max-w-prose text-[14.5px] leading-relaxed text-ink-3">{team.bench}</p>
+      ) : null}
     </Section>
   );
 }
