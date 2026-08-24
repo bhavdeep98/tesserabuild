@@ -436,7 +436,7 @@ export const team = {
   eyebrow: 'Who is building it',
   title: 'Built by the people who lived the problem',
   lede:
-    'A VP who ran 80,000 closings a year at Lennar and an engineer who built AWS\u2019s threat-detection infrastructure. The same coordination gap that cost her margin is the same class of signal-routing problem he solved at cloud scale. Tessera exists because they met.',
+    'She watched homes miss their close date for years \u2014 not because anyone failed, but because no single person could see the whole chain. He spent half a decade building the infrastructure that finds the one signal that matters across billions of events. They met, realised they had been solving the same problem from opposite ends, and started Tessera.',
   people: [
     {
       name: 'Teresa Lynch',
