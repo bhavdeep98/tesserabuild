@@ -441,12 +441,12 @@ export const team = {
     {
       name: 'Teresa Lynch',
       role: 'Founder & Chief Executive',
-      former: 'Former Vice President, Lennar',
+      former: 'Former Vice President of Field Operations, Lennar',
       initials: 'TL',
       image: '/founders/36462.png',
       body:
-        'Teresa spent her career inside the largest homebuilder in the United States, running the field operations where the close date is either protected or lost. She has sat in the meeting where five departments each report that their part is fine and the home still misses its date by three weeks. She left to build the layer that would have told her the truth on week one instead of week nine.',
-      pull: 'She is not guessing at the workflow. She ran it.',
+        'Teresa ran field operations at Lennar \u2014 the second-largest homebuilder in the country, closing over 80,000 homes a year. Her job was the exact intersection this company exists to serve: the point where construction, mortgage, title, and finance have to converge on a single date, and where the cost of them failing to do so lands. She built high-performing teams across culturally diverse groups, established the guiding principles that kept cross-functional handoffs from slipping, and became known internally as a dot connector \u2014 the person who sees the dependency between departments before it becomes a missed close. Forbes featured her in a three-part leadership series on transparency, alignment, and execution. She left Lennar to build the system she always needed and never had: one layer that reads every system in the transaction and tells you the truth on day one.',
+      pull: 'She did not study the workflow from the outside. She owned the outcome.',
     },
     {
       name: 'Bhavdeep Singh Sachdeva',
