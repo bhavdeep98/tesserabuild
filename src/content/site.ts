@@ -434,9 +434,9 @@ export const proof = {
 
 export const team = {
   eyebrow: 'Who is building it',
-  title: 'Operators, not spectators',
+  title: 'Built by the people who lived the problem',
   lede:
-    'This is not a team that read about homebuilding. One of us ran the field organisation this product is built for, and left to fix it. The other has spent a career building the kind of detection pipeline it needs.',
+    'A VP who ran 80,000 closings a year at Lennar and an engineer who built AWS\u2019s threat-detection infrastructure. The same coordination gap that cost her margin is the same class of signal-routing problem he solved at cloud scale. Tessera exists because they met.',
   people: [
     {
       name: 'Teresa Lynch',
