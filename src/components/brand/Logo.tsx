@@ -49,12 +49,12 @@ export function Logo({ withLegalName = false, className }: LogoProps) {
     <span className={`inline-flex items-center gap-3 ${className ?? ''}`}>
       <Logomark className="h-[1.35em] w-[1.35em] shrink-0 text-ink" />
       <span className="flex flex-col leading-none">
-        {/* Typeset in the site's own display face rather than the drawn PNG
-            wordmark, whose angular letterforms read too close to another
-            brand's mark. */}
-        <span className="font-display text-[1.3em] font-extrabold leading-none tracking-[-0.01em] text-ink">
-          Tessera
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/tessera-wordmark.png"
+          alt="Tessera"
+          className="h-14 w-auto dark:invert"
+        />
         {withLegalName ? (
           <span className="mt-1.5 text-[0.62em] font-medium uppercase leading-none tracking-[0.18em] text-ink-3">
             Build Inc
