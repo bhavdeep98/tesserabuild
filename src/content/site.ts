@@ -26,7 +26,6 @@ export const nav = [
   { label: 'The problem', href: '#gap' },
   { label: 'What we believe', href: '#tenets' },
   { label: 'How it works', href: '#how' },
-  { label: 'Kestrel', href: '#kestrel' },
   { label: 'Team', href: '#team' },
 ] as const;
 
@@ -434,23 +433,13 @@ export const proof = {
 
 export const team = {
   eyebrow: 'Who is building it',
-  title: 'Built by the people who lived the problem',
+  title: 'Built close to the problem',
   lede:
-    'She watched homes miss their close date for years \u2014 not because anyone failed, but because no single person could see the whole chain. He spent half a decade building the infrastructure that finds the one signal that matters across billions of events. They met, realised they had been solving the same problem from opposite ends, and started Tessera.',
+    'Bhavdeep has worked closely with many across the homebuilding community and understands their frustration: homes miss their close date not because anyone failed, but because no single person can see the whole chain. He spent half a decade building the infrastructure that finds the one signal that matters across billions of events \u2014 and started Tessera to point it at that problem.',
   people: [
     {
-      name: 'Teresa Lynch',
-      role: 'Founder & Chief Executive',
-      former: 'Former VP of Field Operations, Lennar',
-      initials: 'TL',
-      image: '/founders/36462.png',
-      body:
-        'Teresa ran field operations at Lennar \u2014 the second-largest homebuilder in the country, closing over 80,000 homes a year. Her job was the exact intersection this company exists to serve: the point where construction, mortgage, title, and finance have to converge on a single date. She was known internally as a dot connector \u2014 the person who sees the dependency between departments before it becomes a missed close. Forbes featured her in a three-part series on transparency, alignment, and execution in homebuilding. She left to build the system she always needed and never had.',
-      pull: 'She did not study the workflow from the outside. She owned the outcome.',
-    },
-    {
       name: 'Bhavdeep Singh Sachdeva',
-      role: 'Chief Technology Officer',
+      role: 'Founder & Chief Technology Officer',
       former: 'Five years shipping detection systems at AWS',
       initials: 'BS',
       image: '/founders/36461.png',

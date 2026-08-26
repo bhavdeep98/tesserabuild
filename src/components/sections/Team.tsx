@@ -6,7 +6,11 @@ import { team } from '@/content/site';
 export function Team() {
   return (
     <Section id="team" eyebrow={team.eyebrow} title={team.title} lede={team.lede}>
-      <div className="mt-14 grid gap-8 lg:grid-cols-2">
+      <div
+        className={`mt-14 grid gap-8 ${
+          team.people.length > 1 ? 'lg:grid-cols-2' : 'max-w-2xl'
+        }`}
+      >
         {team.people.map((person) => (
           <article key={person.name} className="card card-hover flex flex-col overflow-hidden">
             {/* Portrait — black bg knocked out via mix-blend-mode: screen.
