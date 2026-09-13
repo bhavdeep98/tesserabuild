@@ -5,8 +5,11 @@ import { gap } from '@/content/site';
  * brand's own metaphors:
  *
  *   Connect    Five silos blink on their own clocks — competent, unaware of
- *              each other. Each emits signals: small tesserae rising out of
- *              the system that produced them.
+ *              each other. Each broadcasts typed signals in its own
+ *              vocabulary — small tesserae rising out of the system that
+ *              produced them, each departure marked by a ping. Once per
+ *              cycle the mortgage channel carries the one signal that
+ *              matters, and everything downstream follows from it.
  *   Correlate  The tiles land in the Kestrel layer, which hovers above the
  *              stack (literally — it never touches the silos). Inside, they
  *              are already laid into a dependency graph per home, and the
@@ -42,6 +45,19 @@ const BLINK = [
 
 /** Signal stream per channel: duration plus two staggered emitters. */
 const STREAM = [3.2, 2.7, 3.6, 2.9, 3.3];
+
+/**
+ * One typed signal per leg, in each system's own vocabulary. Illustrative
+ * names in the shape of the pipeline's register, same policy as the console:
+ * the structure is real, the specific values are invented.
+ */
+const SIGNALS = [
+  'buyer.docs_signed',
+  'inspection.passed',
+  'appraisal.received',
+  'title.search_clear',
+  'invoice.posted',
+];
 
 type NodeKind = 'done' | 'blocked' | 'gate' | 'pending';
 
@@ -101,9 +117,19 @@ export function SystemAnimation() {
           80% { opacity: .95 }
           100% { transform: translateY(-104px); opacity: 0 }
         }
+        @keyframes sysviz-ping {
+          0% { transform: scale(.3); opacity: .8 }
+          70%, 100% { transform: scale(2.4); opacity: 0 }
+        }
+        @keyframes sysviz-risksig {
+          0% { transform: translateY(0); opacity: 0 }
+          1% { opacity: 1 }
+          6% { transform: translateY(-104px); opacity: 1 }
+          9%, 100% { transform: translateY(-104px); opacity: 0 }
+        }
         @keyframes sysviz-path {
           0% { stroke-dashoffset: 560; opacity: 0 }
-          6% { stroke-dashoffset: 560; opacity: 1 }
+          8% { stroke-dashoffset: 560; opacity: 1 }
           42% { stroke-dashoffset: 0 }
           90% { stroke-dashoffset: 0; opacity: 1 }
           97%, 100% { stroke-dashoffset: 0; opacity: 0 }
@@ -134,6 +160,8 @@ export function SystemAnimation() {
         .sysviz-cone { opacity: .45; animation: sysviz-cone 7s ease-in-out infinite }
         .sysviz-dot { animation: sysviz-blink var(--d) ease-in-out infinite; animation-delay: var(--dl) }
         .sysviz-sig { opacity: 0; animation: sysviz-sig var(--d) cubic-bezier(.4, 0, .6, 1) infinite; animation-delay: var(--dl) }
+        .sysviz-ping { opacity: 0; transform-box: fill-box; transform-origin: center; animation: sysviz-ping var(--d) cubic-bezier(0, 0, .2, 1) infinite; animation-delay: var(--dl) }
+        .sysviz-risksig { opacity: 0; animation: sysviz-risksig 12s cubic-bezier(.4, 0, .6, 1) infinite }
         .sysviz-path { stroke-dasharray: 560; animation: sysviz-path 12s linear infinite }
         .sysviz-halo { opacity: .8; animation: sysviz-halo 12s ease-in-out infinite }
         .sysviz-score { animation: sysviz-score 12s cubic-bezier(0.16, 1, 0.3, 1) infinite }
@@ -145,7 +173,7 @@ export function SystemAnimation() {
           viewBox="0 0 920 552"
           className="h-auto w-full min-w-[620px]"
           role="img"
-          aria-label="Animated diagram of the Tessera system. Five siloed systems — sales, construction, mortgage, title and finance — blink independently at the bottom, each emitting signal tiles that rise into the Kestrel layer hovering above them. Inside the layer the signals assemble into a dependency graph for one home: construction is nearly done, the mortgage track is behind, and the critical path runs through it to a blocked clear-to-close milestone. A score of 61, at risk, appears with the close date slipping from July 11 to July 24, and an escalation is routed to mortgage operations naming the milestone as nine days overdue."
+          aria-label="Animated diagram of the Tessera system. Five siloed systems — sales, construction, mortgage, title and finance — blink independently at the bottom, each broadcasting typed signals such as inspection passed or appraisal received, which rise into the Kestrel layer hovering above them. Inside the layer the signals assemble into a dependency graph for one home: construction is nearly done, the mortgage track is behind, and when an underwriting-conditions signal arrives the critical path draws through the mortgage track to a blocked clear-to-close milestone. A score of 61, at risk, appears with the close date slipping from July 11 to July 24, and an escalation is routed to mortgage operations naming the milestone as nine days overdue."
         >
           <defs>
             <linearGradient id="sysviz-cone-g" x1="0" y1="0" x2="0" y2="1">
@@ -266,6 +294,11 @@ export function SystemAnimation() {
               </g>
             ))}
 
+            {/* The register, in one line */}
+            <text x="812" y="340" fontSize="9.5" textAnchor="end" letterSpacing="0.5" className="fill-ink-3">
+              51 signal types → 45 milestones → one score
+            </text>
+
             {/* Escalation — a finding is worthless without an owner */}
             <g className="sysviz-pill">
               <rect x="112" y="322" width="400" height="26" rx="13" className="fill-accent/[0.06] stroke-accent/30" />
@@ -278,7 +311,7 @@ export function SystemAnimation() {
             </g>
           </g>
 
-          {/* ── Signals rising out of the silos ── */}
+          {/* ── Signals broadcast out of the silos ── */}
           {SILO_CX.map((cx, i) => (
             <g key={cx}>
               <line
@@ -289,23 +322,58 @@ export function SystemAnimation() {
                 className="stroke-line/15"
                 strokeDasharray="2 5"
               />
-              {[0, 1].map((j) => (
-                <rect
-                  key={j}
-                  x={cx - 4}
-                  y="454"
-                  width="8"
-                  height="8"
-                  rx="1.5"
-                  className="sysviz-sig fill-accent"
-                  style={{
-                    ['--d' as string]: `${STREAM[i]}s`,
-                    ['--dl' as string]: `${-(i * 0.7) - (j * STREAM[i]) / 2}s`,
-                  }}
-                />
-              ))}
+              {/* Departure ping — the broadcast, made visible */}
+              <circle
+                cx={cx}
+                cy="458"
+                r="7"
+                strokeWidth="1.5"
+                className="sysviz-ping fill-transparent stroke-accent"
+                style={{
+                  ['--d' as string]: `${STREAM[i]}s`,
+                  ['--dl' as string]: `${-(i * 0.7)}s`,
+                }}
+              />
+              {/* First emitter carries the signal's type name */}
+              <g
+                className="sysviz-sig"
+                style={{
+                  ['--d' as string]: `${STREAM[i]}s`,
+                  ['--dl' as string]: `${-(i * 0.7)}s`,
+                }}
+              >
+                <rect x={cx - 4} y="454" width="8" height="8" rx="1.5" className="fill-accent" />
+                <text x={cx + 10} y="461" fontSize="8.5" className="fill-ink-3 font-mono">
+                  {SIGNALS[i]}
+                </text>
+              </g>
+              <rect
+                x={cx - 4}
+                y="454"
+                width="8"
+                height="8"
+                rx="1.5"
+                className="sysviz-sig fill-accent"
+                style={{
+                  ['--d' as string]: `${STREAM[i]}s`,
+                  ['--dl' as string]: `${-(i * 0.7) - STREAM[i] / 2}s`,
+                }}
+              />
             </g>
           ))}
+
+          {/* The one signal that matters. Once per cycle it races up the
+              mortgage channel, and the layer's whole read — path, halo,
+              score, escalation — follows from its arrival. */}
+          <g
+            className="sysviz-risksig"
+            style={{ filter: 'drop-shadow(0 0 6px rgb(var(--c-caution) / 0.6))' }}
+          >
+            <rect x="455" y="453" width="10" height="10" rx="2" className="fill-caution" />
+            <text x="472" y="462" fontSize="8.5" fontWeight="600" className="fill-caution font-mono">
+              uw.conditions_added
+            </text>
+          </g>
 
           {/* ── The silos: five competent systems, none seeing the whole ── */}
           {gap.chain.map((leg, i) => {
@@ -337,9 +405,11 @@ export function SystemAnimation() {
 
       <figcaption className="mt-4 max-w-prose text-[13px] leading-relaxed text-ink-3">
         Illustrative home, not customer data — the same worked example as everywhere else on
-        this site. Five systems, each blinking to its own clock. Kestrel hovers above them,
-        reading and never writing, assembles their signals into one timeline per home, and
-        names the milestone that is actually blocking the close.
+        this site. Every system broadcasts signals in its own vocabulary — signed documents,
+        passed inspections, loan conditions, title searches, postings — and each silo hears
+        only its own. Kestrel listens to all five at once, reading and never writing, resolves
+        every signal onto one timeline per home, and finds the one signal that matters: the
+        milestone actually blocking the close.
       </figcaption>
     </figure>
   );
