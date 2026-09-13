@@ -1,9 +1,15 @@
+import { SystemAnimation } from '@/components/sections/SystemAnimation';
 import { Section } from '@/components/ui/Section';
 import { how } from '@/content/site';
 
 export function HowItWorks() {
   return (
     <Section id="how" eyebrow={how.eyebrow} title={how.title} lede={how.lede}>
+      {/* The whole section, animated: silos below, the layer hovering above,
+          signals assembling into one timeline. The three cards then name the
+          stages the reader has just watched. */}
+      <SystemAnimation />
+
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
         {how.layers.map((layer, i) => (
           <div key={layer.name} className="card card-hover overflow-hidden">
