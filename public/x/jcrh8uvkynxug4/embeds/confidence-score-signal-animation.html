@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Closing Confidence Meter</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  /* Single-theme telemetry screen — deliberately dark, every surface painted explicitly. */
+  :root {
+    --ground: #10141f;
+    --panel: #1a2230;
+    --panel-2: #151b28;
+    --line: #2a3347;
+    --ink: #e9edf6;
+    --ink-mute: #8d97ac;
+    --ink-faint: #5b6478;
+    --pulse: #5fd9e8;
+    --healthy: #57d98f;
+    --atrisk: #ffb454;
+    --critical: #ff6b5e;
+    --c-construction: #e8985a;
+    --c-mortgage: #6fa8ff;
+    --c-title: #b58cf0;
+    --c-sales: #67d3a6;
+    --c-financial: #f0d264;
+    --c-utility: #7f8ca4;
+    --display: 'Sora', 'Avenir Next', 'Segoe UI', sans-serif;
+    --body: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.6;
+    padding-inline: 24px;
+    padding-block: 0 64px;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; }
+  .prose { max-width: 640px; }
+
+  /* ── Header ── */
+  header.wrap { padding-block: 44px 28px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--pulse);
+  }
+  h1 {
+    font-family: var(--display); font-weight: 700; text-wrap: balance;
+    font-size: clamp(28px, 4.5vw, 44px); line-height: 1.12; margin: 10px 0 14px;
+  }
+  .lede { color: var(--ink-mute); font-size: 18px; margin: 0; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* ── Stage chrome ── */
+  .console {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .console-top {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    justify-content: space-between; margin-bottom: 6px;
+  }
+  .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .act-chip {
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
+    color: var(--ink-mute); background: transparent;
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; cursor: pointer;
+  }
+  .act-chip:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .act-chip.on { color: var(--ground); background: var(--pulse); border-color: var(--pulse); font-weight: 700; }
+  .act-chip:focus-visible, .replay:focus-visible { outline: 2px solid var(--pulse); outline-offset: 2px; }
+  .replay {
+    font-family: var(--body); font-size: 14px; font-weight: 600;
+    color: var(--ground); background: var(--ink); border: none;
+    border-radius: 8px; padding: 7px 16px; cursor: pointer;
+  }
+  .replay:hover { background: #fff; }
+  .narration {
+    min-height: 3.2em;
+    font-size: 15px; color: var(--ink-mute); margin: 4px 0 14px;
+  }
+  .narration b { color: var(--ink); font-weight: 600; }
+
+  /* ── Stage ── */
+  .stage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 168px 1fr 232px;
+    gap: 22px;
+    align-items: start;
+  }
+  .pulse-layer {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 3; overflow: visible;
+  }
+
+  /* Towers */
+  .towers { display: flex; flex-direction: column; gap: 8px; }
+  .towers-label, .bands-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px;
+  }
+  .tower {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 10px;
+    transition: opacity 0.5s;
+  }
+  .tower .ant {
+    position: relative; width: 22px; height: 22px; flex: none;
+    display: grid; place-items: center;
+  }
+  .tower .ant .core {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--tc, var(--pulse));
+  }
+  .tower .ant .ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--tc, var(--pulse));
+    opacity: 0; transform: scale(0.4);
+  }
+  .tower.emit .ant .ring { animation: ring 0.6s ease-out; }
+  @keyframes ring {
+    0% { opacity: 0.9; transform: scale(0.4); }
+    100% { opacity: 0; transform: scale(1.5); }
+  }
+  .tower .sys { font-family: var(--mono); font-size: 12px; font-weight: 700; line-height: 1.3; }
+  .tower .feeds { font-size: 11px; color: var(--ink-faint); line-height: 1.3; }
+  .tower.stale { opacity: 0.45; }
+  .tower .stale-tag {
+    display: none; margin-left: auto;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    color: var(--critical); border: 1px solid var(--critical);
+    border-radius: 4px; padding: 1px 5px; letter-spacing: 0.06em;
+  }
+  .tower.stale .stale-tag { display: block; }
+
+  /* Bands */
+  .bands { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .band {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 12px;
+  }
+  .band-head {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 13px; margin-bottom: 6px;
+  }
+  .band-head .nm { font-weight: 600; }
+  .band-head .wt {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    color: var(--bc); border: 1px solid var(--line);
+    border-radius: 4px; padding: 0 5px;
+  }
+  .band-head .ct {
+    margin-left: auto; font-family: var(--mono); font-size: 12px;
+    color: var(--ink-mute); font-variant-numeric: tabular-nums;
+  }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dot {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: var(--ground); border: 1.5px solid var(--line);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .dot.done { background: var(--bc); border-color: var(--bc); }
+  .dot.flash { animation: flash 0.5s ease-out; }
+  @keyframes flash {
+    0% { box-shadow: 0 0 0 0 var(--bc); }
+    100% { box-shadow: 0 0 0 8px transparent; }
+  }
+  .band.spotlight .dot:not(.done) { border-color: var(--atrisk); }
+  .band.spotlight { border-color: var(--atrisk); }
+
+  /* Meter */
+  .meter {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px; text-align: center;
+  }
+  .meter-label {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px;
+  }
+  .gauge { width: 100%; max-width: 210px; margin: 0 auto; display: block; }
+  .score-num {
+    font-family: var(--mono); font-size: 42px; font-weight: 700;
+    line-height: 1; font-variant-numeric: tabular-nums; margin-top: -6px;
+  }
+  .risk-pill {
+    display: inline-block; margin-top: 8px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; border-radius: 999px; padding: 3px 12px;
+    color: var(--ground);
+  }
+  .risk-HEALTHY { background: var(--healthy); }
+  .risk-AT_RISK { background: var(--atrisk); }
+  .risk-CRITICAL { background: var(--critical); }
+  .penalties { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+  .pen-chip {
+    display: none; align-items: center; justify-content: space-between;
+    font-family: var(--mono); font-size: 11px;
+    border: 1px solid var(--critical); color: var(--critical);
+    border-radius: 6px; padding: 4px 8px; text-align: left;
+  }
+  .pen-chip.show { display: flex; }
+  .pen-chip.pulse-me { animation: penpulse 1s ease-in-out 2; }
+  @keyframes penpulse {
+    50% { background: rgba(255, 107, 94, 0.15); }
+  }
+  .pen-chip .amt { font-weight: 700; }
+  .datebox {
+    margin-top: 12px; font-family: var(--mono); font-size: 11px;
+    color: var(--ink-mute); line-height: 1.7;
+  }
+  .datebox .overdue { display: none; color: var(--critical); font-weight: 700; }
+  .datebox.late .overdue { display: block; }
+
+  /* Ticker */
+  .ticker {
+    margin-top: 14px; font-family: var(--mono); font-size: 13px;
+    color: var(--ink-mute); min-height: 1.6em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ticker .sig { color: var(--pulse); font-weight: 700; }
+
+  /* ── Doc sections ── */
+  section.wrap { padding-top: 52px; }
+  h2 {
+    font-family: var(--display); font-weight: 600; font-size: 24px;
+    text-wrap: balance; margin: 0 0 12px;
+  }
+  p { color: var(--ink-mute); margin: 0 0 14px; }
+  p strong, li strong { color: var(--ink); font-weight: 600; }
+  .formula {
+    font-family: var(--mono); font-size: 14px; line-height: 2;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 22px; overflow-x: auto;
+    white-space: pre; color: var(--ink);
+  }
+  .formula .cm { color: var(--ink-faint); }
+  .formula .op { color: var(--pulse); }
+
+  .mixbar {
+    display: flex; height: 46px; border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--line); margin: 18px 0 8px;
+  }
+  .mixbar .seg {
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    color: #10141f;
+  }
+  .mixlegend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 14px; }
+  .mixlegend span {
+    font-size: 13px; color: var(--ink-mute);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mixlegend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px 20px;
+  }
+  .card h3 {
+    font-family: var(--display); font-size: 17px; font-weight: 600;
+    margin: 0 0 8px; display: flex; align-items: baseline; gap: 10px;
+  }
+  .card h3 .amt { font-family: var(--mono); font-size: 14px; color: var(--critical); margin-left: auto; }
+  .card p { font-size: 14px; margin: 0; }
+
+  .bandrows { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .bandrow {
+    display: flex; align-items: baseline; gap: 14px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 18px;
+  }
+  .bandrow .range { font-family: var(--mono); font-size: 14px; font-weight: 700; width: 74px; flex: none; font-variant-numeric: tabular-nums; }
+  .bandrow .tag { font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; width: 84px; flex: none; }
+  .bandrow p { margin: 0; font-size: 14px; }
+  .t-h { color: var(--healthy); } .t-a { color: var(--atrisk); } .t-c { color: var(--critical); }
+
+  footer.wrap {
+    margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--ink-faint);
+  }
+  footer code { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); }
+
+  @media (max-width: 880px) {
+    .stage { grid-template-columns: 1fr; }
+    .towers { flex-direction: row; flex-wrap: wrap; }
+    .towers-label { width: 100%; }
+    .tower { flex: 1 1 150px; }
+    .cards { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tower.emit .ant .ring, .dot.flash, .pen-chip.pulse-me { animation: none; }
+  }
+
+  /* ── Embed mode (#embed): show only the live console for slide/iframe use ── */
+  body.embed { padding: 0 !important; overflow: hidden; }
+  body.embed header.wrap,
+  body.embed section.wrap { display: none !important; }
+  body.embed > .wrap:not(:has(.console)) { display: none !important; }
+  /* Render the console at its designed width; JS scales it to the iframe. */
+  body.embed .wrap { max-width: none; margin: 0; padding: 0; }
+  body.embed .console {
+    width: 1024px; margin: 0; border: none; border-radius: 0;
+    padding: 14px 18px 4px; background: var(--ground);
+  }
+  /* compact vertical rhythm so the whole console fits a slide iframe */
+  body.embed .narration {
+    margin: 6px 0 10px; min-height: 3.2em; font-size: 14px; line-height: 1.5;
+  }
+  body.embed .console-top { margin-bottom: 2px; }
+  body.embed .ticker { margin-top: 8px; }
+  /* Keep the desktop 3-column stage even though the iframe viewport is narrow;
+     the JS scale handles fitting. Overrides the max-width:880px collapse. */
+  body.embed .stage {
+    grid-template-columns: 168px 1fr 232px !important;
+  }
+  body.embed .towers { flex-direction: column !important; flex-wrap: nowrap !important; gap: 6px; }
+  body.embed .tower { flex: 0 0 auto !important; }
+  body.embed .towers-label,
+  body.embed .bands-label { width: auto !important; }
+  /* shrink the Builder Ecosystem tower boxes to make room for the label block */
+  body.embed .tower { padding: 5px 8px !important; gap: 7px !important; }
+  body.embed .tower .ant { width: 16px !important; height: 16px !important; }
+  body.embed .tower .sys { font-size: 11px !important; }
+  body.embed .tower .feeds { font-size: 9px !important; }
+
+
+</style>
+
+<header class="wrap">
+  <div class="eyebrow">Home Passport · How the score works</div>
+  <h1>The Closing Confidence Score is a signal-strength meter</h1>
+  <p class="lede prose">Every system a builder runs is already broadcasting. BuildPro reports the pour, Encompass the underwrite, Qualia the title search. Home Passport never asks anyone for a status — it <strong>listens</strong>. Each signal lights a milestone; the meter reads how strongly one home's closing is coming through.</p>
+</header>
+
+<div class="wrap">
+  <div class="console">
+    <div class="console-top">
+      <div class="acts" id="acts" role="group" aria-label="Animation acts"></div>
+      <button class="replay" id="replay">Replay ▸</button>
+    </div>
+    <p class="narration" id="narration" aria-live="polite"></p>
+
+    <div class="stage" id="stage">
+      <svg class="pulse-layer" id="pulseLayer" aria-hidden="true"></svg>
+
+      <div class="towers" id="towers">
+        <div class="towers-label">Broadcast towers</div>
+      </div>
+
+      <div class="bands" id="bands">
+        <div class="bands-label">Milestones · 51 receivers</div>
+      </div>
+
+      <div class="meter">
+        <div class="meter-label">Closing confidence</div>
+        <svg class="gauge" id="gauge" viewBox="0 0 200 118" aria-hidden="true"></svg>
+        <div class="score-num" id="scoreNum">0</div>
+        <div class="risk-pill risk-CRITICAL" id="riskPill">CRITICAL</div>
+        <div class="penalties">
+          <div class="pen-chip" id="penStale"><span>static · QUALIA quiet</span><span class="amt">−5</span></div>
+          <div class="pen-chip" id="penOverdue"><span>drag · 1 wk overdue</span><span class="amt">−18</span></div>
+        </div>
+        <div class="datebox" id="datebox">
+          target close · SEP 06
+          <span class="overdue">today · SEP 13</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticker" id="ticker">&nbsp;</div>
+  </div>
+</div>
+
+<section class="wrap">
+  <div class="prose">
+    <h2>Silence is information</h2>
+    <p>Each home carries <strong>51 milestone receivers</strong>, one per signal type in the taxonomy. A milestone starts <strong>UNKNOWN</strong> and only a real signal from a source system can flip it to <strong>COMPLETE</strong>. Every receiver counts in the denominator from day one — so an untouched milestone quietly pulls the score down. The meter can't be talked up in a status meeting; it only rises when the systems of record actually broadcast.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="prose">
+    <h2>The formula</h2>
+  </div>
+  <div class="formula"><span class="cm">// packages/api/src/services/confidence-score.ts (rule-based v1)</span>
+score <span class="op">=</span> Σ ( category_weight <span class="op">×</span> category_completion_% )
+        <span class="op">−</span> static   <span class="cm">// 5 pts per source gone quiet</span>
+        <span class="op">−</span> drag     <span class="cm">// 10 pts + 8 per week past target close</span>
+<span class="cm">// clamped to 0–100</span></div>
+  <div class="prose">
+    <p style="margin-top:14px">Six categories, weighted by how much each domain historically decides whether a home closes on time:</p>
+  </div>
+  <div class="mixbar" id="mixbar" role="img" aria-label="Weight mix: construction 35%, mortgage 25%, title 20%, sales 10%, financial 5%, utility 5%"></div>
+  <div class="mixlegend" id="mixlegend"></div>
+  <div class="prose">
+    <p>These weights are <strong>deliberate placeholders</strong> — a first guess awaiting expert calibration and real close data (the HLD's official three-domain split is construction 35 / mortgage 40 / title 25). Divisions can override them per market, and when <code style="font-family:var(--mono);font-size:13px">USE_ML_SCORING</code> is on, a trained model replaces this mix entirely and explains itself through ranked SHAP factors instead.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="prose">
+    <h2>Interference</h2>
+    <p>Two things degrade a broadcast: a transmitter going dark, and time running out. The meter penalizes both.</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <h3>Static — a tower goes quiet <span class="amt">−5 / source</span></h3>
+      <p>When a source system hasn't been heard from past its freshness window, its whole domain is flying blind. Every stale source subtracts 5 points — not because anything is known to be wrong, but because <strong>nothing is known at all</strong>.</p>
+    </div>
+    <div class="card">
+      <h3>Drag — the date slips past <span class="amt">−10 − 8/wk</span></h3>
+      <p>The moment an active home passes its target close date, it takes a 10-point hit, plus 8 more for every week overdue. At <strong>$670/day in carrying costs</strong>, an overdue home should never look calm on a dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="prose">
+    <h2>Reading the meter</h2>
+    <p>The number maps to three bands. The point isn't the score itself — it's that the category breakdown and penalty chips tell you <strong>exactly which tower to fix</strong> before a delay cascades across systems.</p>
+  </div>
+  <div class="bandrows">
+    <div class="bandrow"><span class="range t-h">75–100</span><span class="tag t-h">HEALTHY</span><p>Strong signal on every domain. Leave the team alone.</p></div>
+    <div class="bandrow"><span class="range t-a">50–74</span><span class="tag t-a">AT_RISK</span><p>Signal weakening somewhere specific. Act on the weakest category now, while it's one problem.</p></div>
+    <div class="bandrow"><span class="range t-c">0–49</span><span class="tag t-c">CRITICAL</span><p>Escalate. Delay is compounding across domains — this is where cancellations come from.</p></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  Every number in the animation is computed live with the production formula from
+  <code>packages/api/src/services/confidence-score.ts</code> — weights, penalties, clamping, and risk thresholds included.
+  Rule-based v1 · weights provisional pending expert calibration.
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  // Embed mode for slide/iframe: strip docs, show only the live console,
+  // and scale the fixed-size console to exactly fit the iframe (no clipping).
+  if (location.hash.indexOf('embed') !== -1) {
+    document.body.classList.add('embed');
+    var DESIGN_W = 1024; // must match body.embed .console width in CSS
+    var con = document.querySelector('.console');
+    var host = con ? con.parentElement : null; // the <div class="wrap"> around it
+    if (con && host) {
+      con.style.transformOrigin = 'top left';
+      function scaleConsole() {
+        con.style.transform = 'none';
+        var natW = DESIGN_W;
+        var natH = con.offsetHeight;              // natural (unscaled) height
+        var availW = window.innerWidth;
+        var availH = window.innerHeight;
+        // fit within both width and height, with a small safety margin so the
+        // bottom ticker line is never clipped
+        var s = Math.min(availW / natW, availH / natH) * 0.97;
+        con.style.transform = 'scale(' + s + ')';
+        // center horizontally when height is the limiting factor
+        var scaledW = natW * s;
+        con.style.marginLeft = Math.max(0, (availW - scaledW) / 2) + 'px';
+        host.style.height = (natH * s) + 'px';
+      }
+      // run after layout + fonts settle
+      scaleConsole();
+      requestAnimationFrame(scaleConsole);
+      setTimeout(scaleConsole, 300);
+      setTimeout(scaleConsole, 800);
+      window.addEventListener('resize', scaleConsole);
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(scaleConsole); }
+    }
+  }
+
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Model: the real taxonomy, weights, and formula ─────────────────────────
+  var CATS = [
+    { key: 'construction', sys: 'BUILDPRO', weight: 0.35, color: 'var(--c-construction)',
+      ms: ['foundation_complete','framing_complete','roughin_electrical_complete','roughin_plumbing_complete','roughin_hvac_complete','insulation_complete','drywall_complete','exterior_complete','interior_trim_complete','punch_list_complete','final_inspection_passed','co_issued'] },
+    { key: 'mortgage', sys: 'ENCOMPASS', weight: 0.25, color: 'var(--c-mortgage)',
+      ms: ['loan_application_submitted','rate_lock_set','appraisal_ordered','appraisal_received','underwriting_complete','conditions_cleared','clear_to_close','docs_out','docs_signing_complete','loan_funded'] },
+    { key: 'title', sys: 'QUALIA', weight: 0.20, color: 'var(--c-title)',
+      ms: ['title_search_complete','title_commitment_issued','title_clear','escrow_opened','closing_disclosure_sent','escrow_funded','closing_scheduled','deed_recorded'] },
+    { key: 'sales', sys: 'SALESFORCE', weight: 0.10, color: 'var(--c-sales)',
+      ms: ['lot_released','contract_signed','close_date_set','close_date_changed','buyer_orientation_complete','buyer_walkthrough_scheduled','deal_cancelled'] },
+    { key: 'financial', sys: 'JDE', weight: 0.05, color: 'var(--c-financial)',
+      ms: ['purchase_agreement_booked','earnest_money_received','selections_finalized','change_order_approved','final_cost_reconciled'] },
+    { key: 'utility', sys: 'UTILITY CO.', weight: 0.05, color: 'var(--c-utility)',
+      ms: ['power_scheduled','power_connected','water_scheduled','water_connected','sewer_connected','gas_scheduled','gas_connected','internet_scheduled','meter_set'] }
+  ];
+
+  // One simulated home's broadcast, in story order. f = featured (slow pulse + ticker focus).
+  var EVENTS = [
+    { c: 'sales', s: 'lot_released', f: 1 },
+    { c: 'sales', s: 'contract_signed', f: 1 },
+    { c: 'financial', s: 'purchase_agreement_booked' },
+    { c: 'financial', s: 'earnest_money_received' },
+    { c: 'mortgage', s: 'loan_application_submitted', f: 1 },
+    { c: 'title', s: 'title_search_complete', f: 1 },
+    { c: 'sales', s: 'close_date_set' },
+    { c: 'construction', s: 'foundation_complete', f: 1 },
+    { c: 'mortgage', s: 'rate_lock_set' },
+    { c: 'title', s: 'escrow_opened' },
+    { c: 'construction', s: 'framing_complete', f: 1 },
+    { c: 'mortgage', s: 'appraisal_ordered' },
+    { c: 'construction', s: 'roughin_electrical_complete' },
+    { c: 'construction', s: 'roughin_plumbing_complete' },
+    { c: 'construction', s: 'roughin_hvac_complete' },
+    { c: 'utility', s: 'power_scheduled' },
+    { c: 'utility', s: 'water_scheduled' },
+    { c: 'mortgage', s: 'appraisal_received', f: 1 },
+    { c: 'title', s: 'title_commitment_issued', f: 1 },
+    { c: 'construction', s: 'insulation_complete' },
+    { c: 'financial', s: 'selections_finalized' },
+    { c: 'construction', s: 'drywall_complete', f: 1 },
+    { c: 'mortgage', s: 'underwriting_complete', f: 1 },
+    { c: 'utility', s: 'power_connected' },
+    { c: 'utility', s: 'water_connected' },
+    { c: 'construction', s: 'exterior_complete' },
+    { c: 'title', s: 'title_clear', f: 1 },
+    { c: 'mortgage', s: 'conditions_cleared' },
+    { c: 'utility', s: 'meter_set' },
+    { c: 'construction', s: 'interior_trim_complete' },
+    { c: 'sales', s: 'buyer_orientation_complete' },
+    { c: 'title', s: 'closing_disclosure_sent' },
+    { c: 'sales', s: 'buyer_walkthrough_scheduled' },
+    { c: 'mortgage', s: 'clear_to_close', f: 1 }
+  ];
+
+  var STALE_PENALTY = 5, OVERDUE_BASE = 10, OVERDUE_PER_WEEK = 8;
+
+  var state = { done: {}, staleSources: 0, weeksOverdue: 0 };
+  CATS.forEach(function (c) { state.done[c.key] = {}; });
+
+  // The production formula, verbatim: Σ(weight × pct) − penalties, clamp, round.
+  function computeScore() {
+    var weighted = 0;
+    CATS.forEach(function (c) {
+      var completed = Object.keys(state.done[c.key]).length;
+      weighted += c.weight * (completed / c.ms.length * 100);
+    });
+    var overdue = state.weeksOverdue > 0 ? OVERDUE_BASE + state.weeksOverdue * OVERDUE_PER_WEEK : 0;
+    var score = Math.max(0, Math.min(100, Math.round(weighted - state.staleSources * STALE_PENALTY - overdue)));
+    var risk = score < 50 ? 'CRITICAL' : score < 75 ? 'AT_RISK' : 'HEALTHY';
+    return { score: score, risk: risk };
+  }
+
+  // ── DOM build ──────────────────────────────────────────────────────────────
+  var $ = function (id) { return document.getElementById(id); };
+  var towersEl = $('towers'), bandsEl = $('bands');
+  var towerEls = {}, dotEls = {}, countEls = {}, bandEls = {};
+
+  CATS.forEach(function (c) {
+    var t = document.createElement('div');
+    t.className = 'tower';
+    t.id = 'tower-' + c.key;
+    t.style.setProperty('--tc', c.color);
+    t.innerHTML = '<span class="ant"><span class="ring"></span><span class="core"></span></span>' +
+      '<span><span class="sys">' + c.sys + '</span><br><span class="feeds">' + c.key + '</span></span>' +
+      '<span class="stale-tag">STALE</span>';
+    towersEl.appendChild(t);
+    towerEls[c.key] = t;
+
+    var b = document.createElement('div');
+    b.className = 'band';
+    b.style.setProperty('--bc', c.color);
+    var dots = c.ms.map(function (m, i) {
+      return '<span class="dot" id="dot-' + c.key + '-' + i + '" title="' + m + '"></span>';
+    }).join('');
+    b.innerHTML = '<div class="band-head"><span class="nm">' + c.key + '</span>' +
+      '<span class="wt">' + Math.round(c.weight * 100) + '%</span>' +
+      '<span class="ct" id="ct-' + c.key + '">0/' + c.ms.length + '</span></div>' +
+      '<div class="dots">' + dots + '</div>';
+    bandsEl.appendChild(b);
+    bandEls[c.key] = b;
+    countEls[c.key] = b.querySelector('#ct-' + c.key);
+    dotEls[c.key] = c.ms.map(function (m, i) { return b.querySelector('#dot-' + c.key + '-' + i); });
+  });
+
+  // Weight-mix bar + legend
+  var mixbar = $('mixbar'), mixlegend = $('mixlegend');
+  CATS.forEach(function (c) {
+    var seg = document.createElement('div');
+    seg.className = 'seg';
+    seg.style.width = (c.weight * 100) + '%';
+    seg.style.background = c.color;
+    seg.textContent = Math.round(c.weight * 100) + '%';
+    mixbar.appendChild(seg);
+    var leg = document.createElement('span');
+    leg.innerHTML = '<i style="background:' + c.color + '"></i>' + c.key;
+    mixlegend.appendChild(leg);
+  });
+
+  // ── Gauge ──────────────────────────────────────────────────────────────────
+  var gauge = $('gauge');
+  var CX = 100, CY = 104, R = 84;
+  function polar(pct) { // 0 → left, 100 → right, along the top semicircle
+    var a = Math.PI * (1 - pct / 100);
+    return [CX + R * Math.cos(a), CY - R * Math.sin(a)];
+  }
+  function arcPath(p1, p2) {
+    var a = polar(p1), b = polar(p2);
+    return 'M' + a[0].toFixed(1) + ' ' + a[1].toFixed(1) +
+      ' A' + R + ' ' + R + ' 0 0 1 ' + b[0].toFixed(1) + ' ' + b[1].toFixed(1);
+  }
+  var NS = 'http://www.w3.org/2000/svg';
+  [[0, 50, 'var(--critical)'], [50, 75, 'var(--atrisk)'], [75, 100, 'var(--healthy)']].forEach(function (b) {
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', arcPath(b[0] + (b[0] ? 1 : 0), b[1] - (b[1] < 100 ? 1 : 0)));
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', b[2]);
+    p.setAttribute('stroke-width', '9');
+    p.setAttribute('stroke-linecap', 'round');
+    p.setAttribute('opacity', '0.85');
+    gauge.appendChild(p);
+  });
+  [0, 50, 75, 100].forEach(function (v) {
+    // Endpoint labels sit below the arc ends; 50/75 tuck inside the dial.
+    var end = v === 0 || v === 100;
+    var a = Math.PI * (1 - v / 100), r2 = end ? R : R - 21;
+    var x = CX + r2 * Math.cos(a), y = CY - r2 * Math.sin(a) + (end ? 13 : 4);
+    var t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', x + (v === 0 ? -2 : v === 100 ? 2 : 0));
+    t.setAttribute('y', y);
+    t.setAttribute('text-anchor', v === 0 ? 'start' : v === 100 ? 'end' : 'middle');
+    t.setAttribute('fill', 'var(--ink-faint)');
+    t.setAttribute('font-size', '9');
+    t.setAttribute('font-family', 'JetBrains Mono, monospace');
+    t.textContent = v;
+    gauge.appendChild(t);
+  });
+  var needle = document.createElementNS(NS, 'line');
+  needle.setAttribute('x1', CX); needle.setAttribute('y1', CY);
+  needle.setAttribute('x2', CX); needle.setAttribute('y2', CY - R + 16);
+  needle.setAttribute('stroke', 'var(--ink)');
+  needle.setAttribute('stroke-width', '3');
+  needle.setAttribute('stroke-linecap', 'round');
+  gauge.appendChild(needle);
+  var hub = document.createElementNS(NS, 'circle');
+  hub.setAttribute('cx', CX); hub.setAttribute('cy', CY); hub.setAttribute('r', '5');
+  hub.setAttribute('fill', 'var(--ink)');
+  gauge.appendChild(hub);
+
+  var shownScore = 0;
+  function renderScore(sc) {
+    $('scoreNum').textContent = sc.score;
+    needle.setAttribute('transform', 'rotate(' + (sc.score * 1.8 - 90) + ' ' + CX + ' ' + CY + ')');
+    var pill = $('riskPill');
+    pill.textContent = sc.risk;
+    pill.className = 'risk-pill risk-' + sc.risk;
+    CATS.forEach(function (c) {
+      countEls[c.key].textContent = Object.keys(state.done[c.key]).length + '/' + c.ms.length;
+    });
+  }
+  var scoreAnim = null;
+  function tweenScore() {
+    var target = computeScore();
+    if (RM) { shownScore = target.score; renderScore(target); return; }
+    if (scoreAnim) cancelAnimationFrame(scoreAnim);
+    var from = shownScore, t0 = null;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / 380);
+      var e = 1 - Math.pow(1 - t, 3);
+      var cur = Math.round(from + (target.score - from) * e);
+      renderScore({ score: cur, risk: cur < 50 ? 'CRITICAL' : cur < 75 ? 'AT_RISK' : 'HEALTHY' });
+      if (t < 1) scoreAnim = requestAnimationFrame(step);
+      else { shownScore = target.score; renderScore(target); }
+    }
+    scoreAnim = requestAnimationFrame(step);
+  }
+
+  // ── Pulses ─────────────────────────────────────────────────────────────────
+  var stage = $('stage'), layer = $('pulseLayer');
+  function center(el) {
+    var s = stage.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return [r.left - s.left + r.width / 2, r.top - s.top + r.height / 2];
+  }
+  function firePulse(catKey, dotEl, dur, done) {
+    var cat = CATS.filter(function (c) { return c.key === catKey; })[0];
+    var tower = towerEls[catKey];
+    tower.classList.remove('emit'); void tower.offsetWidth; tower.classList.add('emit');
+    if (RM) { done(); return; }
+    var s = stage.getBoundingClientRect();
+    layer.setAttribute('viewBox', '0 0 ' + s.width + ' ' + s.height);
+    var a = center(tower.querySelector('.ant')), b = center(dotEl);
+    var mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 34; // arc above the straight line
+    var comet = document.createElementNS(NS, 'circle');
+    comet.setAttribute('r', '4');
+    comet.setAttribute('fill', cat.color);
+    var glow = document.createElementNS(NS, 'circle');
+    glow.setAttribute('r', '9');
+    glow.setAttribute('fill', cat.color);
+    glow.setAttribute('opacity', '0.25');
+    layer.appendChild(glow); layer.appendChild(comet);
+    var t0 = null;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      var u = 1 - t;
+      var x = u * u * a[0] + 2 * u * t * mx + t * t * b[0];
+      var y = u * u * a[1] + 2 * u * t * my + t * t * b[1];
+      comet.setAttribute('cx', x); comet.setAttribute('cy', y);
+      glow.setAttribute('cx', x); glow.setAttribute('cy', y);
+      if (t < 1) requestAnimationFrame(step);
+      else { layer.removeChild(comet); layer.removeChild(glow); done(); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function landSignal(ev, animate) {
+    var cat = CATS.filter(function (c) { return c.key === ev.c; })[0];
+    var idx = cat.ms.indexOf(ev.s);
+    state.done[ev.c][ev.s] = true;
+    var dot = dotEls[ev.c][idx];
+    dot.classList.add('done');
+    if (animate && !RM) { dot.classList.remove('flash'); void dot.offsetWidth; dot.classList.add('flash'); }
+    var n = Object.keys(state.done[ev.c]).length;
+    $('ticker').innerHTML = '▮ <span class="sig">' + ev.s + '</span> ← ' + cat.sys +
+      ' · ' + ev.c + ' ' + n + '/' + cat.ms.length;
+    tweenScore();
+  }
+
+  // ── Acts ───────────────────────────────────────────────────────────────────
+  var ACTS = [
+    { label: '1 · Silence',
+      text: '<b>A home goes under contract.</b> All 51 milestone receivers start UNKNOWN — every one already counts against the score, so the meter opens at zero. Nothing is wrong yet; nothing is <i>known</i> yet.' },
+    { label: '2 · Signals',
+      text: '<b>The towers start broadcasting.</b> Each real event — a pour, a rate lock, a title search — lights one receiver. Categories fill, and the meter climbs by each category&rsquo;s weight: construction moves it 3.5× as hard as a utility hookup.' },
+    { label: '3 · Static',
+      text: '<b>Qualia goes quiet.</b> No title signal past the freshness window. Nothing is known to be wrong — but nothing is known at all, and blindness on a whole domain costs a flat <b>−5</b>.' },
+    { label: '4 · Drag',
+      text: '<b>The target close date slips past.</b> One week overdue: −10 base − 8 per week = <b>−18</b>. At $670/day of carrying cost, the meter is built to make an overdue home impossible to ignore.' },
+    { label: '5 · Readout',
+      text: '<b>The meter names the fix.</b> Biggest levers on this home: the missed date (−18), unfinished construction (8.8 weighted points still on the table), and the silent Qualia feed (−5). That&rsquo;s tomorrow&rsquo;s call sheet — before one delay cascades into six.' }
+  ];
+
+  var actsEl = $('acts'), actChips = [];
+  ACTS.forEach(function (a, i) {
+    var b = document.createElement('button');
+    b.className = 'act-chip';
+    b.textContent = a.label;
+    b.addEventListener('click', function () { seek(i); });
+    actsEl.appendChild(b);
+    actChips.push(b);
+  });
+
+  var timers = [], playToken = 0;
+  function later(fn, ms) { timers.push(setTimeout(fn, RM ? 0 : ms)); }
+  function clearTimers() {
+    playToken++;
+    timers.forEach(clearTimeout);
+    timers = [];
+    layer.innerHTML = '';
+  }
+
+  function setAct(i) {
+    actChips.forEach(function (c, j) { c.classList.toggle('on', j === i); });
+    $('narration').innerHTML = ACTS[i].text;
+  }
+
+  function resetState() {
+    CATS.forEach(function (c) {
+      state.done[c.key] = {};
+      c.ms.forEach(function (_, i) { dotEls[c.key][i].classList.remove('done', 'flash'); });
+      bandEls[c.key].classList.remove('spotlight');
+      towerEls[c.key].classList.remove('stale', 'emit');
+    });
+    state.staleSources = 0; state.weeksOverdue = 0;
+    $('penStale').classList.remove('show', 'pulse-me');
+    $('penOverdue').classList.remove('show', 'pulse-me');
+    $('datebox').classList.remove('late');
+    $('ticker').innerHTML = '&nbsp;';
+    shownScore = 0;
+    renderScore(computeScore());
+  }
+
+  // Apply everything up to (not including) act i, instantly.
+  function applyUpTo(i) {
+    resetState();
+    if (i >= 2) EVENTS.forEach(function (ev) {
+      var cat = CATS.filter(function (c) { return c.key === ev.c; })[0];
+      state.done[ev.c][ev.s] = true;
+      dotEls[ev.c][cat.ms.indexOf(ev.s)].classList.add('done');
+    });
+    if (i >= 3) {
+      state.staleSources = 1;
+      towerEls.title.classList.add('stale');
+      $('penStale').classList.add('show');
+    }
+    if (i >= 4) {
+      state.weeksOverdue = 1;
+      $('penOverdue').classList.add('show');
+      $('datebox').classList.add('late');
+    }
+    shownScore = computeScore().score;
+    renderScore(computeScore());
+  }
+
+  function playAct(i) {
+    setAct(i);
+    var token = playToken;
+    var alive = function () { return token === playToken; };
+
+    if (i === 0) {
+      later(function () { if (alive()) seek(1); }, 3400);
+
+    } else if (i === 1) {
+      var k = 0;
+      function next() {
+        if (!alive()) return;
+        if (k >= EVENTS.length) { later(function () { if (alive()) seek(2); }, 1600); return; }
+        var ev = EVENTS[k++];
+        var cat = CATS.filter(function (c) { return c.key === ev.c; })[0];
+        var dot = dotEls[ev.c][cat.ms.indexOf(ev.s)];
+        firePulse(ev.c, dot, ev.f ? 520 : 300, function () {
+          if (!alive()) return;
+          landSignal(ev, true);
+          later(next, ev.f ? 460 : 130);
+        });
+      }
+      if (RM) { applyUpTo(2); setAct(1); later(function () { if (alive()) seek(2); }, 0); }
+      else next();
+
+    } else if (i === 2) {
+      later(function () {
+        if (!alive()) return;
+        state.staleSources = 1;
+        towerEls.title.classList.add('stale');
+        var chip = $('penStale');
+        chip.classList.add('show', 'pulse-me');
+        $('ticker').innerHTML = '▮ <span class="sig" style="color:var(--critical)">source_freshness: QUALIA is_stale=true</span> · −5';
+        tweenScore();
+      }, 1100);
+      later(function () { if (alive()) seek(3); }, 5200);
+
+    } else if (i === 3) {
+      later(function () {
+        if (!alive()) return;
+        state.weeksOverdue = 1;
+        $('datebox').classList.add('late');
+        var chip = $('penOverdue');
+        chip.classList.add('show', 'pulse-me');
+        $('ticker').innerHTML = '▮ <span class="sig" style="color:var(--critical)">target_close_date exceeded</span> · −10 base − 8 × 1 wk';
+        tweenScore();
+      }, 1100);
+      later(function () { if (alive()) seek(4); }, 5200);
+
+    } else if (i === 4) {
+      later(function () {
+        if (!alive()) return;
+        bandEls.construction.classList.add('spotlight');
+        $('penStale').classList.add('pulse-me');
+        $('penOverdue').classList.add('pulse-me');
+        $('ticker').innerHTML = '▮ next actions: <span class="sig">reset close date</span> · <span class="sig">finish construction</span> · <span class="sig">restore QUALIA feed</span>';
+      }, 900);
+    }
+  }
+
+  function seek(i) {
+    clearTimers();
+    applyUpTo(i);
+    playAct(i);
+  }
+
+  $('replay').addEventListener('click', function () { seek(0); });
+
+  // Open on the readout for reduced motion; otherwise run the show.
+  if (RM) { applyUpTo(4); setAct(4); playAct(4); }
+  else seek(0);
+})();
+</script>

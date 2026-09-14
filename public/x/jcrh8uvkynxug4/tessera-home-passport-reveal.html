@@ -1,0 +1,1134 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tessera â€” The Intelligence Layer for the Home</title>
+
+  <!-- reveal.js core (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" />
+
+  <style>
+    /* ==========================================================
+       Theme â€” mirrors the PPTX palette exactly:
+         dark void  #070C0C   teal accent  #31DDC3
+         light ink  #F8F9F7   muted gray   #A4AEAA
+         card surfaces  #0E1615 / #0C1413 / #121D1B
+       ========================================================== */
+    :root {
+      --void:        #070C0C;
+      --surface:     #0E1615;
+      --surface-2:   #0C1413;
+      --surface-3:   #121D1B;
+      --accent:      #31DDC3;
+      --accent-dim:  #1f9f8c;
+      --ink:         #F8F9F7;
+      --ink-2:       #A4AEAA;
+      --ink-3:       #6f807a;
+      --line:        rgba(255,255,255,0.10);
+      --line-2:      rgba(49,221,195,0.30);
+      --display: "Plus Jakarta Sans", "Inter", sans-serif;
+      --body:    "Inter", system-ui, sans-serif;
+      --mono:    "IBM Plex Mono", ui-monospace, monospace;
+    }
+
+    html, body { background: var(--void); }
+    .reveal-viewport { background: var(--void); }
+    .reveal { font-family: var(--body); color: var(--ink); font-weight: 500; }
+    .reveal .slides { text-align: left; }
+
+    /* Fixed 13.33 x 7.5in stage â†’ 1280 x 720 (16:9), matching the PPTX geometry. */
+    .reveal .slides section.deck {
+      width: 1280px;
+      height: 720px;
+      padding: 0 !important;
+      margin: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+      background: var(--void);
+      color: var(--ink);
+    }
+    .deck *, .deck *::before, .deck *::after { box-sizing: border-box; }
+
+    .reveal .deck h1, .reveal .deck h2, .reveal .deck h3 {
+      font-family: var(--display);
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin: 0;
+      text-transform: none;
+      text-shadow: none;
+      text-wrap: balance;
+    }
+    .reveal .deck p { margin: 0; line-height: 1.5; }
+
+    .reveal .controls { color: var(--accent-dim); }
+    .reveal .progress { height: 3px; color: var(--accent); }
+    .reveal .slide-number {
+      right: 14px; bottom: 12px; background: transparent;
+      color: var(--ink-3); font: 11px var(--mono);
+    }
+    .reveal .slide-number a { color: inherit; }
+
+    /* ---------- shared slide furniture ---------- */
+    .kicker {
+      position: absolute; left: 62px; top: 43px;
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .kicker .num {
+      font: 800 15px/1 var(--display); color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .kicker .label {
+      font: 700 13px/1 var(--mono); color: var(--ink-2);
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .foot {
+      position: absolute; left: 62px; right: 62px; bottom: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      font: 500 11px/1.5 var(--mono); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--ink-3);
+      border-top: 1px solid var(--line); padding-top: 14px;
+    }
+
+    .slide-title {
+      position: absolute; left: 62px; top: 80px; right: 62px;
+      font-size: 36px; font-weight: 800; line-height: 1.12;
+    }
+    .slide-deck {
+      position: absolute; left: 62px; top: 168px; right: 62px;
+      font-size: 18px; line-height: 1.5; color: var(--ink-2);
+      max-width: 1060px;
+    }
+
+    .accent { color: var(--accent); }
+    .arrow { color: var(--ink-3); font-weight: 300; }
+
+    /* eyebrow label used inside cards / rows */
+    .eyebrow {
+      font: 700 12px/1.4 var(--mono); letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .row-desc { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+
+    /* ===================== 01 Â· COVER ===================== */
+    .cover::before {
+      content: ""; position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 96% 78%, rgba(49,221,195,0.12), transparent 52%),
+        linear-gradient(120deg, transparent 62%, rgba(18,29,27,0.35));
+      pointer-events: none;
+    }
+    .cover > * { position: relative; z-index: 1; }
+    .cover-brand {
+      position: absolute; left: 62px; top: 46px;
+      font: 800 15px/1 var(--display); letter-spacing: 0.28em; color: var(--ink);
+    }
+    .cover h1 {
+      position: absolute; left: 62px; top: 96px; width: 1156px;
+      font-size: 58px; line-height: 1.06; font-weight: 800; letter-spacing: -0.035em;
+    }
+    .cover-sub {
+      position: absolute; left: 64px; top: 176px; width: 1040px;
+      font-size: 20px; line-height: 1.5; color: var(--ink-2);
+    }
+    .cover-cards {
+      position: absolute; left: 62px; right: 62px; top: 250px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+    }
+    .cover-card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 12px; padding: 26px 28px; min-height: 232px;
+      box-shadow: 0 12px 34px rgba(0,0,0,0.35);
+    }
+    .cover-card .n { font: 800 15px/1 var(--display); color: var(--accent); }
+    .cover-card h3 {
+      margin-top: 24px; font-size: 20px; letter-spacing: 0.01em;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .cover-card p { margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+    .cover-thesis {
+      position: absolute; left: 62px; right: 62px; top: 548px;
+      font-size: 17px; line-height: 1.5; color: var(--ink);
+      border-left: 3px solid var(--accent); padding-left: 20px;
+    }
+
+    /* ===================== 02 Â· PROBLEM ===================== */
+    .sys-strip {
+      position: absolute; left: 62px; right: 62px; top: 236px;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+    }
+    .sys-cell {
+      background: var(--surface); border: 1px solid var(--line);
+      border-top: 3px solid var(--accent-dim);
+      border-radius: 10px; padding: 18px 18px;
+    }
+    .sys-cell .name {
+      font: 700 13px/1.3 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink);
+    }
+    .sys-cell .fn { margin-top: 8px; font-size: 14px; color: var(--ink-2); }
+    .between {
+      position: absolute; left: 62px; right: 62px; top: 372px;
+      font-size: 19px; line-height: 1.5; color: var(--ink);
+    }
+    .between .accent { font-weight: 700; }
+    .consequences {
+      position: absolute; left: 62px; right: 62px; top: 460px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
+    }
+    .consequence { border-top: 1px solid var(--line); padding-top: 18px; }
+    .consequence .head {
+      font: 700 15px/1.3 var(--display); letter-spacing: -0.01em; color: var(--accent);
+    }
+    .consequence p { margin-top: 10px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+
+        /* --- 03 LAYER 1 --- flagship product slide, strong visuals --- */
+    .l1-grid {
+      position: absolute; left: 62px; right: 62px; top: 208px; bottom: 236px;
+      display: grid; grid-template-columns: 1fr 620px; gap: 42px; align-items: start;
+    }
+    .l1-left { position: relative; height: 100%; display: flex; flex-direction: column; }
+
+    /* three-beat method as bold connected step cards */
+    .l1-steps {
+      position: relative; display: flex; flex-direction: column; gap: 12px; height: 100%;
+    }
+    /* the vertical flow spine linking the three steps */
+    .l1-steps::before {
+      content: ""; position: absolute; left: 42px; top: 34px; bottom: 34px;
+      width: 2px; background: linear-gradient(var(--accent), rgba(49,221,195,0.15));
+      z-index: 0;
+    }
+    .l1-step {
+      position: relative; z-index: 1; flex: 1;
+      display: grid; grid-template-columns: 46px 1fr; gap: 18px; align-items: center;
+      background: linear-gradient(120deg, rgba(49,221,195,0.06), var(--surface) 62%);
+      border: 1px solid var(--line); border-radius: 14px; padding: 10px 20px;
+    }
+    .l1-step .l1-num {
+      align-self: center;
+      width: 44px; height: 44px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--void); border: 2px solid var(--accent);
+      font: 800 17px/1 var(--display); color: var(--accent); letter-spacing: -0.02em;
+      box-shadow: 0 0 0 5px rgba(49,221,195,0.08);
+    }
+    .l1-step-k {
+      font: 800 20px/1.1 var(--display); letter-spacing: -0.02em; color: var(--ink);
+    }
+    .l1-step-v { margin-top: 4px; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+    .l1-step-v strong { color: var(--ink); font-weight: 700; }
+
+    /* bottom section: the data moat (headline) + supporting defensibility points */
+    .l1-moat {
+      position: absolute; left: 62px; right: 62px; bottom: 64px;
+    }
+    .l1-moat-eyebrow {
+      font: 700 11px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 9px;
+    }
+    .l1-moat-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px; align-items: stretch;
+    }
+    .l1-moat-main {
+      border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 20px;
+      background: linear-gradient(120deg, rgba(49,221,195,0.12), var(--surface) 68%);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .l1-moat-main .mm-head {
+      font: 800 17px/1.1 var(--display); letter-spacing: -0.01em; color: var(--ink);
+    }
+    .l1-moat-main .mm-body {
+      margin-top: 6px; font-size: 13px; line-height: 1.5; color: var(--ink-2);
+    }
+    .l1-moat-main .mm-body strong { color: var(--accent); font-weight: 700; }
+    .l1-moat-side { display: flex; flex-direction: column; gap: 10px; }
+    .l1-moat-side .ms-item {
+      flex: 1; border: 1px solid var(--line); border-radius: 10px; padding: 9px 14px;
+      background: var(--surface); display: flex; flex-direction: column; justify-content: center;
+    }
+    .l1-moat-side .ms-k {
+      font: 700 10px/1.2 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+    }
+    .l1-moat-side .ms-v { margin-top: 3px; font-size: 12px; line-height: 1.4; color: var(--ink-2); }
+    .l1-moat-side .ms-v strong { color: var(--ink); font-weight: 700; }
+
+    /* right - live proof screenshot, sized to fit its column height */
+    .l1-shot { align-self: start; height: auto; overflow: hidden; }
+    .l1-shot img { max-height: 224px; object-fit: cover; object-position: top left; }
+    .shot-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; height: 300px; text-align: center; padding: 24px;
+      border: 2px dashed var(--line-2);
+      background: repeating-linear-gradient(45deg, rgba(49,221,195,0.03) 0 12px, transparent 12px 24px);
+    }
+    .shot-placeholder .ph-mark {
+      font: 700 12px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
+    }
+    .shot-placeholder .ph-name { font-size: 15px; color: var(--ink); font-weight: 600; max-width: 300px; }
+    .shot-placeholder .ph-note { font: 500 12px/1.4 var(--mono); color: var(--ink-3); }
+    /* --- 04 HOW IT WORKS --- the live confidence meter is the hero --- */
+    /* HERO: the confidence-score signal animation, embedded live from the product design assets. */
+    .hiw-stage {
+      position: absolute; left: 62px; top: 312px; width: 760px; bottom: 52px;
+      border: 1px solid var(--line-2); border-radius: 14px; overflow: hidden;
+      background: #10141f; box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+    }
+    .hiw-stage iframe {
+      display: block; width: 100%; height: 100%; border: 0;
+      background: #10141f;
+    }
+    .hiw-stage-tag {
+      position: absolute; top: 10px; left: 10px; z-index: 2;
+      padding: 3px 8px; border-radius: 5px;
+      background: rgba(7,12,12,0.72); backdrop-filter: blur(2px);
+      font: 600 8px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent); opacity: 0.85;
+    }
+    /* the screenshot tag on this slide — keep it subtle, not overpowering the shot */
+    .hiw-proof .shot-tag {
+      padding: 3px 8px; font-size: 8px; letter-spacing: 0.08em;
+      background: rgba(7,12,12,0.72); opacity: 0.9;
+    }
+
+    /* RIGHT RAIL: the Ecosystem -> Inference -> Action flow, distilled to labels. */
+    .hiw-rail {
+      position: absolute; left: 844px; right: 62px; top: 312px; bottom: 52px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    /* full-width label box below the hero: the Ecosystem -> Inference -> Action flow */
+    .hiw-labels {
+      position: absolute; left: 62px; right: 62px; top: 206px; height: 92px;
+      display: grid; grid-template-columns: 1fr 1.55fr 1.2fr; gap: 0;
+      border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden;
+      background: linear-gradient(120deg, rgba(49,221,195,0.08), var(--surface) 70%);
+    }
+    .hiw-labels .lstep {
+      position: relative; padding: 11px 20px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hiw-labels .lstep + .lstep { border-left: 1px solid var(--line); }
+    .hiw-labels .l-eyebrow {
+      font: 700 11.5px/1.3 var(--mono); letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .hiw-labels .l-body { margin-top: 6px; font-size: 12.5px; line-height: 1.4; color: var(--ink-2); }
+    .hiw-labels .l-body strong { color: var(--ink); font-weight: 700; }
+    .hiw-labels .l-arrow {
+      position: absolute; right: -9px; top: 50%; transform: translateY(-50%);
+      z-index: 2; color: var(--accent); font-size: 18px; font-weight: 300;
+      background: var(--void); padding: 2px 0; line-height: 1;
+    }
+
+    /* the cross-system insight - the one proof point, as a caption */
+    .hiw-insight {
+      border-left: 3px solid var(--accent); padding: 2px 0 2px 16px;
+    }
+    .hiw-insight .head {
+      font: 700 11px/1.3 var(--mono); letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .hiw-insight .claim {
+      margin-top: 7px; font: 800 15px/1.32 var(--display);
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .hiw-insight .claim .c1 { color: var(--ink); }
+    .hiw-insight .claim .c2 { color: var(--accent); }
+    .hiw-insight .sub { margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--ink-2); }
+
+    /* real product proof: a compact live screenshot tile pinned to the rail bottom */
+    .hiw-proof { margin-top: auto; }
+    .hiw-proof .shot { align-self: stretch; }
+    .hiw-proof .shot img { width: 100%; height: auto; display: block; }
+    .hiw-proof .shot figcaption {
+      padding: 6px 12px; font: 500 11px/1.3 var(--body); color: var(--ink-2);
+    }
+/* ===================== 05 Â· LAYER 2 ===================== */
+    /* 2x2 eye-path: focal panel top-left, live proof top-right,
+       ledger bottom-left, trust bottom-right. */
+    .l2-grid {
+      position: absolute; left: 62px; right: 62px; top: 206px; bottom: 54px;
+      display: grid;
+      grid-template-columns: 1fr 430px;
+      grid-template-rows: auto auto;
+      column-gap: 42px; row-gap: 20px; align-content: start;
+    }
+
+    /* shared block heads */
+    .l2-participants .head,
+    .l2-ledger .head { font: 700 12px/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+
+    /* TOP-LEFT Â· elevated focal panel â€” the eye lands here first */
+    .l2-participants {
+      background: linear-gradient(150deg, rgba(49,221,195,0.10), var(--surface) 68%);
+      border: 1px solid var(--line-2); border-radius: 14px;
+      padding: 20px 24px 8px; box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    }
+    .l2-lead { margin-top: 7px; font-size: 14px; line-height: 1.5; color: var(--ink); }
+    .l2-rows { margin-top: 12px; }
+    .l2-row {
+      display: grid; grid-template-columns: 132px 1fr; gap: 16px;
+      align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line);
+    }
+    .l2-row .who { font: 700 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .l2-row .what { font-size: 14px; line-height: 1.4; color: var(--ink); }
+
+    /* BOTTOM-LEFT Â· where the ledger lives */
+    .l2-ledger {
+      border-left: 3px solid var(--accent); padding: 2px 0 0 20px; align-self: start;
+    }
+    .l2-claim {
+      margin-top: 8px; font-size: 18px; line-height: 1.3; font-weight: 800;
+      font-family: var(--display); letter-spacing: -0.01em; color: var(--ink);
+    }
+    .l2-facts { margin-top: 12px; }
+    .l2-fact, .fact {
+      display: grid; grid-template-columns: 88px 1fr; gap: 14px;
+      align-items: baseline; padding: 6px 0;
+    }
+    .fact .k { font: 700 11px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .fact .v { font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+    /* RIGHT Â· live product screenshots framed as evidence */
+    .l2-shot-passport { grid-column: 2; grid-row: 1; }
+    .l2-shot-attestor { grid-column: 2; grid-row: 2; }
+    .shot {
+      position: relative; margin: 0; align-self: start;
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 12px; overflow: hidden; box-shadow: 0 16px 38px rgba(0,0,0,0.45);
+      display: flex; flex-direction: column;
+    }
+    .shot-tag {
+      position: absolute; top: 10px; left: 10px; z-index: 2;
+      padding: 4px 10px; border-radius: 6px;
+      background: rgba(7,12,12,0.80); backdrop-filter: blur(2px);
+      font: 700 10px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent);
+    }
+    .shot img { display: block; width: 100%; height: auto; }
+    /* the attestor band is taller; cap it and anchor to the top so the
+       record + Attest button stay visible while it fits row 2. */
+    .l2-shot-attestor img {
+      height: 152px; object-fit: cover; object-position: top center;
+    }
+    .shot figcaption {
+      padding: 7px 14px; font: 500 11.5px/1.35 var(--body);
+      color: var(--ink-2); border-top: 1px solid var(--line);
+    }
+
+    /* ===================== 06 Â· LAYER 3 ===================== */
+    .l3-grid {
+      position: absolute; left: 62px; right: 62px; top: 226px; bottom: 54px;
+      display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: start;
+    }
+    .l3-left { position: relative; height: 100%; }
+    .l3-eyebrow {
+      font: 700 12px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); display: flex; align-items: center; gap: 12px;
+    }
+    .l3-eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .l3-eyebrow.builder { position: absolute; top: 250px; left: 0; right: 0; }
+
+    /* proactive-delivery callout under the homeowner tiles */
+    .l3-delivery {
+      position: absolute; top: 196px; left: 0; right: 0;
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13.5px; line-height: 1.4; color: var(--ink);
+    }
+    .l3-delivery .dot { color: var(--accent); font-size: 10px; }
+
+    /* the top eyebrow sits at the very top of the left column */
+    .l3-left > .l3-eyebrow:first-child { position: absolute; top: 0; left: 0; right: 0; }
+
+    /* iconic homeowner tiles â€” glyph + a word or two, nothing more */
+    .l3-tiles {
+      position: absolute; top: 30px; left: 0; right: 0;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .l3-tile {
+      background: linear-gradient(160deg, rgba(49,221,195,0.08), var(--surface) 70%);
+      border: 1px solid var(--line); border-radius: 14px;
+      padding: 22px 16px 18px; text-align: center;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.32);
+    }
+    .l3-tile .ic { font-size: 34px; line-height: 1; }
+    .l3-tile .big {
+      margin-top: 14px; font: 800 21px/1.05 var(--display);
+      letter-spacing: -0.02em; color: var(--ink);
+    }
+    .l3-tile .cap {
+      margin-top: 6px; font: 500 12px/1.3 var(--mono);
+      letter-spacing: 0.04em; color: var(--ink-2);
+    }
+
+    /* compressed builder-value keyword strip */
+    .l3-strip {
+      position: absolute; top: 284px; left: 0; right: 0;
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .l3-strip span {
+      padding: 9px 16px; border-radius: 999px;
+      border: 1px solid var(--line-2); background: rgba(49,221,195,0.06);
+      font: 700 13px/1 var(--display); letter-spacing: -0.01em; color: var(--ink);
+    }
+
+    .l3-foot {
+      position: absolute; top: 360px; left: 0; right: 0;
+      padding: 4px 0 4px 18px;
+      border-left: 3px solid var(--accent); max-width: 620px;
+      font-size: 14px; line-height: 1.65; color: var(--ink);
+    }
+
+    /* right Â· live maintenance-intelligence screenshot */
+    .l3-shot { align-self: start; }
+    .l3-shot img {
+      height: 360px; object-fit: cover; object-position: top center;
+    }
+    .l3-shot figcaption { padding: 10px 14px; }
+
+        /* ===================== 07 · THE LANDSCAPE ===================== */
+    .landscape .slide-title { position: absolute; left: 62px; top: 66px; width: 1156px;
+      font: 800 33px/1.14 var(--display); letter-spacing: -0.03em; color: var(--ink); }
+    .landscape .slide-title .accent { color: var(--accent); }
+    .landscape .slide-deck { position: absolute; left: 62px; top: 122px; width: 1010px;
+      font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+    .landscape .slide-deck b { color: var(--ink); font-weight: 700; }
+
+    /* Tessera spine — the compounding moat chain, highlighted */
+    .ls-chain {
+      position: absolute; left: 62px; right: 62px; top: 150px; height: 62px;
+      display: flex; align-items: center; gap: 14px;
+      padding: 0 18px; border-radius: 12px;
+      border: 1px solid var(--accent);
+      background:
+        radial-gradient(80% 200% at 6% 50%, rgba(49,221,195,0.22), rgba(49,221,195,0.04) 60%),
+        linear-gradient(90deg, rgba(49,221,195,0.13), rgba(49,221,195,0.03));
+      box-shadow: 0 0 0 1px rgba(49,221,195,0.14), 0 14px 40px rgba(49,221,195,0.20);
+    }
+    .ch-brand {
+      font: 800 20px/1 var(--display); letter-spacing: -0.02em; color: var(--accent);
+      white-space: nowrap; padding-right: 15px;
+      border-right: 1px solid rgba(49,221,195,0.35);
+    }
+    .ch-nodes {
+      flex: 1; display: grid; align-items: center;
+      grid-template-columns: 1fr 18px 1fr 18px 1fr 18px 1fr 18px 1fr;
+    }
+    .ch-node { text-align: center; }
+    .ch-node .k { font: 800 12.5px/1.1 var(--display); color: var(--ink); letter-spacing: -0.01em; }
+    .ch-node .v { margin-top: 3px; font: 500 8.5px/1.2 var(--mono); letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--ink-3); }
+    .ch-arrow { text-align: center; color: var(--ink-3); font-size: 14px; }
+
+    /* three columns: replace / integrate / augment — deliberately quiet */
+    .ls-cols {
+      position: absolute; left: 62px; right: 62px; top: 234px; height: 320px;
+      display: grid; grid-template-columns: 0.82fr 1.36fr 0.94fr; gap: 18px;
+    }
+    .ls-col {
+      position: relative; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--surface-2); padding: 15px 15px 13px;
+      display: flex; flex-direction: column;
+    }
+    .ls-col.integrate { background: var(--surface-3); }
+    .ls-h {
+      display: flex; align-items: baseline; gap: 8px; padding-bottom: 9px;
+      border-bottom: 1px solid var(--line);
+    }
+    .ls-h .verb {
+      font: 800 13px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink);
+    }
+    .ls-h .qual { font: 500 10px/1.2 var(--mono); letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--ink-3); }
+    .ls-sub { margin-top: 9px; font-size: 11.5px; line-height: 1.45; color: var(--ink-2); }
+    .ls-sub b { color: var(--ink); font-weight: 700; }
+
+    /* generic row (AUGMENT column) */
+    .ls-list { margin-top: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .ls-row {
+      border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+      padding: 8px 10px;
+    }
+    .ls-row .t { font: 700 11.5px/1.25 var(--body); color: var(--ink); }
+    .ls-row .t a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
+    .ls-row .t a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .ls-row .n { margin-top: 4px; font-size: 10px; line-height: 1.35; color: var(--ink-3); }
+
+    /* ---- REPLACE column: spreadsheet glyph ---- */
+    .ss-wrap { margin-top: auto; margin-bottom: auto; padding: 4px 0; }
+    .ss-win {
+      border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+      overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    }
+    .ss-bar {
+      display: flex; align-items: center; gap: 22px;
+      padding: 6px 9px; background: rgba(255,255,255,0.045);
+      border-bottom: 1px solid var(--line);
+    }
+    .ss-bar .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #ff6347;
+      box-shadow: 9px 0 0 rgba(255,193,7,0.65), 18px 0 0 rgba(255,255,255,0.16);
+    }
+    .ss-bar .fn { font: 500 8.5px/1 var(--mono); letter-spacing: 0.06em; color: var(--ink-3); }
+    .ss-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; padding: 9px; }
+    .ss-grid i { height: 12px; border-radius: 2px; background: rgba(255,255,255,0.055); }
+    .ss-grid i.h { background: rgba(255,255,255,0.13); }
+    .ss-grid i.q { background: rgba(255,99,71,0.20); position: relative; }
+    .ss-grid i.q::after {
+      content: "?"; position: absolute; inset: 0; text-align: center;
+      font: 700 8px/12px var(--mono); color: #ff8a70;
+    }
+    .ss-cap {
+      padding: 0 9px 9px; font: 500 8.5px/1.3 var(--mono);
+      letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-3);
+    }
+
+    /* ---- INTEGRATE column: entity lanes converging on Tessera ---- */
+    .cv { margin-top: 11px; position: relative; padding-right: 74px; }
+    .cv-lanes { display: flex; flex-direction: column; gap: 9px; }
+    .cv-lane {
+      position: relative; padding: 8px 10px;
+      border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+    }
+    /* the one meaningful emphasis inside the columns: data we do not own */
+    .cv-lane.hot { border-left: 2px solid var(--accent-dim); }
+    .cv-lane::after {
+      content: ""; position: absolute; right: -14px; top: 50%; width: 14px; height: 1px;
+      background: var(--line);
+    }
+    .cv-ent { display: flex; align-items: baseline; gap: 7px; margin-bottom: 6px; }
+    .cv-ent .e {
+      font: 700 9px/1 var(--mono); letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink);
+    }
+    .cv-ent .w { font: 500 8.5px/1.2 var(--mono); letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--ink-3); }
+    .cv-rail {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 60px;
+      border: 1px dashed var(--line); border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cv-rail span {
+      font: 700 9px/1.45 var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-2); text-align: center;
+    }
+    .cv-rail .ar { display: block; font-size: 13px; line-height: 1; margin-bottom: 3px; }
+
+    .ls-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .ls-chip {
+      border: 1px solid var(--line); border-radius: 6px; background: var(--surface-3);
+      padding: 4px 8px; font: 600 10.5px/1.15 var(--body); color: var(--ink-2);
+      text-decoration: none; white-space: nowrap;
+    }
+    .ls-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .ls-chip .own { color: var(--ink-3); font-weight: 500; font-size: 9px; }
+
+    .ls-note {
+      margin-top: auto; padding-top: 8px; border-top: 1px solid var(--line);
+      font-size: 10.5px; line-height: 1.4; color: var(--ink-2);
+    }
+    .ls-note b { color: var(--ink); font-weight: 700; }
+
+    .ls-note a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
+    .ls-note a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* closing strip — the thesis + the proof numbers */
+    .ls-thesis {
+      position: absolute; left: 62px; right: 62px; top: 572px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; gap: 30px;
+      border-left: 3px solid var(--accent); padding-left: 17px;
+    }
+    .ls-thesis .txt { max-width: 760px; }
+    .ls-thesis .eb {
+      font: 700 9px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .ls-thesis .txt p {
+      margin-top: 7px; font: 700 14.5px/1.42 var(--display);
+      letter-spacing: -0.01em; color: var(--ink);
+    }
+    .ls-stats { display: flex; align-items: center; gap: 26px; }
+    .ls-stat { text-align: right; white-space: nowrap; }
+    .ls-stat .n { font: 800 18px/1 var(--display); color: var(--ink-2); letter-spacing: -0.01em; }
+    .ls-stat .l { margin-top: 4px; font: 500 8.5px/1.2 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-3); }
+/* ===================== 08 Â· PRE-SEED ===================== */
+    .preseed h1 {
+      position: absolute; left: 62px; top: 100px; width: 1156px;
+      font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.035em;
+    }
+    .preseed .lead {
+      position: absolute; left: 64px; top: 200px; width: 1080px;
+      font-size: 20px; line-height: 1.5; color: var(--ink-2);
+    }
+    .ask-rows {
+      position: absolute; left: 62px; right: 62px; top: 296px;
+      display: grid; gap: 0;
+    }
+    .ask-row {
+      display: grid; grid-template-columns: 320px 1fr; gap: 26px; align-items: baseline;
+      padding: 15px 0; border-top: 1px solid var(--line);
+    }
+    .ask-row .k { font: 700 15px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .ask-row .v { font-size: 16px; line-height: 1.5; color: var(--ink); }
+    .ask-close {
+      position: absolute; left: 62px; right: 62px; bottom: 72px;
+      font-size: 17px; line-height: 1.5; color: var(--ink);
+      border-left: 3px solid var(--accent); padding-left: 20px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal *, .reveal *::before, .reveal *::after {
+        animation: none !important; transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ============ 01 Â· COVER ============ -->
+      <section class="deck cover">
+        <div class="cover-brand">TESSERA</div>
+        <h1>The intelligence layer for the home.</h1>
+        <p class="cover-sub">Predict what is happening. Create a persistent record of the home. Use that intelligence after closing.</p>
+
+        <div class="cover-cards">
+          <div class="cover-card">
+            <div class="n">01</div>
+            <h3>AI Predictability Engine</h3>
+            <p>Predict execution risk before it impacts the close.</p>
+          </div>
+          <div class="cover-card">
+            <div class="n">01</div>
+            <h3>Home Passport</h3>
+            <p>Create a persistent digital identity for the home from builder data.</p>
+          </div>
+          <div class="cover-card">
+            <div class="n">01</div>
+            <h3>Maintenance AI</h3>
+            <p>Use the home record to reduce avoidable service and warranty friction.</p>
+          </div>
+        </div>
+
+        <p class="cover-thesis">The wedge is Layer 1. The data created there gives Tessera the right to build Layers 2 and 3.</p>
+
+        <div class="foot">
+          <span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE INTELLIGENCE LAYER FOR THE HOME</span>
+          <span>tesserabuild.ai</span>
+        </div>
+      </section>
+
+      <!-- ============ 02 Â· PROBLEM ============ -->
+      <section class="deck problem">
+        <div class="kicker"><span class="num">02</span><span class="label">The Problem</span></div>
+        <h2 class="slide-title">The home is managed across systems. The outcome happens between them.</h2>
+        <p class="slide-deck">Builders have systems for individual functions. The risk emerges when those functions stop lining up.</p>
+
+        <div class="sys-strip">
+          <div class="sys-cell"><div class="name">Construction</div><div class="fn">Build progress</div></div>
+          <div class="sys-cell"><div class="name">Mortgage</div><div class="fn">Financing</div></div>
+          <div class="sys-cell"><div class="name">Title</div><div class="fn">Clearance</div></div>
+          <div class="sys-cell"><div class="name">Sales</div><div class="fn">Commitment / EDD</div></div>
+          <div class="sys-cell"><div class="name">Finance + Land</div><div class="fn">Exposure</div></div>
+        </div>
+
+        <p class="between">A home can look healthy in one system while a dependency in another puts the close at risk.</p>
+
+        <div class="consequences">
+          <div class="consequence">
+            <div class="head">Missed Close / EDD</div>
+            <p>Delayed revenue and operational disruption.</p>
+          </div>
+          <div class="consequence">
+            <div class="head">Carrying Exposure</div>
+            <p>Longer time between construction completion and closing.</p>
+          </div>
+          <div class="consequence">
+            <div class="head">Escalation Friction</div>
+            <p>Teams discover the issue after the window to act has narrowed.</p>
+          </div>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE PROBLEM</span><span>tesserabuild.ai</span></div>
+      </section>
+
+            <!-- 03 LAYER 1 -->
+      <section class="deck layer1">
+        <div class="kicker"><span class="num">03</span><span class="label">Layer 1</span></div>
+        <h2 class="slide-title">AI Predictability Engine</h2>
+        <p class="slide-deck">A real-time Closing Confidence Score for every home &mdash; predict the risk, explain the cause, drive the intervention.</p>
+
+        <div class="l1-grid">
+          <div class="l1-left">
+            <div class="l1-steps">
+              <div class="l1-step">
+                <div class="l1-num">01</div>
+                <div>
+                  <div class="l1-step-k">Predict</div>
+                  <div class="l1-step-v">Score <strong>on-time / delayed / cancelled</strong> for every active home.</div>
+                </div>
+              </div>
+              <div class="l1-step">
+                <div class="l1-num">02</div>
+                <div>
+                  <div class="l1-step-k">Explain</div>
+                  <div class="l1-step-v">Rank the dependency driving the risk &mdash; <strong>in plain language, not a black box.</strong></div>
+                </div>
+              </div>
+              <div class="l1-step">
+                <div class="l1-num">03</div>
+                <div>
+                  <div class="l1-step-k">Intervene</div>
+                  <div class="l1-step-v">Surface the exposure and the path to <strong>resolve or escalate before the close slips.</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <figure class="shot l1-shot">
+            <span class="shot-tag">Live &mdash; confidence &amp; explanation</span>
+            <img src="demo-shots/04-critical-deal-confidence-crop.png" alt="Home Passport deal detail for 1245 Elm Ct showing 24% confidence and a CRITICAL flag, with a plain-language 'Why This Home Is Critical' breakdown ranking Sales 25%, Title 50%, and Financial 60% behind." />
+            <figcaption>Every score comes with the reason behind it &mdash; ranked, in plain language.</figcaption>
+          </figure>
+        </div>
+
+        <!-- WHY IT'S DEFENSIBLE: the data moat (headline) + how it earns adoption -->
+        <div class="l1-moat">
+          <div class="l1-moat-eyebrow">Why it compounds</div>
+          <div class="l1-moat-grid">
+            <div class="l1-moat-main">
+              <div class="mm-head">The data moat</div>
+              <p class="mm-body">Every prediction and its outcome becomes <strong>labeled training data</strong>. The engine sharpens with every close &mdash; and that data asset is what earns Tessera the <strong>right to build Layers&nbsp;2 &amp; 3</strong>.</p>
+            </div>
+            <div class="l1-moat-side">
+              <div class="ms-item">
+                <div class="ms-k">Cross-system</div>
+                <div class="ms-v">Reads across <strong>BuildPro, Encompass, Qualia, Salesforce, JDE</strong> &mdash; the risk no single tool sees.</div>
+              </div>
+              <div class="ms-item">
+                <div class="ms-k">Read-only overlay</div>
+                <div class="ms-v">Sits above the existing stack. <strong>No rip-and-replace</strong>, no new workflow.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;LAYER 1</span><span>tesserabuild.ai</span></div>
+      </section>
+      <!-- 04 HOW IT WORKS -->
+      <section class="deck howitworks">
+        <div class="kicker"><span class="num">04</span><span class="label">How It Works</span></div>
+        <h2 class="slide-title">From fragmented signals to an actionable risk path.</h2>
+        <p class="slide-deck">Tessera sits above the existing builder stack and reasons across the signals that decide the outcome.</p>
+
+        <!-- HERO: the live confidence-score signal animation (from product design assets) -->
+        <div class="hiw-stage">
+          <span class="hiw-stage-tag">Live &mdash; the closing confidence meter</span>
+          <iframe src="embeds/confidence-score-signal-animation.html#embed"
+                  title="Closing confidence meter: signals from builder systems light up milestones and move the score"
+                  loading="lazy" scrolling="no"></iframe>
+        </div>
+
+        <!-- RIGHT RAIL: the cross-system insight + the real product proof. -->
+        <div class="hiw-rail">
+          <div class="hiw-insight">
+            <div class="head">What it saves</div>
+            <p class="claim"><span class="c2">~$160K / month</span> of preventable loss per division &mdash; against <span class="c2">~$671 / month</span> to run it.</p>
+            <p class="sub">A division runs <strong>~2,100 homes/yr</strong> (~175 closings/mo). Builders carry ~$2K/day per deal during a delay &mdash; so a handful of stuck closings is the whole difference between an on-time close and a month of carry.</p>
+          </div>
+
+          <figure class="shot hiw-proof">
+            <span class="shot-tag">Live &mdash; preventable loss by division</span>
+            <img src="demo-shots/01-portfolio-dashboard-crop.png" alt="Home Passport VP dashboard: portfolio of 195 active homes with each division showing estimated savings and failure rate — Miami-Dade South $476K / 47%, Miami-Dade North $500.5K / 56%, Broward County $551K / 63%." />
+            <figcaption>The VP view &mdash; preventable loss and failure rate, per division.</figcaption>
+          </figure>
+        </div>
+
+        <!-- FULL-WIDTH LABEL BOX: the Ecosystem -> Inference -> Action flow, reading clearly below the hero -->
+        <div class="hiw-labels">
+          <div class="lstep">
+            <div class="l-eyebrow">Builder Ecosystem</div>
+            <div class="l-body">Construction &middot; Mortgage &middot; Title &middot; Sales &middot; Finance / Land</div>
+            <span class="l-arrow">&rarr;</span>
+          </div>
+          <div class="lstep">
+            <div class="l-eyebrow">Tessera Inference</div>
+            <div class="l-body">Find the cross-system dependency that changes the probability of the expected outcome. <strong>No migration, no rip-and-replace.</strong></div>
+            <span class="l-arrow">&rarr;</span>
+          </div>
+          <div class="lstep">
+            <div class="l-eyebrow">Action</div>
+            <div class="l-body"><strong>Risk</strong> which home is exposed &middot; <strong>Cause</strong> what&rsquo;s driving it &middot; <strong>Path</strong> who resolves / escalates.</div>
+          </div>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;LAYER 1</span><span>tesserabuild.ai</span></div>
+      </section>
+<!-- ============ 05 Â· LAYER 2 ============ -->
+      <section class="deck layer2">
+        <div class="kicker"><span class="num">05</span><span class="label">Layer 2</span></div>
+        <h2 class="slide-title">Home Passport</h2>
+        <p class="slide-deck">A persistent digital identity for the home &mdash; from land deal through handoff and throughout the lifetime of the property.</p>
+
+        <div class="l2-grid">
+          <!-- TOP-LEFT Â· the thesis, elevated as the focal point -->
+          <div class="l2-participants">
+            <div class="head">One record. Multiple participants.</div>
+            <p class="l2-lead">Attached to the home &mdash; not the person &mdash; and persists as ownership changes.</p>
+            <div class="l2-rows">
+              <div class="l2-row"><div class="who">Builder</div><div class="what">Creates the record.</div></div>
+              <div class="l2-row"><div class="who">Owner / Seller</div><div class="what">Carries it forward, adds lifecycle events.</div></div>
+              <div class="l2-row"><div class="who">Platforms</div><div class="what">Authorized use by Zillow, Redfin and others.</div></div>
+              <div class="l2-row"><div class="who">Marketplace</div><div class="what">Connects trusted trades and services.</div></div>
+            </div>
+          </div>
+
+          <!-- TOP-RIGHT Â· the passport, live -->
+          <figure class="shot l2-shot-passport">
+            <span class="shot-tag">The passport, live</span>
+            <img src="demo-shots/passport-report-crop.png" alt="Home Passport report showing a 100 trust score, merkle root and on-chain owner for 7112 Elm Blvd." />
+            <figcaption>Every record verified against the on-chain root.</figcaption>
+          </figure>
+
+          <!-- BOTTOM-LEFT Â· where the ledger lives -->
+          <div class="l2-ledger">
+            <div class="head">Where the ledger lives</div>
+            <p class="l2-claim">Tessera doesn&rsquo;t own the ledger &mdash; that&rsquo;s what makes it trustworthy.</p>
+            <div class="l2-facts">
+              <div class="fact"><span class="k">On-chain</span><span class="v">A 32-byte fingerprint per record &mdash; never documents or personal data.</span></div>
+              <div class="fact"><span class="k">Off-chain</span><span class="v">The records stay in the builder&rsquo;s own cloud.</span></div>
+              <div class="fact"><span class="k">The chain</span><span class="v">A neutral public L2, or a builder-run permissioned network.</span></div>
+            </div>
+          </div>
+
+          <!-- BOTTOM-RIGHT Â· how trust is created -->
+          <figure class="shot l2-shot-attestor">
+            <span class="shot-tag">How trust is created</span>
+            <img src="demo-shots/attestor-queue-crop.png" alt="Attestor queue: a self-reported record awaiting an independent signature." />
+            <figcaption>Self-reported until an independent party signs it.</figcaption>
+          </figure>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;LAYER 2</span><span>tesserabuild.ai</span></div>
+      </section>
+
+      <!-- ============ 06 Â· LAYER 3 ============ -->
+      <section class="deck layer3">
+        <div class="kicker"><span class="num">06</span><span class="label">Layer 3</span></div>
+        <h2 class="slide-title">Maintenance AI</h2>
+        <p class="slide-deck l3-deck">Life-of-home care after closing &mdash; fewer avoidable service and warranty calls.</p>
+
+        <div class="l3-grid">
+          <div class="l3-left">
+            <div class="l3-eyebrow">For the homeowner</div>
+            <div class="l3-tiles">
+              <div class="l3-tile">
+                <div class="ic">&#128295;</div>
+                <div class="big">120 days</div>
+                <div class="cap">AC filter</div>
+              </div>
+              <div class="l3-tile">
+                <div class="ic">&#128737;&#65039;</div>
+                <div class="big">Warranty</div>
+                <div class="cap">On hand</div>
+              </div>
+              <div class="l3-tile">
+                <div class="ic">&#128276;</div>
+                <div class="big">Service</div>
+                <div class="cap">Routed to a trade</div>
+              </div>
+              <div class="l3-tile">
+                <div class="ic">&#128161;</div>
+                <div class="big">Devices</div>
+                <div class="cap">Setup guidance</div>
+              </div>
+            </div>
+
+            <p class="l3-delivery"><span class="dot">&#9679;</span> Delivered by email and push &mdash; no login, no app to check.</p>
+
+            <div class="l3-eyebrow builder">For the builder</div>
+            <div class="l3-strip">
+              <span>Fewer calls</span>
+              <span>Less warranty friction</span>
+              <span>Preferred trades</span>
+              <span>Marketplace revenue</span>
+            </div>
+
+            <p class="l3-foot">The Passport creates the context. Maintenance AI turns it into reminders, warranty guidance and service routing.</p>
+          </div>
+
+          <figure class="shot l3-shot">
+            <span class="shot-tag">Live forecast</span>
+            <img src="demo-shots/maintenance-intelligence.png" alt="Maintenance Intelligence panel forecasting AC filter, roof and HVAC service from the home's attested records." />
+            <figcaption>Derived from the home&rsquo;s attested records &mdash; every card cites its source.</figcaption>
+          </figure>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;MAINTENANCE AI</span><span>tesserabuild.ai</span></div>
+      </section>
+
+            <!-- 07 THE LANDSCAPE -->
+      <section class="deck landscape">
+        <div class="kicker"><span class="num">07</span><span class="label">The System</span></div>
+        <h2 class="slide-title">The moat compounds from the point of construction.</h2>
+        <p class="slide-deck">Tessera starts with an economic problem and builds toward a persistent intelligence layer around the home.</p>
+
+        <!-- Tessera spine: the compounding chain -->
+        <div class="ls-chain">
+          <div class="ch-brand">Tessera</div>
+          <div class="ch-nodes">
+            <div class="ch-node"><div class="k">Builder Data</div><div class="v">Source</div></div>
+            <div class="ch-arrow">&rarr;</div>
+            <div class="ch-node"><div class="k">Predict</div><div class="v">Intervene</div></div>
+            <div class="ch-arrow">&rarr;</div>
+            <div class="ch-node"><div class="k">Passport</div><div class="v">Remember</div></div>
+            <div class="ch-arrow">&rarr;</div>
+            <div class="ch-node"><div class="k">Maintain</div><div class="v">Serve</div></div>
+            <div class="ch-arrow">&rarr;</div>
+            <div class="ch-node"><div class="k">Lifecycle Data</div><div class="v">Learn</div></div>
+          </div>
+        </div>
+
+        <div class="ls-cols">
+          <!-- REPLACE -->
+          <div class="ls-col replace">
+            <div class="ls-h"><span class="verb">Replace</span><span class="qual">the status quo</span></div>
+            <p class="ls-sub">Our only real competitor is <b>a spreadsheet.</b></p>
+            <div class="ss-wrap">
+              <div class="ss-win">
+                <div class="ss-bar"><span class="dot"></span><span class="fn">pipeline_wk42.xlsx</span></div>
+                <div class="ss-grid">
+                  <i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i>
+                  <i></i><i></i><i class="q"></i><i></i><i></i>
+                  <i></i><i class="q"></i><i></i><i></i><i class="q"></i>
+                  <i></i><i></i><i></i><i class="q"></i><i></i>
+                  <i></i><i class="q"></i><i></i><i></i><i></i>
+                </div>
+                <div class="ss-cap">Four systems merged by hand &middot; every Monday</div>
+              </div>
+            </div>
+            <p class="ls-note">We land inside the <b>pipeline meeting they already hold.</b></p>
+          </div>
+
+          <!-- INTEGRATE -->
+          <div class="ls-col integrate">
+            <div class="ls-h"><span class="verb">Integrate</span><span class="qual">read-only &middot; 7 systems</span></div>
+            <p class="ls-sub">Grouped by <b>who legally owns the data.</b></p>
+
+            <div class="cv">
+              <div class="cv-lanes">
+                <div class="cv-lane">
+                  <div class="cv-ent"><span class="e">Builder</span><span class="w">owns its stack</span></div>
+                  <div class="ls-chips">
+                    <a class="ls-chip" href="https://hyphensolutions.com/info/products/" target="_blank" rel="noopener">BuildPro <span class="own">Hyphen</span></a>
+                    <a class="ls-chip" href="https://www.procore.com/" target="_blank" rel="noopener">Procore</a>
+                    <a class="ls-chip" href="https://www.salesforce.com/" target="_blank" rel="noopener">Salesforce</a>
+                    <a class="ls-chip" href="https://www.oracle.com/erp/jd-edwards/" target="_blank" rel="noopener">JD Edwards</a>
+                    <a class="ls-chip" href="https://www.acumatica.com/" target="_blank" rel="noopener">Acumatica</a>
+                  </div>
+                </div>
+                <div class="cv-lane hot">
+                  <div class="cv-ent"><span class="e">Lender</span><span class="w">buyer chooses &middot; varies per deal</span></div>
+                  <div class="ls-chips">
+                    <a class="ls-chip" href="https://mortgagetech.ice.com/" target="_blank" rel="noopener">Encompass <span class="own">ICE</span></a>
+                  </div>
+                </div>
+                <div class="cv-lane hot">
+                  <div class="cv-ent"><span class="e">Title &amp; escrow</span><span class="w">third party</span></div>
+                  <div class="ls-chips">
+                    <a class="ls-chip" href="https://www.qualia.com/" target="_blank" rel="noopener">Qualia</a>
+                    <span class="ls-chip">County &amp; utility</span>
+                  </div>
+                </div>
+              </div>
+              <div class="cv-rail"><span><span class="ar">&uarr;</span>Reads<br>all three</span></div>
+            </div>
+
+            <p class="ls-note">Three companies, three owners of the data. <b>The buyer picks the lender, so the mortgage system changes every deal &mdash; no builder ERP can cross that line.</b></p>
+          </div>
+
+          <!-- AUGMENT -->
+          <div class="ls-col augment">
+            <div class="ls-h"><span class="verb">Augment</span><span class="qual">non-competitive</span></div>
+            <p class="ls-sub"><b>None can reach the close.</b></p>
+            <div class="ls-list">
+              <div class="ls-row">
+                <div class="t"><a href="https://www.higharc.com/newsroom/higharc-95m-series-c-for-homebuilding-ai" target="_blank" rel="noopener">Higharc</a> &mdash; $170M+ raised</div>
+                <div class="n">Design &rarr; build AI. Upstream; stops at the build.</div>
+              </div>
+              <div class="ls-row">
+                <div class="t">Builder ERPs &mdash; <a href="https://www.constellationhb.com/" target="_blank" rel="noopener">Constellation</a>, <a href="https://www.ecisolutions.com/" target="_blank" rel="noopener">ECI</a></div>
+                <div class="n">Broad, but all inside the builder.</div>
+              </div>
+              <div class="ls-row">
+                <div class="t">Schedule AI &mdash; <a href="https://www.alicetechnologies.com/about" target="_blank" rel="noopener">ALICE</a>, <a href="https://www.nplan.io/" target="_blank" rel="noopener">nPlan</a></div>
+                <div class="n">Construction slippage only. No lender or title.</div>
+              </div>
+              <div class="ls-row">
+                <div class="t">Home record &mdash; <a href="https://digs.com/" target="_blank" rel="noopener">Digs</a></div>
+                <div class="n">Post-close docs. Consumes what we attest.</div>
+              </div>
+            </div>
+            <p class="ls-note">Closest incumbent: <a href="https://mortgagetech.ice.com/solutions/title" target="_blank" rel="noopener">ICE</a> spans funding to recording &mdash; <b>blind to construction.</b></p>
+          </div>
+        </div>
+
+        <div class="ls-thesis">
+          <div class="txt">
+            <div class="eb">The Thesis</div>
+            <p>The more of the home&rsquo;s lifecycle Tessera can understand, the more useful the intelligence becomes &mdash; from execution risk before closing to service after closing.</p>
+          </div>
+          <div class="ls-stats">
+            <div class="ls-stat"><div class="n">7</div><div class="l">Systems mapped</div></div>
+            <div class="ls-stat"><div class="n">51</div><div class="l">Signal types</div></div>
+            <div class="ls-stat"><div class="n">45</div><div class="l">Milestone graph</div></div>
+            <div class="ls-stat"><div class="n">15</div><div class="l">Cross-domain deps</div></div>
+          </div>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE SYSTEM</span><span>tesserabuild.ai</span></div>
+      </section>
+<!-- ============ 08 Â· PRE-SEED ============ -->
+      <section class="deck preseed">
+        <div class="cover-brand">TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</div>
+        <h1>The MVP is built. Now we build the company.</h1>
+        <p class="lead">Capital to turn the predictability engine into a scalable product and establish the foundation for the Home Passport.</p>
+
+        <div class="ask-rows">
+          <div class="ask-row"><div class="k">Build the Team</div><div class="v">AI / engineering talent to take the existing MVP into a production-grade platform.</div></div>
+          <div class="ask-row"><div class="k">Prove It on Real Data</div><div class="v">Move from synthetic / controlled validation into real builder data and measure prediction accuracy and economic impact.</div></div>
+          <div class="ask-row"><div class="k">Expand the Engine</div><div class="v">Deepen the signals across construction, mortgage, title, sales, finance / land and operations.</div></div>
+          <div class="ask-row"><div class="k">Build the Passport Foundation</div><div class="v">Turn builder-originated home data into the persistent identity that supports the post-close lifecycle.</div></div>
+        </div>
+
+        <p class="ask-close">We are raising pre-seed capital to validate Layer 1 at scale and build the infrastructure for the layers that follow.</p>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</span><span>tesserabuild.ai</span></div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 1.5,
+      center: false,
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      controls: true,
+      progress: true
+    });
+  </script>
+</body>
+</html>
