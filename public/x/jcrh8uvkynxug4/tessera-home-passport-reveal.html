@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tessera â€” The Intelligence Layer for the Home</title>
+  <title>Tessera - The Intelligence Layer for the Home</title>
 
   <!-- reveal.js core (CDN) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
@@ -737,30 +737,77 @@
     .ls-stat .n { font: 800 18px/1 var(--display); color: var(--ink-2); letter-spacing: -0.01em; }
     .ls-stat .l { margin-top: 4px; font: 500 8.5px/1.2 var(--mono); letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--ink-3); }
-/* ===================== 08 Â· PRE-SEED ===================== */
+/* ===================== 08 Â· PRE-SEED / THE ASK ===================== */
     .preseed h1 {
-      position: absolute; left: 62px; top: 100px; width: 1156px;
+      position: absolute; left: 62px; top: 84px; width: 1156px;
       font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.035em;
     }
     .preseed .lead {
-      position: absolute; left: 64px; top: 200px; width: 1080px;
-      font-size: 20px; line-height: 1.5; color: var(--ink-2);
+      position: absolute; left: 64px; top: 152px; width: 1030px;
+      font-size: 18px; line-height: 1.5; color: var(--ink-2);
     }
-    .ask-rows {
-      position: absolute; left: 62px; right: 62px; top: 296px;
-      display: grid; gap: 0;
+    .preseed .lead b { color: var(--ink); font-weight: 700; }
+
+    /* --- 08a: the ask, in numbers --- */
+    .ask-figs {
+      position: absolute; left: 62px; right: 62px; top: 214px; height: 92px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 92px; gap: 18px;
     }
+    .ask-fig {
+      border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2);
+      padding: 0 18px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .ask-fig .n { font: 800 33px/1 var(--display); letter-spacing: -0.035em; color: var(--ink); }
+    .ask-fig .l {
+      margin-top: 9px; font: 700 9px/1.35 var(--mono); letter-spacing: 0.11em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
+    /* the raise itself is the one lit figure */
+    .ask-fig.lit {
+      border-color: var(--accent);
+      background:
+        radial-gradient(130% 160% at 6% 0%, rgba(49,221,195,0.17), rgba(49,221,195,0.03) 62%),
+        var(--surface);
+      box-shadow: 0 0 0 1px rgba(49,221,195,0.13), 0 14px 38px rgba(49,221,195,0.17);
+    }
+    .ask-fig.lit .n { color: var(--accent); }
+    .ask-fig.lit .l { color: var(--accent); }
+
+    /* the four things it buys — original wording preserved */
+    .ask-rows { position: absolute; left: 62px; right: 62px; top: 326px; display: grid; gap: 0; }
     .ask-row {
-      display: grid; grid-template-columns: 320px 1fr; gap: 26px; align-items: baseline;
-      padding: 15px 0; border-top: 1px solid var(--line);
+      display: grid; grid-template-columns: 264px 1fr; gap: 24px; align-items: baseline;
+      padding: 12px 0; border-top: 1px solid var(--line);
     }
-    .ask-row .k { font: 700 15px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-    .ask-row .v { font-size: 16px; line-height: 1.5; color: var(--ink); }
-    .ask-close {
-      position: absolute; left: 62px; right: 62px; bottom: 72px;
-      font-size: 17px; line-height: 1.5; color: var(--ink);
-      border-left: 3px solid var(--accent); padding-left: 20px;
+    .ask-row .k {
+      font: 700 11.5px/1.3 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink);
     }
+    .ask-row .v { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+
+    /* proof already banked + an open invitation to diligence the people */
+    .ps-foot {
+      position: absolute; left: 62px; right: 62px; top: 526px; height: 86px;
+      display: grid; grid-template-columns: 1fr; grid-template-rows: 86px;
+    }
+    .ps-box {
+      border: 1px solid var(--line); border-radius: 10px;
+      background: var(--surface-2); padding: 11px 15px;
+    }
+    .ps-box .k {
+      font: 700 9px/1 var(--mono); letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3);
+    }
+    .ps-proof {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      align-items: start; margin-top: 12px;
+    }
+    .ps-stat .n { font: 800 18px/1 var(--display); color: var(--ink); letter-spacing: -0.01em; }
+    .ps-stat .l {
+      margin-top: 5px; font: 500 8.5px/1.25 var(--mono); letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
+    .ps-box { border-left: 2px solid var(--accent); }
 
     @media (prefers-reduced-motion: reduce) {
       .reveal *, .reveal *::before, .reveal *::after {
@@ -1195,7 +1242,22 @@
       <section class="deck preseed">
         <div class="cover-brand">TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</div>
         <h1>The MVP is built. Now we build the company.</h1>
-        <p class="lead">Capital to turn the predictability engine into a scalable product and establish the foundation for the Home Passport.</p>
+        <p class="lead"><b>$1.5M for 18 months.</b> Capital to turn the predictability engine into a scalable product and establish the foundation for the Home Passport. We stay lean &mdash; engineers are hired against milestones, and sales stays on commission.</p>
+
+        <div class="ask-figs">
+          <div class="ask-fig lit">
+            <div class="n">$1.5M</div>
+            <div class="l">Raising &middot; pre-seed</div>
+          </div>
+          <div class="ask-fig">
+            <div class="n">18 mo</div>
+            <div class="l">Runway &middot; lean burn, staged hiring</div>
+          </div>
+          <div class="ask-fig">
+            <div class="n">15%</div>
+            <div class="l">At a $10M post-money cap</div>
+          </div>
+        </div>
 
         <div class="ask-rows">
           <div class="ask-row"><div class="k">Build the Team</div><div class="v">AI / engineering talent to take the existing MVP into a production-grade platform.</div></div>
@@ -1204,7 +1266,17 @@
           <div class="ask-row"><div class="k">Build the Passport Foundation</div><div class="v">Turn builder-originated home data into the persistent identity that supports the post-close lifecycle.</div></div>
         </div>
 
-        <p class="ask-close">We are raising pre-seed capital to validate Layer 1 at scale and build the infrastructure for the layers that follow.</p>
+        <div class="ps-foot">
+          <div class="ps-box">
+            <div class="k">Already built &mdash; not what the money is for</div>
+            <div class="ps-proof">
+              <div class="ps-stat"><div class="n">7</div><div class="l">Systems mapped<br>2 live</div></div>
+              <div class="ps-stat"><div class="n">51</div><div class="l">Signal types<br>6 categories</div></div>
+              <div class="ps-stat"><div class="n">45</div><div class="l">Milestone graph<br>48 edges</div></div>
+              <div class="ps-stat"><div class="n">500+</div><div class="l">Tests passing<br>full pipeline</div></div>
+            </div>
+          </div>
+        </div>
 
         <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</span><span>tesserabuild.ai</span></div>
       </section>
