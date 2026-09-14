@@ -123,68 +123,149 @@
       pointer-events: none;
     }
     .cover > * { position: relative; z-index: 1; }
+    /* .foot is declared before `.cover > *` and shares its specificity, so it
+       would otherwise lose `position: absolute` and fall into normal flow. */
+    .cover .foot { position: absolute; z-index: 1; }
     .cover-brand {
       position: absolute; left: 62px; top: 46px;
       font: 800 15px/1 var(--display); letter-spacing: 0.28em; color: var(--ink);
     }
     .cover h1 {
-      position: absolute; left: 62px; top: 96px; width: 1156px;
+      position: absolute; left: 62px; top: 92px; width: 1156px;
       font-size: 58px; line-height: 1.06; font-weight: 800; letter-spacing: -0.035em;
     }
+    .cover h1 .accent { color: var(--accent); }
     .cover-sub {
-      position: absolute; left: 64px; top: 176px; width: 1040px;
+      position: absolute; left: 64px; top: 172px; width: 1040px;
       font-size: 20px; line-height: 1.5; color: var(--ink-2);
     }
     .cover-cards {
-      position: absolute; left: 62px; right: 62px; top: 250px;
+      position: absolute; left: 62px; right: 62px; top: 244px;
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
     }
     .cover-card {
+      position: relative; overflow: hidden;
       background: var(--surface); border: 1px solid var(--line);
-      border-radius: 12px; padding: 26px 28px; min-height: 232px;
+      border-radius: 12px; padding: 22px 26px; min-height: 236px;
       box-shadow: 0 12px 34px rgba(0,0,0,0.35);
     }
-    .cover-card .n { font: 800 15px/1 var(--display); color: var(--accent); }
+    /* oversized ghost numeral for depth */
+    .cover-card .ghost {
+      position: absolute; right: 16px; top: -6px; pointer-events: none;
+      font: 800 92px/1 var(--display); letter-spacing: -0.05em;
+      color: rgba(255,255,255,0.035);
+    }
+    .cover-card .lay {
+      position: relative;
+      font: 700 10px/1 var(--mono); letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
     .cover-card h3 {
-      margin-top: 24px; font-size: 20px; letter-spacing: 0.01em;
+      position: relative; margin-top: 22px; font-size: 20px; letter-spacing: 0.01em;
       text-transform: uppercase; font-weight: 800;
     }
-    .cover-card p { margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+    .cover-card p { position: relative; margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+    /* Layer 1 is the wedge — the only lit card */
+    .cover-card.wedge {
+      border-color: var(--accent);
+      background:
+        radial-gradient(120% 150% at 8% 0%, rgba(49,221,195,0.16), rgba(49,221,195,0.03) 62%),
+        var(--surface);
+      box-shadow: 0 0 0 1px rgba(49,221,195,0.14), 0 16px 44px rgba(49,221,195,0.18);
+    }
+    .cover-card.wedge .lay { color: var(--accent); }
+    .cover-card.wedge .ghost { color: rgba(49,221,195,0.10); }
+    .cover-card .now, .cover-card .next {
+      position: absolute; left: 26px; bottom: 20px;
+      font: 700 9px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase;
+      border-radius: 999px; padding: 5px 10px;
+    }
+    .cover-card .now { color: var(--accent); border: 1px solid rgba(49,221,195,0.4); }
+    .cover-card .next { color: var(--ink-3); border: 1px solid var(--line); }
     .cover-thesis {
       position: absolute; left: 62px; right: 62px; top: 548px;
       font-size: 17px; line-height: 1.5; color: var(--ink);
       border-left: 3px solid var(--accent); padding-left: 20px;
     }
+    .cover-thesis b { font-weight: 700; }
 
     /* ===================== 02 Â· PROBLEM ===================== */
-    .sys-strip {
-      position: absolute; left: 62px; right: 62px; top: 236px;
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+    /* five silos, each reporting healthy — with the seams between them exposed */
+    .pb-silos {
+      position: absolute; left: 62px; right: 62px; top: 222px; height: 134px;
+      display: grid; align-items: stretch;
+      grid-template-columns: 1fr 26px 1fr 26px 1fr 26px 1fr 26px 1fr;
     }
-    .sys-cell {
+    .pb-silo {
       background: var(--surface); border: 1px solid var(--line);
       border-top: 3px solid var(--accent-dim);
-      border-radius: 10px; padding: 18px 18px;
+      border-radius: 10px; padding: 14px 15px 13px;
+      display: flex; flex-direction: column;
     }
-    .sys-cell .name {
-      font: 700 13px/1.3 var(--mono); letter-spacing: 0.1em;
+    .pb-silo .nm {
+      font: 700 12px/1.3 var(--mono); letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--ink);
     }
-    .sys-cell .fn { margin-top: 8px; font-size: 14px; color: var(--ink-2); }
-    .between {
-      position: absolute; left: 62px; right: 62px; top: 372px;
-      font-size: 19px; line-height: 1.5; color: var(--ink);
+    .pb-silo .fn { margin-top: 7px; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+    .pb-silo .ok {
+      margin-top: auto; display: flex; align-items: center; gap: 7px;
+      font: 700 9px/1 var(--mono); letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
     }
-    .between .accent { font-weight: 700; }
+    .pb-silo .ok::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 8px rgba(49,221,195,0.85);
+    }
+    /* the seam: where the outcome actually happens */
+    .pb-seam { position: relative; }
+    .pb-seam::before {
+      content: ""; position: absolute; left: 50%; top: 4px; bottom: 4px;
+      border-left: 1px dashed rgba(255,99,71,0.45);
+    }
+    .pb-seam span {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 17px; height: 17px; border-radius: 50%;
+      background: var(--void); border: 1px solid rgba(255,99,71,0.8);
+      color: #ff8a70; font: 700 9px/15px var(--mono); text-align: center;
+    }
+    .pb-seam-cap {
+      position: absolute; left: 62px; right: 62px; top: 366px;
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      font: 700 9px/1 var(--mono); letter-spacing: 0.14em;
+      text-transform: uppercase; color: #ff8a70;
+    }
+    .pb-seam-cap::before, .pb-seam-cap::after {
+      content: ""; height: 1px; width: 110px; background: rgba(255,99,71,0.3);
+    }
+    /* the punchline band */
+    .pb-out {
+      position: absolute; left: 62px; right: 62px; top: 392px; height: 78px;
+      display: flex; align-items: center; gap: 24px; padding: 0 24px;
+      border: 1px solid rgba(255,99,71,0.32); border-left: 3px solid #ff6347;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255,99,71,0.09), rgba(255,99,71,0.015));
+    }
+    .pb-out .big {
+      font: 800 25px/1.1 var(--display); letter-spacing: -0.025em;
+      color: var(--ink); white-space: nowrap;
+    }
+    .pb-out .big em { font-style: normal; color: #ff8a70; }
+    .pb-out .sep { width: 1px; align-self: stretch; margin: 17px 0; background: rgba(255,99,71,0.28); }
+    .pb-out .txt { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
+    .pb-out .txt b { color: var(--ink); font-weight: 700; }
+
     .consequences {
-      position: absolute; left: 62px; right: 62px; top: 460px;
+      position: absolute; left: 62px; right: 62px; top: 504px;
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px;
     }
-    .consequence { border-top: 1px solid var(--line); padding-top: 18px; }
-    .consequence .head {
-      font: 700 15px/1.3 var(--display); letter-spacing: -0.01em; color: var(--accent);
+    .consequence::before {
+      content: ""; display: block; width: 30px; height: 2px;
+      background: rgba(255,99,71,0.85); margin-bottom: 14px;
     }
-    .consequence p { margin-top: 10px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+    .consequence .head {
+      font: 700 15px/1.3 var(--display); letter-spacing: -0.01em; color: var(--ink);
+    }
+    .consequence p { margin-top: 8px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 
         /* --- 03 LAYER 1 --- flagship product slide, strong visuals --- */
     .l1-grid {
@@ -526,8 +607,9 @@
 
     /* three columns: replace / integrate / augment — deliberately quiet */
     .ls-cols {
-      position: absolute; left: 62px; right: 62px; top: 234px; height: 320px;
-      display: grid; grid-template-columns: 0.82fr 1.36fr 0.94fr; gap: 18px;
+      position: absolute; left: 62px; right: 62px; top: 234px; height: 316px;
+      display: grid; grid-template-columns: 0.82fr 1.36fr 0.94fr;
+      grid-template-rows: 316px; gap: 18px;
     }
     .ls-col {
       position: relative; border: 1px solid var(--line); border-radius: 12px;
@@ -638,7 +720,7 @@
 
     /* closing strip — the thesis + the proof numbers */
     .ls-thesis {
-      position: absolute; left: 62px; right: 62px; top: 572px; height: 64px;
+      position: absolute; left: 62px; right: 62px; top: 582px; height: 58px;
       display: flex; align-items: center; justify-content: space-between; gap: 30px;
       border-left: 3px solid var(--accent); padding-left: 17px;
     }
@@ -647,7 +729,7 @@
       font: 700 9px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);
     }
     .ls-thesis .txt p {
-      margin-top: 7px; font: 700 14.5px/1.42 var(--display);
+      margin-top: 6px; font: 700 14px/1.4 var(--display);
       letter-spacing: -0.01em; color: var(--ink);
     }
     .ls-stats { display: flex; align-items: center; gap: 26px; }
@@ -694,28 +776,34 @@
       <!-- ============ 01 Â· COVER ============ -->
       <section class="deck cover">
         <div class="cover-brand">TESSERA</div>
-        <h1>The intelligence layer for the home.</h1>
+        <h1>The <span class="accent">intelligence layer</span> for the home.</h1>
         <p class="cover-sub">Predict what is happening. Create a persistent record of the home. Use that intelligence after closing.</p>
 
         <div class="cover-cards">
-          <div class="cover-card">
-            <div class="n">01</div>
+          <div class="cover-card wedge">
+            <div class="ghost">01</div>
+            <div class="lay">Layer 01</div>
             <h3>AI Predictability Engine</h3>
             <p>Predict execution risk before it impacts the close.</p>
+            <div class="now">Where we start</div>
           </div>
           <div class="cover-card">
-            <div class="n">01</div>
+            <div class="ghost">02</div>
+            <div class="lay">Layer 02</div>
             <h3>Home Passport</h3>
             <p>Create a persistent digital identity for the home from builder data.</p>
+            <div class="next">Built on Layer 1</div>
           </div>
           <div class="cover-card">
-            <div class="n">01</div>
+            <div class="ghost">03</div>
+            <div class="lay">Layer 03</div>
             <h3>Maintenance AI</h3>
             <p>Use the home record to reduce avoidable service and warranty friction.</p>
+            <div class="next">Built on Layer 2</div>
           </div>
         </div>
 
-        <p class="cover-thesis">The wedge is Layer 1. The data created there gives Tessera the right to build Layers 2 and 3.</p>
+        <p class="cover-thesis">The wedge is <b>Layer 1.</b> The data created there gives Tessera the right to build Layers 2 and 3.</p>
 
         <div class="foot">
           <span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE INTELLIGENCE LAYER FOR THE HOME</span>
@@ -729,15 +817,25 @@
         <h2 class="slide-title">The home is managed across systems. The outcome happens between them.</h2>
         <p class="slide-deck">Builders have systems for individual functions. The risk emerges when those functions stop lining up.</p>
 
-        <div class="sys-strip">
-          <div class="sys-cell"><div class="name">Construction</div><div class="fn">Build progress</div></div>
-          <div class="sys-cell"><div class="name">Mortgage</div><div class="fn">Financing</div></div>
-          <div class="sys-cell"><div class="name">Title</div><div class="fn">Clearance</div></div>
-          <div class="sys-cell"><div class="name">Sales</div><div class="fn">Commitment / EDD</div></div>
-          <div class="sys-cell"><div class="name">Finance + Land</div><div class="fn">Exposure</div></div>
+        <div class="pb-silos">
+          <div class="pb-silo"><div class="nm">Construction</div><div class="fn">Build progress</div><div class="ok">On track</div></div>
+          <div class="pb-seam"><span>?</span></div>
+          <div class="pb-silo"><div class="nm">Mortgage</div><div class="fn">Financing</div><div class="ok">On track</div></div>
+          <div class="pb-seam"><span>?</span></div>
+          <div class="pb-silo"><div class="nm">Title</div><div class="fn">Clearance</div><div class="ok">On track</div></div>
+          <div class="pb-seam"><span>?</span></div>
+          <div class="pb-silo"><div class="nm">Sales</div><div class="fn">Commitment / EDD</div><div class="ok">On track</div></div>
+          <div class="pb-seam"><span>?</span></div>
+          <div class="pb-silo"><div class="nm">Finance + Land</div><div class="fn">Exposure</div><div class="ok">On track</div></div>
         </div>
 
-        <p class="between">A home can look healthy in one system while a dependency in another puts the close at risk.</p>
+        <div class="pb-seam-cap">Nobody owns the seams</div>
+
+        <div class="pb-out">
+          <div class="big">All green. <em>Still slips.</em></div>
+          <div class="sep"></div>
+          <div class="txt">A home can look healthy in one system while <b>a dependency in another puts the close at risk.</b></div>
+        </div>
 
         <div class="consequences">
           <div class="consequence">
@@ -1074,7 +1172,7 @@
                 <div class="n">Post-close docs. Consumes what we attest.</div>
               </div>
             </div>
-            <p class="ls-note">Closest incumbent: <a href="https://mortgagetech.ice.com/solutions/title" target="_blank" rel="noopener">ICE</a> spans funding to recording &mdash; <b>blind to construction.</b></p>
+            <p class="ls-note">Closest: <a href="https://mortgagetech.ice.com/solutions/title" target="_blank" rel="noopener">ICE</a> &mdash; funding to recording, <b>not construction.</b></p>
           </div>
         </div>
 
