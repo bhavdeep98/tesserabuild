@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -12,7 +12,7 @@
 
   <style>
     /* ==========================================================
-       Theme â€” mirrors the PPTX palette exactly:
+       Theme Ã¢â‚¬â€ mirrors the PPTX palette exactly:
          dark void  #070C0C   teal accent  #31DDC3
          light ink  #F8F9F7   muted gray   #A4AEAA
          card surfaces  #0E1615 / #0C1413 / #121D1B
@@ -39,7 +39,7 @@
     .reveal { font-family: var(--body); color: var(--ink); font-weight: 500; }
     .reveal .slides { text-align: left; }
 
-    /* Fixed 13.33 x 7.5in stage â†’ 1280 x 720 (16:9), matching the PPTX geometry. */
+    /* Fixed 13.33 x 7.5in stage Ã¢â€ â€™ 1280 x 720 (16:9), matching the PPTX geometry. */
     .reveal .slides section.deck {
       width: 1280px;
       height: 720px;
@@ -114,7 +114,7 @@
     }
     .row-desc { font-size: 15px; line-height: 1.45; color: var(--ink-2); }
 
-    /* ===================== 01 Â· COVER ===================== */
+    /* ===================== 01 Ã‚Â· COVER ===================== */
     .cover::before {
       content: ""; position: absolute; inset: 0; z-index: 0;
       background:
@@ -165,7 +165,7 @@
       text-transform: uppercase; font-weight: 800;
     }
     .cover-card p { position: relative; margin-top: 12px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
-    /* Layer 1 is the wedge — the only lit card */
+    /* Layer 1 is the wedge â€” the only lit card */
     .cover-card.wedge {
       border-color: var(--accent);
       background:
@@ -189,8 +189,8 @@
     }
     .cover-thesis b { font-weight: 700; }
 
-    /* ===================== 02 Â· PROBLEM ===================== */
-    /* five silos, each reporting healthy — with the seams between them exposed */
+    /* ===================== 02 Ã‚Â· PROBLEM ===================== */
+    /* five silos, each reporting healthy â€” with the seams between them exposed */
     .pb-silos {
       position: absolute; left: 62px; right: 62px; top: 222px; height: 134px;
       display: grid; align-items: stretch;
@@ -370,7 +370,7 @@
       font: 600 8px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
       color: var(--accent); opacity: 0.85;
     }
-    /* the screenshot tag on this slide — keep it subtle, not overpowering the shot */
+    /* the screenshot tag on this slide â€” keep it subtle, not overpowering the shot */
     .hiw-proof .shot-tag {
       padding: 3px 8px; font-size: 8px; letter-spacing: 0.08em;
       background: rgba(7,12,12,0.72); opacity: 0.9;
@@ -428,7 +428,7 @@
     .hiw-proof .shot figcaption {
       padding: 6px 12px; font: 500 11px/1.3 var(--body); color: var(--ink-2);
     }
-/* ===================== 05 Â· LAYER 2 ===================== */
+/* ===================== 05 Ã‚Â· LAYER 2 ===================== */
     /* 2x2 eye-path: focal panel top-left, live proof top-right,
        ledger bottom-left, trust bottom-right. */
     .l2-grid {
@@ -443,7 +443,7 @@
     .l2-participants .head,
     .l2-ledger .head { font: 700 12px/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 
-    /* TOP-LEFT Â· elevated focal panel â€” the eye lands here first */
+    /* TOP-LEFT Ã‚Â· elevated focal panel Ã¢â‚¬â€ the eye lands here first */
     .l2-participants {
       background: linear-gradient(150deg, rgba(49,221,195,0.10), var(--surface) 68%);
       border: 1px solid var(--line-2); border-radius: 14px;
@@ -458,7 +458,7 @@
     .l2-row .who { font: 700 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
     .l2-row .what { font-size: 14px; line-height: 1.4; color: var(--ink); }
 
-    /* BOTTOM-LEFT Â· where the ledger lives */
+    /* BOTTOM-LEFT Ã‚Â· where the ledger lives */
     .l2-ledger {
       border-left: 3px solid var(--accent); padding: 2px 0 0 20px; align-self: start;
     }
@@ -474,7 +474,7 @@
     .fact .k { font: 700 11px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
     .fact .v { font-size: 13px; line-height: 1.4; color: var(--ink-2); }
 
-    /* RIGHT Â· live product screenshots framed as evidence */
+    /* RIGHT Ã‚Â· live product screenshots framed as evidence */
     .l2-shot-passport { grid-column: 2; grid-row: 1; }
     .l2-shot-attestor { grid-column: 2; grid-row: 2; }
     .shot {
@@ -501,7 +501,7 @@
       color: var(--ink-2); border-top: 1px solid var(--line);
     }
 
-    /* ===================== 06 Â· LAYER 3 ===================== */
+    /* ===================== 06 Ã‚Â· LAYER 3 ===================== */
     .l3-grid {
       position: absolute; left: 62px; right: 62px; top: 226px; bottom: 54px;
       display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: start;
@@ -525,7 +525,7 @@
     /* the top eyebrow sits at the very top of the left column */
     .l3-left > .l3-eyebrow:first-child { position: absolute; top: 0; left: 0; right: 0; }
 
-    /* iconic homeowner tiles â€” glyph + a word or two, nothing more */
+    /* iconic homeowner tiles Ã¢â‚¬â€ glyph + a word or two, nothing more */
     .l3-tiles {
       position: absolute; top: 30px; left: 0; right: 0;
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
@@ -564,14 +564,14 @@
       font-size: 14px; line-height: 1.65; color: var(--ink);
     }
 
-    /* right Â· live maintenance-intelligence screenshot */
+    /* right Ã‚Â· live maintenance-intelligence screenshot */
     .l3-shot { align-self: start; }
     .l3-shot img {
       height: 360px; object-fit: cover; object-position: top center;
     }
     .l3-shot figcaption { padding: 10px 14px; }
 
-        /* ===================== 07 · THE LANDSCAPE ===================== */
+        /* ===================== 07 Â· THE LANDSCAPE ===================== */
     .landscape .slide-title { position: absolute; left: 62px; top: 66px; width: 1156px;
       font: 800 33px/1.14 var(--display); letter-spacing: -0.03em; color: var(--ink); }
     .landscape .slide-title .accent { color: var(--accent); }
@@ -579,7 +579,7 @@
       font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
     .landscape .slide-deck b { color: var(--ink); font-weight: 700; }
 
-    /* Tessera spine — the compounding moat chain, highlighted */
+    /* Tessera spine â€” the compounding moat chain, highlighted */
     .ls-chain {
       position: absolute; left: 62px; right: 62px; top: 150px; height: 62px;
       display: flex; align-items: center; gap: 14px;
@@ -605,7 +605,7 @@
       text-transform: uppercase; color: var(--ink-3); }
     .ch-arrow { text-align: center; color: var(--ink-3); font-size: 14px; }
 
-    /* three columns: replace / integrate / augment — deliberately quiet */
+    /* three columns: replace / integrate / augment â€” deliberately quiet */
     .ls-cols {
       position: absolute; left: 62px; right: 62px; top: 234px; height: 316px;
       display: grid; grid-template-columns: 0.82fr 1.36fr 0.94fr;
@@ -718,7 +718,7 @@
     .ls-note a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-3); }
     .ls-note a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-    /* closing strip — the thesis + the proof numbers */
+    /* closing strip â€” the thesis + the proof numbers */
     .ls-thesis {
       position: absolute; left: 62px; right: 62px; top: 582px; height: 58px;
       display: flex; align-items: center; justify-content: space-between; gap: 30px;
@@ -737,7 +737,7 @@
     .ls-stat .n { font: 800 18px/1 var(--display); color: var(--ink-2); letter-spacing: -0.01em; }
     .ls-stat .l { margin-top: 4px; font: 500 8.5px/1.2 var(--mono); letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--ink-3); }
-/* ===================== 08 Â· PRE-SEED / THE ASK ===================== */
+/* ===================== 08 Ã‚Â· PRE-SEED / THE ASK ===================== */
     .preseed h1 {
       position: absolute; left: 62px; top: 84px; width: 1156px;
       font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.035em;
@@ -774,7 +774,7 @@
     .ask-fig.lit .n { color: var(--accent); }
     .ask-fig.lit .l { color: var(--accent); }
 
-    /* the four things it buys — original wording preserved */
+    /* the four things it buys â€” original wording preserved */
     .ask-rows { position: absolute; left: 62px; right: 62px; top: 326px; display: grid; gap: 0; }
     .ask-row {
       display: grid; grid-template-columns: 264px 1fr; gap: 24px; align-items: baseline;
@@ -820,7 +820,7 @@
   <div class="reveal">
     <div class="slides">
 
-      <!-- ============ 01 Â· COVER ============ -->
+      <!-- ============ 01 Ã‚Â· COVER ============ -->
       <section class="deck cover">
         <div class="cover-brand">TESSERA</div>
         <h1>The <span class="accent">intelligence layer</span> for the home.</h1>
@@ -858,7 +858,7 @@
         </div>
       </section>
 
-      <!-- ============ 02 Â· PROBLEM ============ -->
+      <!-- ============ 02 Ã‚Â· PROBLEM ============ -->
       <section class="deck problem">
         <div class="kicker"><span class="num">02</span><span class="label">The Problem</span></div>
         <h2 class="slide-title">The home is managed across systems. The outcome happens between them.</h2>
@@ -989,7 +989,7 @@
 
           <figure class="shot hiw-proof">
             <span class="shot-tag">Live &mdash; preventable loss by division</span>
-            <img src="demo-shots/01-portfolio-dashboard-crop.png" alt="Home Passport VP dashboard: portfolio of 195 active homes with each division showing estimated savings and failure rate — Miami-Dade South $476K / 47%, Miami-Dade North $500.5K / 56%, Broward County $551K / 63%." />
+            <img src="demo-shots/01-portfolio-dashboard-crop.png" alt="Home Passport VP dashboard: portfolio of 195 active homes with each division showing estimated savings and failure rate â€” Miami-Dade South $476K / 47%, Miami-Dade North $500.5K / 56%, Broward County $551K / 63%." />
             <figcaption>The VP view &mdash; preventable loss and failure rate, per division.</figcaption>
           </figure>
         </div>
@@ -1014,14 +1014,14 @@
 
         <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;LAYER 1</span><span>tesserabuild.ai</span></div>
       </section>
-<!-- ============ 05 Â· LAYER 2 ============ -->
+<!-- ============ 05 Ã‚Â· LAYER 2 ============ -->
       <section class="deck layer2">
         <div class="kicker"><span class="num">05</span><span class="label">Layer 2</span></div>
         <h2 class="slide-title">Home Passport</h2>
         <p class="slide-deck">A persistent digital identity for the home &mdash; from land deal through handoff and throughout the lifetime of the property.</p>
 
         <div class="l2-grid">
-          <!-- TOP-LEFT Â· the thesis, elevated as the focal point -->
+          <!-- TOP-LEFT Ã‚Â· the thesis, elevated as the focal point -->
           <div class="l2-participants">
             <div class="head">One record. Multiple participants.</div>
             <p class="l2-lead">Attached to the home &mdash; not the person &mdash; and persists as ownership changes.</p>
@@ -1033,14 +1033,14 @@
             </div>
           </div>
 
-          <!-- TOP-RIGHT Â· the passport, live -->
+          <!-- TOP-RIGHT Ã‚Â· the passport, live -->
           <figure class="shot l2-shot-passport">
             <span class="shot-tag">The passport, live</span>
             <img src="demo-shots/passport-report-crop.png" alt="Home Passport report showing a 100 trust score, merkle root and on-chain owner for 7112 Elm Blvd." />
             <figcaption>Every record verified against the on-chain root.</figcaption>
           </figure>
 
-          <!-- BOTTOM-LEFT Â· where the ledger lives -->
+          <!-- BOTTOM-LEFT Ã‚Â· where the ledger lives -->
           <div class="l2-ledger">
             <div class="head">Where the ledger lives</div>
             <p class="l2-claim">Tessera doesn&rsquo;t own the ledger &mdash; that&rsquo;s what makes it trustworthy.</p>
@@ -1051,7 +1051,7 @@
             </div>
           </div>
 
-          <!-- BOTTOM-RIGHT Â· how trust is created -->
+          <!-- BOTTOM-RIGHT Ã‚Â· how trust is created -->
           <figure class="shot l2-shot-attestor">
             <span class="shot-tag">How trust is created</span>
             <img src="demo-shots/attestor-queue-crop.png" alt="Attestor queue: a self-reported record awaiting an independent signature." />
@@ -1062,7 +1062,7 @@
         <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;LAYER 2</span><span>tesserabuild.ai</span></div>
       </section>
 
-      <!-- ============ 06 Â· LAYER 3 ============ -->
+      <!-- ============ 06 Ã‚Â· LAYER 3 ============ -->
       <section class="deck layer3">
         <div class="kicker"><span class="num">06</span><span class="label">Layer 3</span></div>
         <h2 class="slide-title">Maintenance AI</h2>
@@ -1109,7 +1109,7 @@
 
           <figure class="shot l3-shot">
             <span class="shot-tag">Live forecast</span>
-            <img src="demo-shots/maintenance-intelligence.png" alt="Maintenance Intelligence panel forecasting AC filter, roof and HVAC service from the home's attested records." />
+            <img src="demo-shots/maintenance-intelligence.png" alt="Maintenance Intelligence panel forecasting the AC filter change, roof inspection, HVAC service, annual home inspection and insurance renewal from the home's attested records." />
             <figcaption>Derived from the home&rsquo;s attested records &mdash; every card cites its source.</figcaption>
           </figure>
         </div>
@@ -1238,7 +1238,7 @@
 
         <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE SYSTEM</span><span>tesserabuild.ai</span></div>
       </section>
-<!-- ============ 08 Â· PRE-SEED ============ -->
+<!-- ============ 08 Ã‚Â· PRE-SEED ============ -->
       <section class="deck preseed">
         <div class="cover-brand">TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</div>
         <h1>The MVP is built. Now we build the company.</h1>
