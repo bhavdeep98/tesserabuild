@@ -809,6 +809,68 @@
     }
     .ps-box { border-left: 2px solid var(--accent); }
 
+    /* ===================== 09 · THE BUSINESS CASE ===================== */
+    .bizcase .bc-deck {
+      position: absolute; left: 62px; top: 132px; right: 62px;
+      font-size: 16px; line-height: 1.5; color: var(--ink-2); max-width: 1120px;
+    }
+    .bizcase .bc-deck b { color: var(--ink); font-weight: 700; }
+
+    .bc-figs {
+      position: absolute; left: 62px; right: 62px; top: 214px; height: 84px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .bc-fig {
+      border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2);
+      padding: 12px 15px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .bc-fig.lit { border-color: var(--line-2); background: var(--surface-3); }
+    .bc-fig .n { font: 800 26px/1 var(--display); color: var(--ink); letter-spacing: -0.02em; }
+    .bc-fig.lit .n { color: var(--accent); }
+    .bc-fig .l { margin-top: 7px; font: 500 10px/1.3 var(--mono); letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-3); }
+
+    .bc-grid {
+      position: absolute; left: 62px; right: 62px; top: 320px; bottom: 70px;
+      display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px;
+    }
+    .bc-card {
+      border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2);
+      padding: 16px 18px; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .bc-tbl { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .bc-tbl th {
+      text-align: right; font: 700 10px/1 var(--mono); letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--ink-3); padding: 0 0 8px; border-bottom: 1px solid var(--line);
+    }
+    .bc-tbl th:first-child { text-align: left; }
+    .bc-tbl td { text-align: right; font: 600 14px/1 var(--body); color: var(--ink);
+      padding: 8px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+    .bc-tbl td:first-child { text-align: left; color: var(--ink-2); }
+    .bc-tbl tbody tr:last-child td { border-bottom: none; }
+    .bc-tbl tr.lit td { color: var(--accent); }
+    .bc-tbl td.pos { color: var(--accent); font-weight: 700; }
+    .bc-tbl td.neg { color: var(--ink-3); }
+    .bc-cap { margin-top: auto; padding-top: 12px; font: 500 12px/1.45 var(--body); color: var(--ink-3); }
+    .bc-cap b { color: var(--ink-2); font-weight: 700; }
+
+    .bc-chart {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+      align-items: end; height: 168px; margin-top: 12px; padding: 0 6px;
+    }
+    .bcbar { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+    .bcbar .stack { width: 60%; display: flex; flex-direction: column; justify-content: flex-end; min-height: 3px; }
+    .bcbar .up { background: var(--accent); border-radius: 4px 4px 0 0; }
+    .bcbar .fl { background: var(--accent-dim); border-radius: 0 0 4px 4px; }
+    /* zero-revenue Y1: show a faint baseline stub so the column and its label read */
+    .bcbar.zero .stack { min-height: 3px; }
+    .bcbar.zero .fl { background: var(--line); border-radius: 4px; height: 3px; }
+    .bcbar .yl { margin-top: 10px; font: 600 11px/1 var(--mono); color: var(--ink-3); }
+    .bc-legend { display: flex; gap: 20px; margin-top: 18px; font: 500 11px/1 var(--body); color: var(--ink-2); }
+    .bc-legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+    .bc-legend .sw-fl { background: var(--accent-dim); }
+    .bc-legend .sw-up { background: var(--accent); }
+
     @media (prefers-reduced-motion: reduce) {
       .reveal *, .reveal *::before, .reveal *::after {
         animation: none !important; transition: none !important;
@@ -1207,19 +1269,19 @@
                 <div class="n">Design &rarr; build AI. Upstream; stops at the build.</div>
               </div>
               <div class="ls-row">
-                <div class="t">Builder ERPs &mdash; <a href="https://www.constellationhb.com/" target="_blank" rel="noopener">Constellation</a>, <a href="https://www.ecisolutions.com/" target="_blank" rel="noopener">ECI</a></div>
-                <div class="n">Broad, but all inside the builder.</div>
-              </div>
-              <div class="ls-row">
                 <div class="t">Schedule AI &mdash; <a href="https://www.alicetechnologies.com/about" target="_blank" rel="noopener">ALICE</a>, <a href="https://www.nplan.io/" target="_blank" rel="noopener">nPlan</a></div>
                 <div class="n">Construction slippage only. No lender or title.</div>
+              </div>
+              <div class="ls-row">
+                <div class="t">Trade AI &mdash; <a href="https://www.housingwire.com/articles/scaffold-raises-seed-round/" target="_blank" rel="noopener">Scaffold</a> &mdash; $15M seed (Horton, Pulte)</div>
+                <div class="n">Automates the trades below the builder. Never reaches the close.</div>
               </div>
               <div class="ls-row">
                 <div class="t">Home record &mdash; <a href="https://digs.com/" target="_blank" rel="noopener">Digs</a></div>
                 <div class="n">Post-close docs. Consumes what we attest.</div>
               </div>
             </div>
-            <p class="ls-note">Closest: <a href="https://mortgagetech.ice.com/solutions/title" target="_blank" rel="noopener">ICE</a> &mdash; funding to recording, <b>not construction.</b></p>
+            <p class="ls-note">Closest: <a href="https://mortgagetech.ice.com/solutions/title" target="_blank" rel="noopener">ICE</a> &mdash; funding to recording, <b>not construction.</b> Builders funding <b>Scaffold</b> proves the thesis: they pay to unify fragmented data.</p>
           </div>
         </div>
 
@@ -1242,20 +1304,20 @@
       <section class="deck preseed">
         <div class="cover-brand">TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</div>
         <h1>The MVP is built. Now we build the company.</h1>
-        <p class="lead"><b>$1.5M for 18 months.</b> Capital to turn the predictability engine into a scalable product and establish the foundation for the Home Passport. We stay lean &mdash; engineers are hired against milestones, and sales stays on commission.</p>
+        <p class="lead"><b>$2M for 24 months.</b> Capital to turn the predictability engine into a scalable product, put a dedicated salesperson in the field, and establish the foundation for the Home Passport. We stay lean &mdash; engineers are hired against milestones, and sales carries a commission.</p>
 
         <div class="ask-figs">
           <div class="ask-fig lit">
-            <div class="n">$1.5M</div>
+            <div class="n">$2M</div>
             <div class="l">Raising &middot; pre-seed</div>
           </div>
           <div class="ask-fig">
-            <div class="n">18 mo</div>
+            <div class="n">24 mo</div>
             <div class="l">Runway &middot; lean burn, staged hiring</div>
           </div>
           <div class="ask-fig">
-            <div class="n">15%</div>
-            <div class="l">At a $10M post-money cap</div>
+            <div class="n">16.7%</div>
+            <div class="l">At a $12M post-money cap</div>
           </div>
         </div>
 
@@ -1279,6 +1341,57 @@
         </div>
 
         <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;PRE-SEED</span><span>tesserabuild.ai</span></div>
+      </section>
+
+      <!-- ============ 09 · THE BUSINESS CASE ============ -->
+      <section class="deck bizcase">
+        <div class="kicker"><span class="num">09</span><span class="label">The Business Case</span></div>
+        <h2 class="slide-title">Conservative on the floor. Built to scale on signals.</h2>
+        <p class="bc-deck">Signal-based licensing, sales from Year 2 &mdash; and it&rsquo;s just Layer 1. With the dedicated salesperson the <b>$2M funds, we pay back in Year 3 and reach $5.1M of Year-5 revenue</b>. The conservative flat-license floor still pays back the $2M in Year 4 on its own.</p>
+
+        <!-- headline figures -->
+        <div class="bc-figs">
+          <div class="bc-fig"><div class="n">$5.1M</div><div class="l">Year-5 revenue &middot; with sales</div></div>
+          <div class="bc-fig"><div class="n">28</div><div class="l">Active clients by Yr 5</div></div>
+          <div class="bc-fig lit"><div class="n">Year 3</div><div class="l">Payback on $2M</div></div>
+          <div class="bc-fig"><div class="n">466%</div><div class="l">5-year ROI</div></div>
+        </div>
+
+        <!-- left: the forward P&L; right: floor vs upside -->
+        <div class="bc-grid">
+          <div class="bc-card">
+            <div class="eyebrow">The forward model &mdash; $2M, with sales</div>
+            <table class="bc-tbl">
+              <thead><tr><th>Year</th><th>Clients</th><th>Revenue</th><th>Cumulative</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>0</td><td>$0</td><td class="neg">($2.4M)</td></tr>
+                <tr><td>2</td><td>7</td><td>$1.81M</td><td class="neg">($1.13M)</td></tr>
+                <tr class="lit"><td>3</td><td>14</td><td>$2.92M</td><td class="pos">$1.25M</td></tr>
+                <tr><td>4</td><td>21</td><td>$4.03M</td><td class="pos">$4.73M</td></tr>
+                <tr><td>5</td><td>28</td><td>$5.14M</td><td class="pos">$9.33M</td></tr>
+              </tbody>
+            </table>
+            <div class="bc-cap">$100K implementation + signal license per client, plus a dedicated salesperson from Year 2 &mdash; the $2M in motion.</div>
+          </div>
+
+          <div class="bc-card">
+            <div class="eyebrow">Floor vs signal-model upside</div>
+            <div class="bc-chart">
+              <div class="bcbar zero"><div class="stack"><div class="fl"></div></div><div class="yl">Y1</div></div>
+              <div class="bcbar"><div class="stack"><div class="up" style="height:9px"></div><div class="fl" style="height:50px"></div></div><div class="yl">Y2</div></div>
+              <div class="bcbar"><div class="stack"><div class="up" style="height:17px"></div><div class="fl" style="height:77px"></div></div><div class="yl">Y3</div></div>
+              <div class="bcbar"><div class="stack"><div class="up" style="height:26px"></div><div class="fl" style="height:104px"></div></div><div class="yl">Y4</div></div>
+              <div class="bcbar"><div class="stack"><div class="up" style="height:35px"></div><div class="fl" style="height:131px"></div></div><div class="yl">Y5</div></div>
+            </div>
+            <div class="bc-legend">
+              <span><i class="sw-fl"></i> Floor &mdash; flat license</span>
+              <span><i class="sw-up"></i> Signal-model upside</span>
+            </div>
+            <div class="bc-cap">Signal overage is upside on top of the flat-license floor: Year&nbsp;5 goes <b>$4.06M &rarr; $5.14M</b>. The floor alone still pays back the $2M in Year 4.</div>
+          </div>
+        </div>
+
+        <div class="foot"><span>TESSERA&nbsp;&nbsp;/&nbsp;&nbsp;THE BUSINESS CASE</span><span>tesserabuild.ai</span></div>
       </section>
 
     </div>

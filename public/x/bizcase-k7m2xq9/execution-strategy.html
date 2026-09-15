@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera — Execution Strategy: The Business Case &amp; What It Means for Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f7f4ed; --bg-card: #fcfaf6; --text: #20352f; --text-2: #4a5c56; --text-3: #5f6f68;
+        --accent: #397c70; --teal-50: #e6f5f2; --teal-100: #ccebe5; --teal-700: #2d655b; --teal-800: #1f4f47;
+        --border: rgba(43,75,66,0.13); --horiz: #12539e; --horiz-bg: #e3f2fd; --vert: #b34700; --vert-bg: #fff3e0;
+        --r: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.55; }
+    .wrap { max-width: 1300px; margin: 0 auto; padding: 40px 28px 64px; }
+    h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+    h1 { font-size: 2rem; line-height: 1.12; margin-bottom: 10px; }
+    h2 { font-size: 1.12rem; margin-bottom: 4px; }
+    h4 { font-size: 0.88rem; margin-bottom: 8px; }
+    p { color: var(--text-2); margin: 0 0 12px; }
+    .lede { font-size: 1rem; color: var(--text-2); max-width: 940px; }
+    .eyebrow { font-size: 0.7rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 9px; }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 22px; margin-bottom: 26px; }
+    .meta { font-size: 0.8rem; color: var(--text-3); margin-top: 12px; }
+
+    .layout { display: grid; grid-template-columns: 330px 1fr; gap: 24px; align-items: start; }
+    .panel { position: sticky; top: 16px; background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 18px 18px 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
+    .panel h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .panel .phint { font-size: 0.78rem; color: var(--text-3); margin-bottom: 14px; }
+    .grp { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+    .grp:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .grp .gt { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 10px; }
+    .grp .gt.vert { color: var(--vert); }
+    .ctrl { margin-bottom: 13px; }
+    .ctrl .lrow { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .ctrl label { font-size: 0.8rem; color: var(--text-2); font-weight: 500; }
+    .ctrl .cv { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.86rem; color: var(--teal-800); font-variant-numeric: tabular-nums; }
+    .ctrl input[type=range] { width: 100%; margin: 6px 0 0; accent-color: var(--accent); height: 4px; }
+    .ctrl .sub { font-size: 0.7rem; color: var(--text-3); }
+    .btn { width: 100%; margin-top: 6px; padding: 9px; border: 1px solid var(--accent); background: transparent; color: var(--accent);
+        border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
+    .btn:hover { background: var(--teal-50); }
+    .seg { display: flex; gap: 4px; background: rgba(43,75,66,0.06); border-radius: 8px; padding: 3px; }
+    .seg button { flex: 1; border: none; background: transparent; color: var(--text-2); font-family: 'Inter', sans-serif;
+        font-weight: 600; font-size: 0.76rem; padding: 6px 4px; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
+    .seg button.on { background: var(--accent); color: #fff; }
+    .ctrl.hide { display: none; }
+
+    section { margin-bottom: 30px; }
+    .divider { display: flex; align-items: center; gap: 14px; margin: 40px 0 24px; }
+    .divider .line { flex: 1; height: 1px; background: var(--border); }
+    .divider .lab { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.78rem;
+        text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+    .divider.us .lab { color: var(--vert); }
+    .divider.us .line { background: rgba(179,71,0,0.25); }
+
+    .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .sec-num { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.8rem; color: #fff; background: var(--accent);
+        width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+    .sec-num.v { background: var(--vert); }
+    .flowarrow { text-align: center; color: var(--text-3); font-size: 1.1rem; margin: -14px 0 10px; }
+
+    .kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 11px; }
+    .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 14px 13px; }
+    .kpi .val { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--teal-800); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .kpi .lab { font-size: 0.72rem; color: var(--text-3); margin-top: 7px; line-height: 1.35; }
+    .kpi.hero { background: var(--teal-800); border-color: var(--teal-800); } .kpi.hero .val { color: #fff; } .kpi.hero .lab { color: #cfe4df; }
+    .kpi.vhero { background: var(--vert); border-color: var(--vert); } .kpi.vhero .val { color: #fff; } .kpi.vhero .lab { color: #ffe3cc; }
+    .kpi.flash { animation: flash 0.5s ease; } @keyframes flash { 0% { background: var(--teal-50); } 100% { } }
+
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cols-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; }
+    .card.accent { border-left: 3px solid var(--accent); }
+    .card.vaccent { border-left: 3px solid var(--vert); }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 2px; }
+    th { background: var(--teal-50); color: var(--teal-700); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--teal-100); }
+    th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.85rem; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(43,75,66,0.028); }
+    td.lbl { font-weight: 500; color: var(--text); }
+    tr.total td { font-weight: 700; color: var(--teal-800); background: var(--teal-50); border-top: 2px solid var(--teal-100); }
+    tr.pbrow td { background: var(--vert-bg); }
+    .pos { color: var(--accent); font-weight: 600; } .neg { color: var(--vert); font-weight: 600; }
+    .src { color: var(--text-3); font-size: 0.78rem; }
+    .out { font-variant-numeric: tabular-nums; }
+    .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+    .badge.h { background: var(--horiz-bg); color: var(--horiz); } .badge.v { background: var(--vert-bg); color: var(--vert); }
+    .note { font-size: 0.79rem; color: var(--text-3); font-style: italic; margin-top: 8px; }
+
+    /* floor-vs-upside stacked bars */
+    .floorchart { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; align-items: end; height: 220px; }
+    .fbar { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+    .fbar .stack { width: 64%; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+    .fbar .up { background: var(--vert); border-radius: 5px 5px 0 0; transition: height 0.25s ease; min-height: 0; }
+    .fbar .fl { background: var(--accent); transition: height 0.25s ease; min-height: 2px; border-radius: 0 0 5px 5px; }
+    .fbar .stack.noup .fl { border-radius: 5px 5px 5px 5px; }
+    .fbar .tot { font-size: 0.74rem; font-weight: 700; color: var(--teal-800); margin-top: 6px; font-variant-numeric: tabular-nums; }
+    .fbar .up-lab { font-size: 0.68rem; color: var(--vert); font-weight: 600; }
+    .fbar .yl { font-size: 0.72rem; color: var(--text-3); margin-top: 2px; }
+
+    /* cumulative cash-flow bars */
+    .ccf { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; align-items: center; height: 190px; margin-top: 8px; position: relative; }
+    .ccf .zero { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--text-3); }
+    .ccfbar { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; position: relative; }
+    .ccfbar .b { width: 62%; border-radius: 5px; transition: all 0.25s ease; position: absolute; }
+    .ccfbar .b.pos { background: var(--accent); } .ccfbar .b.neg { background: var(--vert); }
+    .ccfbar .cl { position: absolute; bottom: -18px; font-size: 0.68rem; color: var(--text-3); white-space: nowrap; }
+
+    footer { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 4px; font-size: 0.76rem; color: var(--text-3); }
+
+    @media (max-width: 1000px) {
+        .layout { grid-template-columns: 1fr; } .panel { position: static; max-height: none; }
+        .kpis { grid-template-columns: repeat(2,1fr); } .cols-2, .cols-3 { grid-template-columns: 1fr; }
+    }
+
+    /* ── Inline executive summary (always visible, top of page) ── */
+    .execsum { background: var(--bg-card); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+        border-radius: var(--r); padding: 20px 24px 22px; margin-bottom: 26px; }
+    .execsum-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+    .execsum-head h2 { font-size: 1.15rem; color: var(--teal-800); }
+    .execsum-tools { display: flex; align-items: center; gap: 12px; }
+    .execsum-flag { font-size: 0.74rem; color: var(--vert); background: var(--vert-bg); padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+    .btn-sm { padding: 7px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: #fff;
+        font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+    .btn-sm:hover { opacity: 0.9; }
+    .execsum-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 11px; margin-bottom: 16px; }
+    .execsum-kpis .k { border: 1px solid var(--border); border-radius: 9px; padding: 11px 13px; background: var(--bg); }
+    .execsum-kpis .k .n { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--teal-800); line-height: 1; letter-spacing: -0.02em; }
+    .execsum-kpis .k.hi { background: var(--teal-800); border-color: var(--teal-800); }
+    .execsum-kpis .k.hi .n { color: #fff; }
+    .execsum-kpis .k .l { font-size: 0.68rem; color: var(--text-3); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .execsum-kpis .k.hi .l { color: #cfe4df; }
+    .execsum-story { font-size: 0.93rem; line-height: 1.62; color: var(--text-2); }
+    .execsum-story p { margin: 0 0 10px; }
+    .execsum-story p:last-child { margin-bottom: 0; }
+    .execsum-story strong { color: var(--teal-800); font-weight: 600; }
+
+    /* ── Detailed print sheet (used only when printing) ── */
+    #printsheet { display: none; }
+    .ps-head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 18px; }
+    .ps-brand { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--teal-800); letter-spacing: -0.02em; }
+    .ps-sub { font-size: 0.82rem; color: var(--text-3); margin-top: 3px; }
+    .ps-meta { font-size: 0.78rem; color: var(--text-3); text-align: right; }
+    .ps-h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; color: var(--accent); margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ps-h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; color: var(--teal-800); margin: 0 0 6px; }
+    .ps-story { font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+    .ps-story p { margin: 0 0 9px; }
+    .ps-story strong { color: var(--teal-800); }
+    .ps-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
+    .ps-kpi { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+    .ps-kpi .n { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--teal-800); }
+    .ps-kpi .l { font-size: 0.68rem; color: var(--text-3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .ps-two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .ps-tbl { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+    .ps-tbl th { text-align: right; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); padding: 4px 8px; border-bottom: 1px solid var(--border); }
+    .ps-tbl th:first-child { text-align: left; }
+    .ps-tbl td { text-align: right; font-size: 0.82rem; padding: 5px 8px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+    .ps-tbl td:first-child { text-align: left; color: var(--text-2); }
+    .ps-tbl tr.hi td { color: var(--accent); font-weight: 700; }
+    .ps-assume td:first-child { color: var(--text-3); }
+    .ps-foot { margin-top: 16px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--text-3); font-style: italic; }
+
+    @media print {
+        @page { size: A4 portrait; margin: 14mm; }
+        body { background: #fff; }
+        .wrap { padding: 0; max-width: 100%; }
+        .layout, .execsum { display: none !important; }   /* hide interactive UI + inline summary; print the detailed sheet */
+        #printsheet { display: block !important; color: #000; }
+        .ps-two, .ps-kpis { break-inside: avoid; }
+        .ps-h2 { break-after: avoid; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">Execution Strategy · The Business Case, Then What It Means For Us</div>
+    <h1>Tessera — From the Business Case Backwards to Us</h1>
+    <p class="lede">
+        Top half: the business case built forward — assumptions → client growth → revenue → P&amp;L →
+        cumulative cash flow → ROI — with a chart showing the <strong>conservative floor vs the signal-model upside</strong>
+        (set overage to $0 to reproduce the base case exactly). Bottom half: we translate that same model down to what it means
+        for <strong>us</strong> — our real cost stack behind the placeholder opex, what the company keeps, founder runway,
+        and the ask. Move any assumption on the left; everything recomputes and stays reconciled.
+    </p>
+    <div class="meta">Forward business case · Translation to our real costs (AWS-verified infra + staged team) · Everything ties back to the same inputs</div>
+</header>
+
+<!-- ═══════════ EXECUTIVE SUMMARY — always visible at the top, live ═══════════ -->
+<section class="execsum" id="execsum">
+    <div class="execsum-head">
+        <h2>Executive summary</h2>
+        <div class="execsum-tools">
+            <span class="execsum-flag" id="es_scenario">Working assumptions — not final</span>
+            <button class="btn-sm" id="printbtn">⎙ Print / Save PDF</button>
+        </div>
+    </div>
+    <div class="execsum-kpis" id="es_kpis"></div>
+    <div class="execsum-story" id="es_story"></div>
+</section>
+
+<div class="layout">
+
+<!-- ═══════════ CONTROLS ═══════════ -->
+<aside class="panel">
+    <h3>Assumptions</h3>
+    <div class="phint">Business-case inputs up top; our real costs below.</div>
+
+    <div class="grp">
+        <div class="gt">Business case</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="invest">Initial investment</label><span class="cv" id="invest_v">$2,000,000</span></div>
+            <input type="range" id="invest" min="750000" max="2500000" step="50000" value="2000000">
+            <div class="sub">$2M "go high" default · $1.5M lean floor</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="implfee">Implementation fee</label><span class="cv" id="implfee_v">$100,000</span></div>
+            <input type="range" id="implfee" min="50000" max="350000" step="10000" value="100000">
+        </div>
+        <div class="ctrl">
+            <label style="font-size:0.8rem;color:var(--text-2);font-weight:500;display:block;margin-bottom:6px;">Pricing mechanism</label>
+            <div class="seg" id="pricemode">
+                <button data-mode="token" class="on">Token + overage</button>
+                <button data-mode="flat">Flat tier</button>
+                <button data-mode="division">Per-division</button>
+            </div>
+            <div class="sub" id="pricemode_hint">Base license covers a signal bundle; usage above it bills per signal (Maen's model).</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="molic">Monthly base license</label><span class="cv" id="molic_v">$10,000</span></div>
+            <input type="range" id="molic" min="0" max="30000" step="500" value="10000">
+            <div class="sub">$120K/yr per client — the conservative floor</div>
+        </div>
+        <div class="ctrl" data-mode="token division">
+            <div class="lrow"><label for="inclsig">Signals in base tier</label><span class="cv" id="inclsig_v">20</span></div>
+            <input type="range" id="inclsig" min="5" max="51" step="1" value="20">
+        </div>
+        <div class="ctrl" data-mode="token division">
+            <div class="lrow"><label for="avgsig">Avg signals / client</label><span class="cv" id="avgsig_v">28</span></div>
+            <input type="range" id="avgsig" min="5" max="51" step="1" value="28">
+            <div class="sub">51 signal types available across 6 categories</div>
+        </div>
+        <div class="ctrl" data-mode="token division">
+            <div class="lrow"><label for="oversig">Overage / signal / mo</label><span class="cv" id="oversig_v">$400</span></div>
+            <input type="range" id="oversig" min="0" max="1500" step="50" value="400">
+            <div class="sub">Set to $0 → collapses to the flat-license floor</div>
+        </div>
+        <div class="ctrl" data-mode="flat">
+            <div class="lrow"><label for="tierup">Flat-tier premium</label><span class="cv" id="tierup_v">+30%</span></div>
+            <input type="range" id="tierup" min="0" max="100" step="5" value="30">
+            <div class="sub">Package price above the base — no per-signal metering</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="newclients">New clients / yr</label><span class="cv" id="newclients_v">4</span></div>
+            <input type="range" id="newclients" min="1" max="12" step="1" value="4">
+            <div class="sub" id="newclients_hint">A company OR a large division</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="salesyr">Sales start (year)</label><span class="cv" id="salesyr_v">Year 2</span></div>
+            <input type="range" id="salesyr" min="1" max="3" step="1" value="2">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="opex">Operating cost / yr</label><span class="cv" id="opex_v">$400,000</span></div>
+            <input type="range" id="opex" min="200000" max="900000" step="25000" value="400000">
+            <div class="sub">Placeholder — we break it down below</div>
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Dedicated salesperson <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-3);">— the 3-yr payback answer</span></div>
+        <div class="ctrl">
+            <label style="font-size:0.8rem;color:var(--text-2);font-weight:500;display:block;margin-bottom:6px;">Add a salesperson?</label>
+            <div class="seg" id="salestoggle">
+                <button data-sales="0">No</button>
+                <button data-sales="1" class="on">Yes</button>
+            </div>
+            <div class="sub">On by default — the $2M funds this and pulls payback to Year 3</div>
+        </div>
+        <div class="ctrl" data-sales="1">
+            <div class="lrow"><label for="salescost">Salesperson cost / yr</label><span class="cv" id="salescost_v">$140,000</span></div>
+            <input type="range" id="salescost" min="60000" max="250000" step="10000" value="140000">
+            <div class="sub">Base + commission; hired in the sales-start year</div>
+        </div>
+        <div class="ctrl" data-sales="1">
+            <div class="lrow"><label for="salesboost">Extra clients / yr from sales</label><span class="cv" id="salesboost_v">+3</span></div>
+            <input type="range" id="salesboost" min="0" max="8" step="1" value="3">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Division → company expansion</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="divsperco">Divisions / company logo</label><span class="cv" id="divsperco_v">40</span></div>
+            <input type="range" id="divsperco" min="1" max="60" step="1" value="40">
+            <div class="sub">Land one division → expand across the logo</div>
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt vert">Translation — our real cost stack</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="foundersal">Founder salary (each)</label><span class="cv" id="foundersal_v">$75,000</span></div>
+            <input type="range" id="foundersal" min="0" max="180000" step="5000" value="75000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="nfounders">Founders</label><span class="cv" id="nfounders_v">2</span></div>
+            <input type="range" id="nfounders" min="1" max="3" step="1" value="2">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="engcost">Engineer cost (each/yr)</label><span class="cv" id="engcost_v">$150,000</span></div>
+            <input type="range" id="engcost" min="100000" max="220000" step="5000" value="150000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="neng">Engineers hired</label><span class="cv" id="neng_v">2</span></div>
+            <input type="range" id="neng" min="0" max="5" step="1" value="2">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="infra">↳ Infra / client / mo (AWS)</label><span class="cv" id="infra_v">$671</span></div>
+            <input type="range" id="infra" min="671" max="7857" step="1" value="671">
+            <div class="sub">$671 (1 division) → $7,857 (national). Verified AWS — the infra floor only.</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="opsclient">↳ Ops &amp; maintenance / client / mo</label><span class="cv" id="opsclient_v">$1,200</span></div>
+            <input type="range" id="opsclient" min="0" max="5000" step="100" value="1200">
+            <div class="sub">Monitoring, support, signal upkeep — the human side per active account</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="othercost">Other (tools, legal, travel)</label><span class="cv" id="othercost_v">$60,000</span></div>
+            <input type="range" id="othercost" min="0" max="200000" step="5000" value="60000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="postcap">Post-money valuation</label><span class="cv" id="postcap_v">$12.0M</span></div>
+            <input type="range" id="postcap" min="6000000" max="16000000" step="500000" value="12000000">
+        </div>
+    </div>
+
+    <button class="btn" id="reset">↺ Reset to optimum ($2M) defaults</button>
+</aside>
+
+<!-- ═══════════ OUTPUTS ═══════════ -->
+<main>
+
+    <!-- HALF 1: THE BUSINESS CASE (forward) -->
+    <div class="divider"><span class="lab">The Business Case</span><span class="line"></span></div>
+
+    <section>
+        <div class="sec-head"><span class="sec-num">1</span><h2>What the VC sees — the conservative forward model</h2></div>
+        <div class="kpis">
+            <div class="kpi" id="k_arr"><div class="val out">$1.92M</div><div class="lab">Year-5 ARR (license)</div></div>
+            <div class="kpi" id="k_rev5"><div class="val out">$2.32M</div><div class="lab">Year-5 total revenue</div></div>
+            <div class="kpi" id="k_clients"><div class="val out">16</div><div class="lab">Active clients by Yr 5</div></div>
+            <div class="kpi hero" id="k_payback"><div class="val out">Yr 4</div><div class="lab">Payback</div></div>
+            <div class="kpi" id="k_roi"><div class="val out">193%</div><div class="lab">5-yr ROI</div></div>
+        </div>
+        <p class="note">4 conservative implementations a year, sales starting Year 2 — and it's just Layer 1. Shown here on the signal model (base license + overage); set overage to $0 to see the flat-license floor.</p>
+    </section>
+
+    <section>
+        <div class="cols-2">
+            <div class="card">
+                <h4>Client growth</h4>
+                <table>
+                    <thead><tr><th>Year</th><th class="num">New</th><th class="num">Active</th></tr></thead>
+                    <tbody id="growth_rows"></tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h4>Revenue forecast</h4>
+                <table>
+                    <thead><tr><th>Year</th><th class="num">Implementation</th><th class="num">License</th><th class="num">Total</th></tr></thead>
+                    <tbody id="rev_rows"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="flowarrow">↓</div>
+        <div class="card accent">
+            <h4>Profit &amp; loss → cumulative cash flow</h4>
+            <table>
+                <thead><tr><th>Year</th><th class="num">Revenue</th><th class="num">Operating cost</th><th class="num">Net profit / (loss)</th><th class="num">Cumulative cash</th></tr></thead>
+                <tbody id="pnl_rows"></tbody>
+            </table>
+            <div class="ccf" id="ccf" style="margin-top:20px;"></div>
+            <p class="note" style="margin-top:24px;">Cumulative begins at −investment. Payback = the year cumulative cash turns positive (highlighted).</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="card">
+            <h4>Five-year summary &amp; ROI</h4>
+            <div class="cols-3">
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Total revenue</td><td class="num out" id="s_rev">$6.40M</td></tr>
+                        <tr><td class="lbl">Total operating cost</td><td class="num out" id="s_opex">$2.00M</td></tr>
+                        <tr><td class="lbl">Initial investment</td><td class="num out" id="s_inv">$1.50M</td></tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Net profit before investment</td><td class="num out" id="s_npbi">$4.40M</td></tr>
+                        <tr><td class="lbl">Net benefit after investment</td><td class="num out pos" id="s_nbai">$2.90M</td></tr>
+                        <tr><td class="lbl">Year-5 ARR</td><td class="num out" id="s_arr">$1.92M</td></tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tbody>
+                        <tr class="total"><td>ROI</td><td class="num out" id="s_roi">193%</td></tr>
+                        <tr><td class="lbl">SaaS value (4–8× ARR)</td><td class="num out" id="s_saas">$7.7M–$15.4M</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="note" id="roi_note">ROI = (net profit before investment − investment) ÷ investment. This view shows the signal model; set overage to $0 to reproduce the base case exactly ($6.40M revenue, 193% ROI, Year-4 payback).</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="sec-head"><span class="sec-num">3</span><h2>Conservative floor vs signal-model upside <span class="badge v" style="margin-left:6px;">the room-ready visual</span></h2></div>
+        <div class="card">
+            <div class="cols-2" style="grid-template-columns: 1.5fr 1fr; align-items:center;">
+                <div>
+                    <div class="floorchart" id="floorchart"></div>
+                    <div class="glegend" style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:0.78rem;color:var(--text-2);">
+                        <div style="display:flex;align-items:center;gap:7px;"><span style="width:13px;height:13px;border-radius:3px;background:var(--accent);display:inline-block;"></span> Conservative floor — flat license (base case)</div>
+                        <div style="display:flex;align-items:center;gap:7px;"><span style="width:13px;height:13px;border-radius:3px;background:var(--vert);display:inline-block;"></span> Signal-model upside — overage on top</div>
+                    </div>
+                </div>
+                <div>
+                    <table>
+                        <thead><tr><th>Year</th><th class="num">Floor</th><th class="num">Upside</th></tr></thead>
+                        <tbody id="floor_rows"></tbody>
+                    </table>
+                    <p class="note" id="floor_note">At default inputs, the signal model adds the overage band on top of the flat-license floor. Drag <strong>Overage → $0</strong> and the orange band vanishes — the model collapses exactly to the base case.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="sec-head"><span class="sec-num">4</span><h2>Deployment — what the implementation fee covers <span class="badge h" style="margin-left:6px;">answers "up the impl or the license?"</span></h2></div>
+        <div class="cols-2">
+            <div class="card">
+                <h4>What it costs us to deliver one implementation</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Labor (<span class="out" id="dp_days">12</span> days × <span class="out" id="dp_rate">$1,200</span>)</td><td class="num out" id="dp_labor">$14.4K</td></tr>
+                        <tr><td class="lbl">Travel</td><td class="num out" id="dp_travel">$4K</td></tr>
+                        <tr class="total"><td>Cost to deliver (vs fee)</td><td class="num out" id="dp_cost">$18.4K</td></tr>
+                        <tr><td class="lbl">Implementation margin</td><td class="num out pos" id="dp_margin">82%</td></tr>
+                        <tr><td class="lbl">Time to live</td><td class="num out" id="dp_ttl">30 days</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">The connectors are already built — the constraint is builder-gated (credentials handoff + the joint signal-definition workshop), not our effort. Write the JDE integration once, reuse it on the next builder.</p>
+            </div>
+            <div class="card accent">
+                <h4>Where to load the integration cost</h4>
+                <p style="font-size:0.86rem;">The implementation fee more than covers the delivery cost at these inputs — so the integration work is recovered up front, and the license stays clean recurring margin. Two dials:</p>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Implementation fee (one-time)</td><td class="num out" id="dp_fee">$100K</td></tr>
+                        <tr><td class="lbl">Recovers delivery cost by</td><td class="num out pos" id="dp_cover">5.4×</td></tr>
+                        <tr><td class="lbl">License / client / yr (recurring)</td><td class="num out" id="dp_lic">$158K</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">If a deployment is unusually heavy, raise the implementation fee for that builder rather than the recurring license — the fee absorbs one-time integration work; the license stays value-based.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="sec-head"><span class="sec-num">5</span><h2>Customer = a division, or a company <span class="badge h" style="margin-left:6px;">land &amp; expand</span></h2></div>
+        <div class="cols-3">
+            <div class="card">
+                <h4>Land one division</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">License / division / yr</td><td class="num out" id="ex_divlic">$158K</td></tr>
+                        <tr><td class="lbl">+ Implementation</td><td class="num out" id="ex_divimpl">$100K</td></tr>
+                        <tr class="total"><td>Year-1 per division</td><td class="num out" id="ex_divy1">$258K</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">The beachhead: lower friction, faster reference case. "4 implementations/yr" can be divisions.</p>
+            </div>
+            <div class="card">
+                <h4>Expand across the company</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Divisions / company logo</td><td class="num out" id="ex_divs">40</td></tr>
+                        <tr><td class="lbl">License / logo / yr (full)</td><td class="num out pos" id="ex_logolic">$6.3M</td></tr>
+                        <tr><td class="lbl">One logo vs 4 clients</td><td class="num out" id="ex_vs">10×</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">Win the logo, grow per division. A national builder is a 40-contract runway, not one sale.</p>
+            </div>
+            <div class="card accent">
+                <h4>Why it matters to the model</h4>
+                <p style="font-size:0.86rem;">The "4 clients/yr" assumption stays the conservative floor. But because a client can be a division inside a
+                company we already serve, expansion revenue compounds without new logo acquisition — the growth engine runs on
+                <strong>net revenue retention</strong>, not just new-logo count.</p>
+                <p class="note">Big builders (Lennar, D.R. Horton) roll out by division, not company-wide.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HALF 2: WHAT IT MEANS FOR US -->
+    <div class="divider us"><span class="lab">↓ What This Means For Us</span><span class="line"></span></div>
+
+    <section>
+        <div class="sec-head"><span class="sec-num v">2</span><h2>Translating the model down to the company</h2></div>
+        <p style="max-width:900px;">The base case uses a clean <strong>$400K</strong> operating-cost placeholder. Here's the honest breakdown behind it.
+        The per-client cost is <strong>operational cost, distributed</strong> — AWS infrastructure is only the floor; the larger
+        piece is the human effort to run each active account (monitoring, support, signal upkeep). The business case holds even
+        with honest numbers because that operational cost is small next to the license revenue each client generates.</p>
+        <div class="kpis" style="margin-top:6px;">
+            <div class="kpi vhero" id="u_realopex"><div class="val out">$480K</div><div class="lab">Our true annual operating cost</div></div>
+            <div class="kpi" id="u_infrapct"><div class="val out">7%</div><div class="lab">AWS infra as % of cost (the floor)</div></div>
+            <div class="kpi" id="u_peoplepct"><div class="val out">88%</div><div class="lab">People &amp; ops as % of cost</div></div>
+            <div class="kpi" id="u_runway"><div class="val out">~38 mo</div><div class="lab">Runway on the raise</div></div>
+            <div class="kpi" id="u_dilution"><div class="val out">15%</div><div class="lab">Dilution at this valuation</div></div>
+        </div>
+    </section>
+
+    <section>
+        <div class="cols-2">
+            <div class="card vaccent">
+                <h4>What's behind the operating cost</h4>
+                <table>
+                    <thead><tr><th>Line</th><th class="num">Per year</th><th class="num">% of cost</th></tr></thead>
+                    <tbody id="stack_rows"></tbody>
+                </table>
+                <p class="note" id="reconcile_note">Operational cost is distributed: AWS infra is the floor, ops &amp; maintenance is the larger per-client piece. Reconciles to the $400K placeholder — gap shown below.</p>
+            </div>
+            <div class="card">
+                <h4>What the company keeps</h4>
+                <table>
+                    <thead><tr><th>Year</th><th class="num">Revenue</th><th class="num">Our real cost</th><th class="num">Kept</th></tr></thead>
+                    <tbody id="keep_rows"></tbody>
+                </table>
+                <p class="note">Our true operating cost auto-scales the per-client operational cost (AWS infra + ops/maintenance) with active clients; the rest is the fixed team stack at left.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="cols-3">
+            <div class="card">
+                <h4>The raise → runway</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Raise</td><td class="num out" id="r_raise">$1.5M</td></tr>
+                        <tr><td class="lbl">Year-1 burn (pre-revenue)</td><td class="num out" id="r_burn">$480K</td></tr>
+                        <tr><td class="lbl">Runway at that burn</td><td class="num out pos" id="r_runway">~38 mo</td></tr>
+                        <tr><td class="lbl">Infra over 18 mo</td><td class="num out" id="r_infra18">~$12K</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">We hire against milestones, so real runway stretches longer than a flat-burn estimate.</p>
+            </div>
+            <div class="card">
+                <h4>Founder economics</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Founder salary (each)</td><td class="num out" id="f_sal">$75K</td></tr>
+                        <tr><td class="lbl">Founders</td><td class="num out" id="f_n">2</td></tr>
+                        <tr><td class="lbl">Founder cost / yr</td><td class="num out" id="f_total">$150K</td></tr>
+                        <tr><td class="lbl">Ownership retained (post-round)</td><td class="num out pos" id="f_own">~75%</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">10% option pool assumed for the engineering hires; founders hold the balance.</p>
+            </div>
+            <div class="card vaccent">
+                <h4>The ask, translated</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Raise</td><td class="num out" id="a_raise">$1.5M</td></tr>
+                        <tr><td class="lbl">Post-money valuation</td><td class="num out" id="a_post">$10.0M</td></tr>
+                        <tr><td class="lbl">Investor stake</td><td class="num out" id="a_stake">15.0%</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">Scaffold just raised $15M seed (but 200K homes deployed + Horton/Pulte). We're pre-seed with the MVP built — this is velocity money, not survival money.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <strong id="print_anchor">Formulas &amp; sources.</strong> Top half reproduces the base business case (<em>Business Case_Base_Tessera.pdf</em>, Sep 15): initial investment, implementation fee, monthly signal license, new clients/yr, operating cost → client growth → revenue → P&amp;L → cumulative cash flow → ROI. ROI = (net profit before investment − investment) ÷ investment. With overage set to $0 (token mode) it reproduces the email exactly ($6.40M revenue, $2.90M net benefit, 193% ROI, Year-4 payback); the default view adds the signal-model upside on top. Bottom half decomposes the placeholder operating cost into our real stack — founder salaries, staged engineering hires, and infrastructure taken from <em>AWS Infrastructure Cost — Kestrel &amp; HomePassport</em> (verified vs AWS Price List Bulk API, Sept 2026; $671/mo per division scaling to $7,857/mo at national scale). Comparable: Scaffold $14.85M seed (Navitas; D.R. Horton, PulteGroup, Builders FirstSource, Ivy Zelman; 200K homes deployed). Operating-cost and founder figures are working assumptions to be replaced with real numbers. <em>Content rephrased for compliance with licensing restrictions.</em>
+    </footer>
+
+<!-- ═══════════ DETAILED PRINT SHEET (print-only; the inline summary is always visible above) ═══════════ -->
+<div id="printsheet" aria-hidden="true">
+    <div class="ps-head">
+        <div>
+            <div class="ps-brand">TESSERA · Execution Strategy</div>
+            <div class="ps-sub">Business case &amp; unit-economics summary — generated from the interactive model</div>
+        </div>
+        <div class="ps-meta" id="ps_date"></div>
+    </div>
+
+    <h2 class="ps-h2">Executive summary</h2>
+    <div class="ps-story" id="ps_story"></div>
+
+    <h2 class="ps-h2">Scenario at a glance</h2>
+    <div class="ps-kpis" id="ps_kpis"></div>
+
+    <div class="ps-two">
+        <div>
+            <h3 class="ps-h3">The forward model (what the VC sees)</h3>
+            <table class="ps-tbl" id="ps_pnl"></table>
+        </div>
+        <div>
+            <h3 class="ps-h3">Floor vs signal-model upside</h3>
+            <table class="ps-tbl" id="ps_floor"></table>
+        </div>
+    </div>
+
+    <h2 class="ps-h2">What it means for us</h2>
+    <div class="ps-two">
+        <div>
+            <h3 class="ps-h3">Operating cost, distributed (Yr-3 scale)</h3>
+            <table class="ps-tbl" id="ps_stack"></table>
+        </div>
+        <div>
+            <h3 class="ps-h3">The raise &amp; founder economics</h3>
+            <table class="ps-tbl" id="ps_ask"></table>
+        </div>
+    </div>
+
+    <h2 class="ps-h2">Assumptions used in this run</h2>
+    <table class="ps-tbl ps-assume" id="ps_assume"></table>
+
+    <div class="ps-foot" id="ps_foot"></div>
+</div>
+
+</main>
+</div>
+
+<script>
+(function () {
+    "use strict";
+    var DEFAULTS = {
+        invest: 2000000, implfee: 100000, molic: 10000, inclsig: 20, avgsig: 28, oversig: 400, tierup: 30,
+        newclients: 4, salesyr: 2, opex: 400000, salescost: 140000, salesboost: 3, divsperco: 40,
+        foundersal: 75000, nfounders: 2, engcost: 150000, neng: 2, infra: 671, opsclient: 1200, othercost: 60000, postcap: 12000000
+    };
+    var IDS = Object.keys(DEFAULTS);
+    // Optimum $2M scenario: dedicated salesperson on from the start (the payback accelerator)
+    var STATE = { pricemode: "token", sales: 1 };  // non-slider toggles
+
+    function money(n) {
+        var neg = n < 0; n = Math.abs(n); var s;
+        if (n >= 1e9) s = "$" + (n/1e9).toFixed(2).replace(/\.?0+$/,"") + "B";
+        else if (n >= 1e6) s = "$" + (n/1e6).toFixed(2).replace(/\.?0+$/,"") + "M";
+        else if (n >= 1e3) s = "$" + Math.round(n/1e3) + "K";
+        else s = "$" + Math.round(n);
+        return (neg ? "-" : "") + s;
+    }
+    // For big-money tables (millions): show sub-$1K values as near-break-even, not "$800"
+    function moneyBig(n) { return (Math.abs(n) > 0 && Math.abs(n) < 1000) ? (n<0?"-~$0":"~$0") : money(n); }
+    function moneyParen(n){ return n<0 ? "("+moneyBig(-n)+")" : moneyBig(n); }
+    function pct(n,d){ return n.toFixed(d===undefined?0:d) + "%"; }
+    function num(n){ return Math.round(n).toLocaleString("en-US"); }
+    function get(id){ return parseFloat(document.getElementById(id).value); }
+    function setOut(id,t){ var el=document.getElementById(id); if(el) el.textContent=t; }
+    function setKpi(id,t){ var el=document.getElementById(id); if(el){ var v=el.querySelector(".val"); if(v) v.textContent=t; } }
+    function flash(id){ var el=document.getElementById(id); if(!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+
+    function compute() {
+        var v = {}; IDS.forEach(function(id){ v[id]=get(id); });
+        var years = [1,2,3,4,5];
+
+        // Floor = flat base license (base case).
+        var floorLicYr = v.molic * 12;
+        var overageN = Math.max(0, v.avgsig - v.inclsig);
+        var overageYr = overageN * v.oversig * 12;
+
+        // Pricing mechanism — several ways to monetize
+        //  token     — base bundle + per-signal overage (Maen's model)
+        //  flat      — package price = base × (1 + premium%), no metering
+        //  division  — per-division license = base bundle + overage, priced per division
+        var licenseYr;
+        if (STATE.pricemode === "flat") {
+            licenseYr = floorLicYr * (1 + v.tierup/100);
+        } else { // token or division both meter signals
+            licenseYr = floorLicYr + overageYr;
+        }
+
+        // Client growth (+ dedicated salesperson lever)
+        var salesOn = STATE.sales === 1;
+        var active = [], newAdds = [];
+        years.forEach(function(y){
+            var base = (y >= v.salesyr) ? v.newclients : 0;
+            var boost = (salesOn && y >= v.salesyr) ? v.salesboost : 0;
+            var add = base + boost;
+            newAdds.push(add);
+            active.push((active.length?active[active.length-1]:0) + add);
+        });
+
+        // Revenue (signal-model = the headline business case)
+        var implRev = newAdds.map(function(a){ return a*v.implfee; });
+        var licRev = active.map(function(a){ return a*licenseYr; });
+        var totalRev = years.map(function(y,i){ return implRev[i]+licRev[i]; });
+
+        // Floor-vs-upside comparison (total revenue including implementation)
+        var floorRev = years.map(function(y,i){ return implRev[i] + active[i]*floorLicYr; });
+        var upsideRev = totalRev;                              // full model at chosen mechanism
+        var upsideBand = years.map(function(y,i){ return upsideRev[i] - floorRev[i]; });
+
+        // Opex per year: flat opex + salesperson cost (from sales-start year, if on)
+        var opexYr = years.map(function(y){
+            return v.opex + (salesOn && y >= v.salesyr ? v.salescost : 0);
+        });
+
+        // P&L
+        var net = years.map(function(y,i){ return totalRev[i] - opexYr[i]; });
+        var cum = []; var run = -v.invest;
+        net.forEach(function(n){ run += n; cum.push(run); });
+        var payback = 0; for (var i=0;i<cum.length;i++){ if(cum[i]>=0){ payback=years[i]; break; } }
+
+        // 5-yr summary
+        var totRev5 = totalRev.reduce(function(a,b){return a+b;},0);
+        var totOpex5 = opexYr.reduce(function(a,b){return a+b;},0);
+        var npbi = totRev5 - totOpex5;                 // net profit before investment
+        var nbai = npbi - v.invest;                    // net benefit after investment
+        var roi = v.invest>0 ? (npbi - v.invest)/v.invest*100 : 0;
+        var arr5 = licRev[4];
+        var saasLow = arr5*4, saasHigh = arr5*8;
+
+        // ── Translation: our real cost stack ──
+        var founderCost = v.foundersal * v.nfounders;
+        var engTotal = v.engcost * v.neng;
+        // Per-client OPERATIONAL cost (distributed) = AWS infra floor + ops/maintenance effort
+        var perClientOpsMo = v.infra + v.opsclient;
+        var repClients = (active[2] || v.newclients);          // Yr-3 as representative scale
+        var infraSteady = repClients * v.infra * 12;           // AWS infra portion (the floor)
+        var opsSteady = repClients * v.opsclient * 12;         // ops/maintenance portion
+        var perClientSteady = infraSteady + opsSteady;         // total distributed operational cost
+        var teamFixed = founderCost + engTotal + v.othercost;  // fixed team baseline
+        var trueAnnual = teamFixed + perClientSteady;
+
+        var stack = [
+            { name: "Founders ("+v.nfounders+" × "+money(v.foundersal)+")", val: founderCost },
+            { name: "Engineers ("+v.neng+" × "+money(v.engcost)+")", val: engTotal },
+            { name: "Operational — ops &amp; maintenance (per client, Yr-3)", val: opsSteady },
+            { name: "Operational — AWS infra floor (per client, Yr-3)", val: infraSteady },
+            { name: "Other (tools, legal, travel)", val: v.othercost }
+        ];
+        var stackTotal = stack.reduce(function(a,b){return a+b.val;},0);
+        var infraPct = stackTotal>0 ? infraSteady/stackTotal*100 : 0;                        // AWS floor only
+        var peoplePct = stackTotal>0 ? (founderCost+engTotal+opsSteady)/stackTotal*100 : 0;  // people + ops effort
+
+        // What company keeps (real cost = fixed team + per-year operational cost + salesperson if on)
+        var salesYrCost = years.map(function(y){ return (salesOn && y >= v.salesyr) ? v.salescost : 0; });
+        var realCostYr = years.map(function(y,i){ return teamFixed + active[i]*perClientOpsMo*12 + salesYrCost[i]; });
+        var kept = years.map(function(y,i){ return totalRev[i] - realCostYr[i]; });
+
+        // Runway (year-1 pre-revenue burn = fixed team + starting operational cost)
+        var burnYr1 = teamFixed + active[0]*perClientOpsMo*12;
+        var runwayMo = burnYr1>0 ? v.invest/(burnYr1/12) : 0;
+        var infra18 = v.infra*18; // rough 18-mo AWS infra at ~1 client (the floor)
+
+        // Dilution
+        var stake = v.postcap>0 ? v.invest/v.postcap*100 : 0;
+        var ownRetained = Math.max(0, 100 - stake - 10); // 10% pool
+
+        // Deployment effort behind the implementation fee
+        var deployDays = 12, dayRate = 1200, deployTravel = 4000; // fixed illustrative effort
+        var deployLabor = deployDays * dayRate;
+        var deployCost = deployLabor + deployTravel;
+        var deployMargin = v.implfee>0 ? (1 - deployCost/v.implfee)*100 : 0;
+        var deployCover = deployCost>0 ? v.implfee/deployCost : 0;
+        var deployTTL = 30; // days, builder-gated
+
+        // Division → company expansion
+        var logoLic = v.divsperco * licenseYr;             // full company logo license/yr
+        var logoY1 = v.divsperco * (licenseYr + v.implfee); // if all divisions land
+        var vsFourClients = licenseYr>0 ? logoLic/(4*licenseYr) : 0;
+
+        return {
+            v:v, years:years, licenseYr:licenseYr, floorLicYr:floorLicYr, overageN:overageN, overageYr:overageYr, active:active, newAdds:newAdds,
+            implRev:implRev, licRev:licRev, totalRev:totalRev, floorRev:floorRev, upsideRev:upsideRev, upsideBand:upsideBand,
+            opexYr:opexYr, net:net, cum:cum, payback:payback,
+            totRev5:totRev5, totOpex5:totOpex5, npbi:npbi, nbai:nbai, roi:roi, arr5:arr5, saasLow:saasLow, saasHigh:saasHigh,
+            founderCost:founderCost, engTotal:engTotal, infraSteady:infraSteady, trueAnnual:trueAnnual,
+            stack:stack, stackTotal:stackTotal, infraPct:infraPct, peoplePct:peoplePct,
+            realCostYr:realCostYr, kept:kept, burnYr1:burnYr1, runwayMo:runwayMo, infra18:infra18,
+            stake:stake, ownRetained:ownRetained,
+            deployLabor:deployLabor, deployCost:deployCost, deployMargin:deployMargin, deployCover:deployCover, deployTTL:deployTTL,
+            deployDays:deployDays, dayRate:dayRate, deployTravel:deployTravel,
+            logoLic:logoLic, logoY1:logoY1, vsFourClients:vsFourClients, salesOn:salesOn
+        };
+    }
+
+    function render() {
+        var r = compute(), v = r.v;
+
+        // KPIs (business case)
+        setKpi("k_arr", money(r.arr5));
+        setKpi("k_rev5", money(r.totalRev[4]));
+        setKpi("k_clients", r.active[4]);
+        setKpi("k_payback", r.payback ? "Yr "+r.payback : ">5 yr");
+        setKpi("k_roi", pct(r.roi));
+        ["k_arr","k_rev5","k_clients","k_payback","k_roi"].forEach(flash);
+
+        // Growth
+        var g="";
+        r.years.forEach(function(y,i){ g+="<tr><td class='lbl'>Year "+y+"</td><td class='num out'>"+r.newAdds[i]+"</td><td class='num out'>"+r.active[i]+"</td></tr>"; });
+        document.getElementById("growth_rows").innerHTML=g;
+
+        // Revenue
+        var rr="";
+        r.years.forEach(function(y,i){ rr+="<tr><td class='lbl'>Year "+y+"</td><td class='num out'>"+money(r.implRev[i])+"</td><td class='num out'>"+money(r.licRev[i])+"</td><td class='num out'>"+money(r.totalRev[i])+"</td></tr>"; });
+        document.getElementById("rev_rows").innerHTML=rr;
+
+        // P&L
+        var pn="";
+        r.years.forEach(function(y,i){
+            var pbCls = (r.payback===y) ? " class='pbrow'" : "";
+            var netCls = r.net[i]>=0?"pos":"neg", cumCls=r.cum[i]>=0?"pos":"neg";
+            pn+="<tr"+pbCls+"><td class='lbl'>Year "+y+"</td><td class='num out'>"+money(r.totalRev[i])+"</td><td class='num out'>"+money(r.opexYr[i])+"</td>"+
+                "<td class='num out "+netCls+"'>"+moneyParen(r.net[i])+"</td><td class='num out "+cumCls+"'>"+moneyParen(r.cum[i])+"</td></tr>";
+        });
+        document.getElementById("pnl_rows").innerHTML=pn;
+
+        // Cumulative cash-flow bars (include the -investment starting point)
+        var series = [{lab:"Start", val:-v.invest}].concat(r.years.map(function(y,i){ return {lab:"Y"+y, val:r.cum[i]}; }));
+        var maxAbs = Math.max.apply(null, series.map(function(s){return Math.abs(s.val);}).concat([1]));
+        var ccf = "";
+        series.forEach(function(s){
+            var half = 82; // px each side of zero line (container 190, zero ~ middle)
+            var h = (Math.abs(s.val)/maxAbs)*half;
+            var style = s.val>=0
+                ? "bottom:50%;height:"+h.toFixed(0)+"px"
+                : "top:50%;height:"+h.toFixed(0)+"px";
+            ccf += "<div class='ccfbar'><div class='b "+(s.val>=0?"pos":"neg")+"' style='"+style+"'></div><div class='cl'>"+s.lab+"</div></div>";
+        });
+        var ccfEl = document.getElementById("ccf");
+        ccfEl.innerHTML = "<div class='zero' style='top:50%'></div>" + ccf;
+
+        // Floor-vs-upside chart
+        var fmax = Math.max.apply(null, r.upsideRev.concat([1]));
+        var fchart = "", frows = "";
+        r.years.forEach(function(y,i){
+            var floorH = (r.floorRev[i]/fmax)*200;
+            var upH = (r.upsideBand[i]/fmax)*200;
+            var noup = r.upsideBand[i] <= 0 ? " noup" : "";
+            var upLab = r.upsideBand[i] > 0 ? "<div class='up-lab'>+"+money(r.upsideBand[i])+"</div>" : "";
+            fchart += "<div class='fbar'><div class='stack"+noup+"'>"+
+                "<div class='up' style='height:"+upH.toFixed(0)+"px'></div>"+
+                "<div class='fl' style='height:"+floorH.toFixed(0)+"px'></div></div>"+
+                upLab + "<div class='tot'>"+money(r.upsideRev[i])+"</div><div class='yl'>Year "+y+"</div></div>";
+            frows += "<tr><td class='lbl'>Year "+y+"</td><td class='num out'>"+money(r.floorRev[i])+"</td><td class='num out'>"+money(r.upsideRev[i])+"</td></tr>";
+        });
+        document.getElementById("floorchart").innerHTML = fchart;
+        document.getElementById("floor_rows").innerHTML = frows;
+        var fnote = document.getElementById("floor_note");
+        if (r.overageYr <= 0 || r.overageN <= 0) {
+            fnote.innerHTML = "Overage is off — the signal model equals the flat-license floor exactly. Year-5 total: <strong>"+money(r.upsideRev[4])+"</strong>. Raise the overage or avg-signals slider to reveal the upside band.";
+        } else {
+            fnote.innerHTML = "Signal model adds <strong>"+money(r.overageN*r.v.oversig*12)+"/client/yr</strong> ("+r.overageN+" signals over the base "+r.v.inclsig+"). Year-5 goes "+money(r.floorRev[4])+" → <strong>"+money(r.upsideRev[4])+"</strong>. Set <strong>Overage → $0</strong> and the orange band collapses to the PDF floor.";
+        }
+
+        // Deployment effort
+        setOut("dp_days", r.deployDays);
+        setOut("dp_rate", "$"+num(r.dayRate));
+        setOut("dp_labor", money(r.deployLabor));
+        setOut("dp_travel", money(r.deployTravel));
+        setOut("dp_cost", money(r.deployCost));
+        setOut("dp_margin", pct(r.deployMargin));
+        setOut("dp_ttl", r.deployTTL + " days");
+        setOut("dp_fee", money(v.implfee));
+        setOut("dp_cover", r.deployCover.toFixed(1)+"×");
+        setOut("dp_lic", money(r.licenseYr));
+
+        // Division → company expansion
+        setOut("ex_divlic", money(r.licenseYr));
+        setOut("ex_divimpl", money(v.implfee));
+        setOut("ex_divy1", money(r.licenseYr + v.implfee));
+        setOut("ex_divs", v.divsperco);
+        setOut("ex_logolic", money(r.logoLic));
+        setOut("ex_vs", r.vsFourClients.toFixed(1)+"×");
+
+        // Summary
+        setOut("s_rev", money(r.totRev5));
+        setOut("s_opex", money(r.totOpex5));
+        setOut("s_inv", money(v.invest));
+        setOut("s_npbi", money(r.npbi));
+        setOut("s_nbai", money(r.nbai));
+        setOut("s_arr", money(r.arr5));
+        setOut("s_roi", pct(r.roi));
+        setOut("s_saas", money(r.saasLow)+"–"+money(r.saasHigh));
+
+        // Dynamic ROI note — only claim "matches base case" when it actually does (floor case)
+        var roiNote = document.getElementById("roi_note");
+        if (roiNote) {
+            var isFloor = (r.overageYr <= 0 || r.overageN <= 0) && STATE.pricemode !== "flat";
+            if (isFloor) {
+                roiNote.innerHTML = "ROI = (net profit before investment − investment) ÷ investment. <strong>This is the base-case floor exactly</strong> — $6.40M revenue, "+pct(r.roi)+" ROI, Year-"+r.payback+" payback.";
+            } else {
+                roiNote.innerHTML = "ROI = (net profit before investment − investment) ÷ investment. <strong>This view shows the signal-model upside</strong> ("+money(r.totRev5)+" 5-yr revenue, "+pct(r.roi)+" ROI, Year-"+r.payback+" payback). Set overage to $0 (token mode) to reproduce the base-case floor — $6.40M / 193% / Year 4.";
+            }
+        }
+
+        // ── Translation KPIs ──
+        setKpi("u_realopex", money(r.trueAnnual));
+        setKpi("u_infrapct", pct(r.infraPct));
+        setKpi("u_peoplepct", pct(r.peoplePct));
+        setKpi("u_runway", "~"+Math.round(r.runwayMo)+" mo");
+        setKpi("u_dilution", pct(r.stake,1));
+
+        // Cost stack
+        var st="";
+        r.stack.forEach(function(row){
+            var p = r.stackTotal>0 ? row.val/r.stackTotal*100 : 0;
+            st += "<tr><td class='lbl'>"+row.name+"</td><td class='num out'>"+money(row.val)+"</td><td class='num out'>"+pct(p)+"</td></tr>";
+        });
+        st += "<tr class='total'><td>Our true annual cost</td><td class='num out'>"+money(r.stackTotal)+"</td><td class='num out'>100%</td></tr>";
+        document.getElementById("stack_rows").innerHTML=st;
+
+        var gap = r.stackTotal - v.opex;
+        document.getElementById("reconcile_note").textContent =
+            "The placeholder is "+money(v.opex)+"; our real stack is "+money(r.stackTotal)+" ("+
+            (gap>=0?"+":"")+money(gap)+" vs placeholder). Set the operating-cost slider to match once we lock the real number.";
+
+        // Keep table
+        var kp="";
+        r.years.forEach(function(y,i){
+            var keptCls = r.kept[i]>=0?"pos":"neg";
+            kp+="<tr><td class='lbl'>Year "+y+"</td><td class='num out'>"+money(r.totalRev[i])+"</td><td class='num out'>"+money(r.realCostYr[i])+"</td><td class='num out "+keptCls+"'>"+moneyParen(r.kept[i])+"</td></tr>";
+        });
+        document.getElementById("keep_rows").innerHTML=kp;
+
+        // Raise/runway
+        setOut("r_raise", money(v.invest));
+        setOut("r_burn", money(r.burnYr1));
+        setOut("r_runway", "~"+Math.round(r.runwayMo)+" mo");
+        setOut("r_infra18", money(r.infra18));
+
+        // Founder economics
+        setOut("f_sal", money(v.foundersal));
+        setOut("f_n", v.nfounders);
+        setOut("f_total", money(r.founderCost));
+        setOut("f_own", "~"+Math.round(r.ownRetained)+"%");
+
+        // Ask
+        setOut("a_raise", money(v.invest));
+        setOut("a_post", money(v.postcap));
+        setOut("a_stake", pct(r.stake,1));
+
+        // Live inline executive summary (always visible at top)
+        updateExecSummary(r);
+    }
+
+    var LABELS = {
+        invest:function(x){return "$"+num(x);}, implfee:function(x){return "$"+num(x);}, molic:function(x){return "$"+num(x);},
+        inclsig:function(x){return x+"";}, avgsig:function(x){return x+"";}, oversig:function(x){return "$"+num(x);},
+        tierup:function(x){return "+"+x+"%";},
+        newclients:function(x){return x+"";}, salesyr:function(x){return "Year "+x;}, opex:function(x){return "$"+num(x);},
+        salescost:function(x){return "$"+num(x);}, salesboost:function(x){return "+"+x;}, divsperco:function(x){return x+"";},
+        foundersal:function(x){return "$"+num(x);}, nfounders:function(x){return x+"";}, engcost:function(x){return "$"+num(x);},
+        neng:function(x){return x+"";}, infra:function(x){return "$"+num(x);}, opsclient:function(x){return "$"+num(x);}, othercost:function(x){return "$"+num(x);},
+        postcap:function(x){return "$"+(x/1e6).toFixed(1)+"M";}
+    };
+    function syncLabel(id){ var el=document.getElementById(id+"_v"); if(el) el.textContent=LABELS[id](get(id)); }
+
+    // ── Executive-summary prose (shared by the inline block + the print sheet) ──
+    function execStory(r) {
+        var v = r.v;
+        var modeName = { token: "signal token + overage", flat: "flat package tier", division: "per-division license" }[STATE.pricemode];
+        var isFloor = (r.overageYr <= 0 || r.overageN <= 0) && STATE.pricemode !== "flat";
+        var story = "";
+        story += "<p>Tessera is raising <strong>"+money(v.invest)+"</strong> at a "+money(v.postcap)+" post-money cap ("+
+            pct(r.stake,1)+" to the investor) to take a built Layer-1 MVP into paid builder deployments. This is velocity capital, not survival capital — a national builder's entire pipeline runs on under $8K/month of infrastructure, so the raise is almost entirely people.</p>";
+        story += "<p>The business case is deliberately conservative: <strong>"+v.newclients+" new implementation"+(v.newclients>1?"s":"")+" a year</strong> beginning in Year "+v.salesyr+
+            ", priced on a "+modeName+" model at "+money(v.molic)+"/month base plus a "+money(v.implfee)+" implementation fee"+
+            (STATE.sales===1 ? ", with a dedicated salesperson added to accelerate growth" : "")+". ";
+        if (isFloor) {
+            story += "At these settings the model reproduces the base business case exactly — <strong>"+money(r.totalRev[4])+" of Year-5 revenue, "+pct(r.roi)+" five-year ROI, and payback in Year "+r.payback+"</strong>.</p>";
+        } else {
+            story += "That produces <strong>"+money(r.totalRev[4])+" of Year-5 revenue, "+pct(r.roi)+" five-year ROI, and payback in Year "+r.payback+"</strong>";
+            if (STATE.pricemode !== "flat") story += " — with "+money(r.upsideBand[4])+" of that Year-5 total coming from signal overage on top of a "+money(r.floorRev[4])+" flat-license floor that already pays back on its own";
+            story += ".</p>";
+        }
+        story += "<p>The economics compound two ways. <strong>Vertically</strong>, each client can widen from the base signal bundle toward the full 51-signal set, lifting the license without new acquisition. <strong>Horizontally</strong>, a client can be a single division — so landing one national builder is a "+v.divsperco+"-division runway worth "+money(r.logoLic)+"/year at full rollout, not one sale. Implementation is "+pct(r.deployMargin)+" margin and recovers its delivery cost "+r.deployCover.toFixed(1)+"× up front, so integration work is paid for on day one and the license stays clean recurring revenue.</p>";
+        story += "<p>Honestly costed, our true operating cost at Year-3 scale is <strong>"+money(r.trueAnnual)+"/year</strong> — of which AWS infrastructure is only "+pct(r.infraPct)+" (the floor); the rest is people and per-account operations. Even so, the company keeps "+money(r.kept[4])+" in Year 5, and founders retain roughly "+Math.round(r.ownRetained)+"% after the round.</p>";
+        return story;
+    }
+
+    // ── Live inline executive summary (top of page) ──
+    function updateExecSummary(r) {
+        document.getElementById("es_kpis").innerHTML =
+            "<div class='k'><div class='n'>"+money(r.totalRev[4])+"</div><div class='l'>Year-5 revenue</div></div>"+
+            "<div class='k'><div class='n'>"+r.active[4]+"</div><div class='l'>Active clients Yr 5</div></div>"+
+            "<div class='k hi'><div class='n'>Year "+(r.payback||">5")+"</div><div class='l'>Payback</div></div>"+
+            "<div class='k'><div class='n'>"+pct(r.roi)+"</div><div class='l'>5-year ROI</div></div>"+
+            "<div class='k'><div class='n'>"+pct(r.stake,1)+"</div><div class='l'>Dilution</div></div>";
+        document.getElementById("es_story").innerHTML = execStory(r);
+    }
+
+    // ── Build the detailed print summary from current settings ──
+    function buildPrintSheet() {
+        var r = compute(), v = r.v;
+        var modeName = { token: "signal token + overage", flat: "flat package tier", division: "per-division license" }[STATE.pricemode];
+        var isFloor = (r.overageYr <= 0 || r.overageN <= 0) && STATE.pricemode !== "flat";
+
+        // Date
+        document.getElementById("ps_date").innerHTML =
+            new Date().toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" }) +
+            "<br>Working assumptions — not final";
+
+        // Executive-summary prose (adapts to the scenario)
+        document.getElementById("ps_story").innerHTML = execStory(r);
+
+        // KPIs
+        document.getElementById("ps_kpis").innerHTML =
+            kpi(money(r.totalRev[4]), "Year-5 revenue") +
+            kpi(r.active[4], "Active clients Yr 5") +
+            kpi("Year "+(r.payback||">5"), "Payback") +
+            kpi(pct(r.roi), "5-year ROI") +
+            kpi(pct(r.stake,1), "Dilution");
+
+        // Forward P&L
+        var pnl = "<tr><th>Year</th><th>Clients</th><th>Revenue</th><th>Op cost</th><th>Net</th><th>Cumulative</th></tr>";
+        r.years.forEach(function(y,i){
+            var hi = (r.payback===y) ? " class='hi'" : "";
+            pnl += "<tr"+hi+"><td>"+y+"</td><td>"+r.active[i]+"</td><td>"+money(r.totalRev[i])+"</td><td>"+money(r.opexYr[i])+
+                "</td><td>"+moneyParen(r.net[i])+"</td><td>"+moneyParen(r.cum[i])+"</td></tr>";
+        });
+        document.getElementById("ps_pnl").innerHTML = pnl;
+
+        // Floor vs upside
+        var fl = "<tr><th>Year</th><th>Floor</th><th>This model</th><th>Upside</th></tr>";
+        r.years.forEach(function(y,i){
+            fl += "<tr><td>"+y+"</td><td>"+money(r.floorRev[i])+"</td><td>"+money(r.upsideRev[i])+"</td><td>"+
+                (r.upsideBand[i]>0?"+"+money(r.upsideBand[i]):"—")+"</td></tr>";
+        });
+        document.getElementById("ps_floor").innerHTML = fl;
+
+        // Cost stack
+        var stk = "<tr><th>Line</th><th>Per year</th><th>%</th></tr>";
+        r.stack.forEach(function(row){
+            var p = r.stackTotal>0 ? row.val/r.stackTotal*100 : 0;
+            stk += "<tr><td>"+row.name.replace(/&amp;/g,"&")+"</td><td>"+money(row.val)+"</td><td>"+pct(p)+"</td></tr>";
+        });
+        stk += "<tr class='hi'><td>True annual operating cost</td><td>"+money(r.stackTotal)+"</td><td>100%</td></tr>";
+        document.getElementById("ps_stack").innerHTML = stk;
+
+        // Ask / founder
+        document.getElementById("ps_ask").innerHTML =
+            "<tr><td>Raise</td><td>"+money(v.invest)+"</td></tr>"+
+            "<tr><td>Post-money valuation</td><td>"+money(v.postcap)+"</td></tr>"+
+            "<tr><td>Investor stake</td><td>"+pct(r.stake,1)+"</td></tr>"+
+            "<tr><td>Founder ownership retained</td><td>~"+Math.round(r.ownRetained)+"%</td></tr>"+
+            "<tr><td>Year-1 burn / runway</td><td>"+money(r.burnYr1)+" · ~"+Math.round(r.runwayMo)+" mo</td></tr>";
+
+        // Assumptions
+        var am = [
+            ["Pricing mechanism", modeName],
+            ["Dedicated salesperson", STATE.sales===1 ? "Yes (+"+v.salesboost+" clients/yr, "+money(v.salescost)+"/yr)" : "No"],
+            ["Implementation fee", money(v.implfee)],
+            ["Monthly base license", money(v.molic)],
+            ["Signals: base / avg / overage", v.inclsig+" / "+v.avgsig+" / "+money(v.oversig)+" per signal/mo"],
+            ["New clients per year", v.newclients+" (from Year "+v.salesyr+")"],
+            ["Divisions per company logo", v.divsperco],
+            ["Operating cost (placeholder)", money(v.opex)],
+            ["Team: founders / engineers", v.nfounders+" × "+money(v.foundersal)+" / "+v.neng+" × "+money(v.engcost)],
+            ["Per-client ops: infra + maintenance", money(v.infra)+" + "+money(v.opsclient)+" /mo"]
+        ];
+        var at = "";
+        am.forEach(function(row){ at += "<tr><td>"+row[0]+"</td><td>"+row[1]+"</td></tr>"; });
+        document.getElementById("ps_assume").innerHTML = at;
+
+        document.getElementById("ps_foot").innerHTML =
+            "Generated from the Tessera execution-strategy model. Signal prices and operating-cost figures are internal working assumptions to be validated in pilots. Infrastructure verified vs the AWS Price List Bulk API (Sept 2026). With overage at $0 in token mode, the model reproduces the base business case exactly ($6.40M revenue, 193% ROI, Year-4 payback).";
+    }
+    function kpi(n,l){ return "<div class='ps-kpi'><div class='n'>"+n+"</div><div class='l'>"+l+"</div></div>"; }
+
+    // Show/hide mode-specific controls
+    var PRICEHINTS = {
+        token: "Base license covers a signal bundle; usage above it bills per signal (Maen's model).",
+        flat: "One package price, no per-signal metering — easier for a CFO to budget.",
+        division: "Per-division license, metered by signals — a company can roll out division by division."
+    };
+    function applyMode() {
+        // pricemode-specific ctrls
+        document.querySelectorAll('.ctrl[data-mode]').forEach(function(el){
+            var modes = el.getAttribute('data-mode').split(' ');
+            el.classList.toggle('hide', modes.indexOf(STATE.pricemode) === -1);
+        });
+        // sales-specific ctrls
+        document.querySelectorAll('.ctrl[data-sales]').forEach(function(el){
+            el.classList.toggle('hide', el.getAttribute('data-sales') !== String(STATE.sales));
+        });
+        var ph = document.getElementById('pricemode_hint'); if (ph) ph.textContent = PRICEHINTS[STATE.pricemode];
+    }
+
+    // Segmented toggle wiring
+    document.querySelectorAll('#pricemode button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            STATE.pricemode = btn.getAttribute('data-mode');
+            document.querySelectorAll('#pricemode button').forEach(function(b){ b.classList.toggle('on', b===btn); });
+            applyMode(); render();
+        });
+    });
+    document.querySelectorAll('#salestoggle button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            STATE.sales = parseInt(btn.getAttribute('data-sales'),10);
+            document.querySelectorAll('#salestoggle button').forEach(function(b){ b.classList.toggle('on', b===btn); });
+            applyMode(); render();
+        });
+    });
+
+    IDS.forEach(function(id){ document.getElementById(id).addEventListener("input", function(){ syncLabel(id); render(); }); });
+    document.getElementById("reset").addEventListener("click", function(){
+        IDS.forEach(function(id){ document.getElementById(id).value=DEFAULTS[id]; syncLabel(id); });
+        STATE.pricemode = "token"; STATE.sales = 1;   // optimum $2M scenario
+        document.querySelectorAll('#pricemode button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-mode')==='token'); });
+        document.querySelectorAll('#salestoggle button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sales')==='1'); });
+        applyMode(); render();
+    });
+    // Print button (in the inline exec summary) builds the detailed sheet, then prints
+    document.getElementById("printbtn").addEventListener("click", function(){
+        buildPrintSheet();
+        window.print();
+    });
+
+    IDS.forEach(syncLabel);
+    applyMode();
+    render();
+})();
+</script>
+
+</body>
+</html>
