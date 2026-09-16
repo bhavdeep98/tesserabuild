@@ -79,6 +79,11 @@
   .say{font-size:17px;line-height:1.62;color:var(--ink);}
   .say.muted{color:var(--ink-2);font-size:15.5px;}
   .say b{color:#fff;}
+  /* bulleted teleprompter beats — easier to read while speaking */
+  .beats{list-style:none;margin:8px 0 0;padding:0;}
+  .beats li{position:relative;padding:5px 0 5px 20px;line-height:1.55;}
+  .beats li::before{content:"";position:absolute;left:2px;top:13px;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .line.mine .beats li{font-size:inherit;}
 
   /* YOUR turn — highlighted block */
   .line.mine{background:linear-gradient(120deg,rgba(49,221,195,.10),transparent 70%);
@@ -173,7 +178,12 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames it: this is an intelligence layer that sits <b>above</b> the systems a builder already runs. Three layers — Layer 1 predicts execution risk before the close; Layer 2 is a persistent record of the home; Layer 3 uses that record after closing. And the key point she plants: <b>Layer 1 is the wedge — without it we can’t build 2 or 3.</b> Then: “Bhavdeep is going to walk you through how we actually do it.”</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Teresa hands to you. Take it from here and drive the slides.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — take the mic</span>“Thanks, Teresa. So the way I’d frame the technology: the whole thing sits <b>on top</b> of what the builder already owns — we don’t rip anything out. Layer 1 predicts what’s happening to a home before it closes, Layer 2 turns that into a permanent record, Layer 3 uses it after close. Layer 1 is our wedge. Let me show you the problem it solves first.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — take the mic</span><ul class="beats">
+        <li>“Thanks, Teresa. The whole thing sits <b>on top</b> of what the builder already owns — we don’t rip anything out.</li>
+        <li>Layer 1 predicts what’s happening to a home before it closes.</li>
+        <li>Layer 2 turns that into a permanent record. Layer 3 uses it after close.</li>
+        <li><b>Layer 1 is our wedge.</b> Let me show you the problem it solves first.”</li>
+      </ul></div></div>
     </div>
   </section>
 
@@ -184,8 +194,17 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Sets up the problem from her operator seat — why builders feel this. This is what she’s hearing from builders in her advisory / fractional‑COO work. She may frame it as “the reason it’s a down market and why these tools matter.” Then leaves the mechanics to you.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You walk the actual slide — the five silos and the seams. This is yours.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk the slide</span>“No single system runs the home — construction sits in BuildPro, sales in Salesforce, and mortgage, title, finance and land each in their own tool. The outcome happens <b>between</b> them: every system reads ‘on track’ and the home still misses close, because nobody owns the dependencies in between. By the time someone spots it, the window to act is gone. It’s not missing data — builders have plenty. Nobody connects it early enough to say what’s actually going to happen.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the validation</span>“And this isn’t hypothetical — it shows up right in the builders’ earnings calls. Cancellations are running at <b>16–18%</b>, longer build times are a <b>multi‑billion‑dollar</b> annual drag on the industry, and it only worsens as margins compress. Their own leadership is saying the way they protect margin now is <b>better technology</b>. That’s exactly the gap we fill.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk the slide</span><ul class="beats">
+        <li>“No single system runs the home — construction sits in <b>BuildPro</b>, sales in <b>Salesforce</b>, mortgage, title, finance and land each in their own tool.</li>
+        <li>The outcome happens <b>between</b> them: every system reads ‘on track’ and the home still misses close, because nobody owns the dependencies in between.</li>
+        <li>By the time someone spots it, the window to act is gone.</li>
+        <li>It’s not missing data — builders have plenty. Nobody connects it early enough to say what’s actually going to happen.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the validation</span><ul class="beats">
+        <li>“And this isn’t hypothetical — it shows up right in the builders’ earnings calls.</li>
+        <li>Cancellations are running at <b>16–18%</b>; longer build times are a <b>multi‑billion‑dollar</b> annual drag — and it worsens as margins compress.</li>
+        <li>Their own leadership says the way they protect margin now is <b>better technology</b>. That’s exactly the gap we fill.”</li>
+      </ul></div></div>
       <div class="line cuerow"><div class="who cue">Note</div><div class="cuebox">Don’t name every tool unless they ask — 30‑min meeting, stay high level. Conclude with: “that’s the problem we solve.”</div></div>
     </div>
   </section>
@@ -197,9 +216,19 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Opens Layer 1 at a high level — “Layer 1 is critical; without it we can’t build 2 or 3. Bhavdeep will show you how we get there.” Then hands to you for the technical walk.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your slide. Walk Predict → Explain → Intervene, then land the graph and the moat.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — Predict · Explain · Intervene</span>“Our wedge, at the individual‑home level. <b>Predict</b> — what’s going to happen. <b>Explain</b> — why. <b>Intervene</b> — how and when to fix it. Like the one on screen: 1245 Elm Ct is <b>critical at 24% confidence</b> — the driver is <b>title, 50% behind</b> — so clear title now, before it drags the close.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — why it’s hard to copy</span>“The hard part isn’t wiring systems together — it’s the <b>graph underneath</b>, a <b>neurosymbolic</b> approach that knows how a home <b>should</b> move. That’s what no single builder tool can see.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the compounding moat</span>“And it compounds: every close is <b>labeled training data</b> that sharpens the engine — and earns us the right to build Layers 2 and 3.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — Predict · Explain · Intervene</span><ul class="beats">
+        <li>“Our wedge, at the individual‑home level.</li>
+        <li><b>Predict</b> — what’s going to happen. <b>Explain</b> — why. <b>Intervene</b> — how and when to fix it.</li>
+        <li>Like the one on screen: 1245 Elm Ct is <b>critical at 24% confidence</b>, driven by <b>title, 50% behind</b> — so clear title now, before it drags the close.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — why it’s hard to copy</span><ul class="beats">
+        <li>“The hard part isn’t wiring systems together — it’s the <b>graph underneath</b>, a <b>neurosymbolic</b> approach that knows how a home <b>should</b> move.</li>
+        <li>That’s what no single builder tool can see.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the compounding moat</span><ul class="beats">
+        <li>“And it compounds: every close is <b>labeled training data</b> that sharpens the engine.</li>
+        <li>That’s what earns us the right to build Layers 2 and 3.”</li>
+      </ul></div></div>
       <div class="qa">
         <div class="qh">Likely questions</div>
         <div class="qrow"><div class="q">“Is this real or a mockup?”</div><div class="a">Real — the MVP is built. 7 systems mapped, 2 live, 51 signal types, 500+ tests on the full pipeline. The raise turns it into a production platform and proves it on real builder data.</div></div>
@@ -214,8 +243,17 @@
       <span class="screen">On screen: live confidence‑meter animation; ~$160K/mo preventable loss per division vs ~$671/mo to run; VP dashboard; Ecosystem → Inference → Action.</span></div>
     <div class="slide-body">
       <div class="line cuerow"><div class="who cue">Cue</div><div class="cuebox act">Play the signal animation (great visual). Talk over it — this slide is yours, it’s the mechanics.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the mechanism</span>“Here’s <b>how</b> we get to that ‘why.’ We take the signals already flowing across the builder’s systems and run them against two things: a <b>dependency graph</b> of what physically has to happen before what, and the builder’s <b>own history</b> — how long each step has actually taken here. So on 1245 Elm Ct, we’re not guessing ‘title feels slow’ — we can say title has never cleared in under X days in this community, and there aren’t X days left. That’s what pins the blocker and ranks it.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the economics</span>“And the economics are simple. A single division runs ~2,100 homes a year, ~175 closings a month. Builders carry roughly $2K a day per deal during a delay — so a handful of stuck closings is a month of carry. That’s ~$160K a month of preventable loss per division, against ~$671 a month to run us. That ratio is the pitch.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the mechanism</span><ul class="beats">
+        <li>“Here’s <b>how</b> we get to that ‘why.’ We take the signals already flowing across their systems and check them against two things:</li>
+        <li>a <b>dependency graph</b> — what has to happen before what — and the builder’s <b>own history</b> — how long each step actually takes here.</li>
+        <li>So on 1245 Elm Ct we’re not guessing ‘title feels slow’ — title has never cleared in under 30 days here, and there are only 18 left.</li>
+        <li>That’s what pins the blocker and ranks it.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the economics</span><ul class="beats">
+        <li>“And the economics are simple. A division runs ~2,100 homes a year, ~175 closings a month.</li>
+        <li>Builders carry ~$2K a day per deal during a delay — so a handful of stuck closings is a whole month of carry.</li>
+        <li>That’s <b>~$160K a month</b> of preventable loss per division, against <b>~$671 a month</b> to run us. That ratio is the pitch.”</li>
+      </ul></div></div>
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Good spot for Teresa to reinforce “why builders want this now” from her operator lens, before you move to Layer 2.</div></div>
     </div>
   </section>
@@ -227,8 +265,18 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Sets it up (she said she’ll jump in here): a persistent record of the home, attached to the <b>home, not the person</b>, that survives ownership changes — the “only reliable home‑fax,” not unverified Zillow data. Then hands the “how” to you.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your favorite part — but the trap is over‑selling “blockchain.” Your job is precision on what we actually do. Own this.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — what it is</span>“So the Home Passport is a persistent digital identity for the home — from the land deal, through construction and handoff, and through the life of the property. It carries plans, materials, appliances, HVAC, inspections, warranties, repairs, even smart‑home devices — attached to the home, not the person. Think Carfax for a house: when it sells, the record moves with it.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — blockchain precision</span>“Let me be precise, because it’s our differentiator. We do <b>not</b> put documents or personal data on a blockchain. The actual records stay where they belong — in the builder’s own cloud. On‑chain we store only a <b>32‑byte fingerprint</b>, a hash, of each record. The chain acts as a <b>notary</b>: it proves the record hasn’t been tampered with, and it’s permanent by design. And each chain has its own value — title‑and‑ownership is one lineage, construction‑and‑maintenance is another. We’re not selling storage — we’re selling a trusted, permanent way to <b>verify</b> the home’s history.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — what it is</span><ul class="beats">
+        <li>“The Home Passport is a persistent digital identity for the home — from the land deal, through construction and handoff, through the life of the property.</li>
+        <li>It carries plans, materials, appliances, HVAC, inspections, warranties, repairs, even smart‑home devices — attached to the <b>home, not the person</b>.</li>
+        <li>Think Carfax for a house: when it sells, the record moves with it.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — blockchain precision</span><ul class="beats">
+        <li>“Let me be precise — this is our differentiator. We do <b>not</b> put documents or personal data on a blockchain.</li>
+        <li>The records stay in the builder’s own cloud. On‑chain we store only a <b>32‑byte fingerprint</b> — a hash — of each record.</li>
+        <li>The chain is a <b>notary</b>: it proves the record wasn’t tampered with, and it’s permanent by design.</li>
+        <li>Each chain has its own value — title‑and‑ownership is one lineage, construction‑and‑maintenance another.</li>
+        <li>We’re not selling storage — we’re selling a trusted way to <b>verify</b> the home’s history.”</li>
+      </ul></div></div>
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Takes the business color: warranty pain today, and the crypto/syndication angle — Lennar’s Bitcoin fund, crypto as a legal path to invest in a home, community syndication. Per the call this is a <b>soundbite, not the core sell</b> — let her lead it and read the room.</div></div>
       <div class="line cuerow"><div class="who cue">Note</div><div class="cuebox">Don’t lead with crypto. It’s an unlock the ledger enables, not the reason for the ledger.</div></div>
       <div class="qa">
@@ -246,7 +294,12 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames the “why it matters after close” — a first‑time buyer doesn’t know the HVAC filter is due, what’s under warranty, or who the builder recommends. The data keeps giving. Hands the mechanics to you.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your slide — walk the homeowner value and how it’s generated. Then hand to Teresa for monetization.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk it</span>“Because we have the data from the wedge through the Passport, we turn it into action for the homeowner: ‘it’s been 120 days, time to change your AC filter,’ warranty guidance, device setup, and service routed to the right preferred trade — delivered by email and push, no app to check. And every one of these is derived from the home’s <b>attested</b> records — each card cites its source. It’s not guessing; it’s reading the home’s own history. For the builder, that’s fewer calls, less warranty friction, and marketplace revenue on every referral.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk it</span><ul class="beats">
+        <li>“With the data from the wedge through the Passport, we turn it into action for the homeowner:</li>
+        <li>‘it’s been 120 days, change your AC filter,’ warranty guidance, device setup, service routed to the right preferred trade — by email and push, no app to check.</li>
+        <li>Every card is derived from the home’s <b>attested</b> records and cites its source. It’s not guessing — it’s reading the home’s own history.</li>
+        <li>For the builder: fewer calls, less warranty friction, and marketplace revenue on every referral.”</li>
+      </ul></div></div>
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Takes the big‑picture monetization: marketplace ownership, joint ventures, “who owns the marketplace” strategy — the endless upside.</div></div>
     </div>
   </section>
@@ -258,8 +311,18 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">This is the high‑level, vision slide — hand it to Teresa if she wants it. “The moat compounds” is her kind of line. Thesis: we don’t build another system of record — builders have those. We sit above and connect them, replacing the manual spreadsheet reconciliation. Every time we understand another part of the home’s lifecycle, the system gets smarter.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You own the competitive landscape here — you prepped this. Be ready to explain each competitor and why we’re different.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the moat, plainly</span>“The moat is simple: the more of the home’s lifecycle we understand, the better the intelligence gets — and we have the data to learn from what actually happened. Start with builder data, predict, create the passport, serve after close, and the lifecycle data feeds back in. Our only real competitor today is <b>a spreadsheet</b> — four systems merged by hand every Monday. We land inside the pipeline meeting they already hold.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — competition</span>“On the field: <b>Higharc</b> raised $170M+ but is design‑to‑build, upstream. <b>ALICE</b> and <b>nPlan</b> only see construction slippage. <b>Scaffold</b> — Horton and Pulte just put $15M in — automates the trades below the builder. <b>Digs</b> is post‑close docs. <b>ICE</b> is the closest — funding to recording, but not construction. None of them reach the actual close. And builders funding Scaffold <b>proves our thesis</b>: they’ll pay to unify fragmented data.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the moat, plainly</span><ul class="beats">
+        <li>“The moat is simple: the more of the home’s lifecycle we understand, the better the intelligence gets — and we have the data to learn from what actually happened.</li>
+        <li>Builder data → predict → passport → serve after close → and the lifecycle data feeds back in.</li>
+        <li>Our only real competitor today is <b>a spreadsheet</b> — four systems merged by hand every Monday. We land inside the pipeline meeting they already hold.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — competition</span><ul class="beats">
+        <li>“<b>Higharc</b> — $170M+ raised, but design‑to‑build, upstream.</li>
+        <li><b>ALICE</b> / <b>nPlan</b> — construction slippage only.</li>
+        <li><b>Scaffold</b> — Horton and Pulte put $15M in — automates the trades below the builder.</li>
+        <li><b>Digs</b> — post‑close docs. <b>ICE</b> — closest, but funding‑to‑recording, not construction.</li>
+        <li>None reach the actual close. And builders funding Scaffold <b>proves our thesis</b> — they’ll pay to unify fragmented data.”</li>
+      </ul></div></div>
     </div>
   </section>
 
@@ -270,8 +333,18 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames the ask: the MVP is built — that’s not what the money is for. This raise lets the team go full‑time and build. Lean — engineers hired against milestones, sales on commission. Then to you for the team detail.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You own the team plan — you defined the four hires. Frame the raise number as flexible.</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the team</span>“The money is for good engineers and a sales motion — that’s the heart of the company. I’m thinking a lean team of four, not all at once: an <b>NLP engineer</b> to streamline the signals and sharpen the engine, a <b>blockchain engineer</b> for the passport, a <b>go‑to‑market engineer</b> to automate our sales and outreach processes, and a <b>UX</b> hire. Over the first year that grows to four or five as the runway allows.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">If they ask the number</span>“The raise figure is a starting point tied to an ~18‑month runway — it can flex up or down depending on how fast we build the team. We’d rather have the conversation with you than anchor hard. And we have engineers and partners ready to go — we’re not starting a hiring search.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the team</span><ul class="beats">
+        <li>“The money is for good engineers and a sales motion — the heart of the company. A lean team of four, not all at once:</li>
+        <li>an <b>NLP engineer</b> to sharpen the signal engine,</li>
+        <li>a <b>blockchain engineer</b> for the passport,</li>
+        <li>a <b>go‑to‑market engineer</b> to automate sales and outreach,</li>
+        <li>and a <b>UX</b> hire. Grows to four or five over the first year as runway allows.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">If they ask the number</span><ul class="beats">
+        <li>“The raise figure is a starting point tied to an ~18‑month runway — it can flex up or down with how fast we build the team.</li>
+        <li>We’d rather have the conversation with you than anchor hard.</li>
+        <li>And we have engineers and partners ready to go — we’re not starting a hiring search.”</li>
+      </ul></div></div>
       <div class="qa">
         <div class="qh">Likely questions</div>
         <div class="qrow"><div class="q">“What do we get for it?” / “Is the valuation crazy?”</div><div class="a">Let Teresa / the cap‑table framing lead: a standard pre‑seed equity stake at a post‑money cap. If pushed on valuation, it’s conservative and grounded in TAM/SAM bottom‑up — not a wild number. Redirect to the ROI slide.</div></div>
@@ -287,8 +360,17 @@
     <div class="slide-body">
       <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Teresa leads this — it’s her slide and her strength. Frames it as the most conservative possible view: signal‑based licensing, sales from Year 2, and it’s still just Layer 1. The floor pays back on its own; a dedicated salesperson pulls payback forward.</div></div>
       <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You back the unit economics and pricing when the VC digs in. Cody/Teresa own the model; you own the “how the number is built.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — pricing model</span>“The model is <b>signal‑based</b> — it’s the natural AI‑native unit. A customer licenses a package of signals; roughly $10K/month for ~20 signals, ~$20K/month for ~45. Implementation is separate and one‑time — about $100K on average, from $50K for a clean stack up to $350K for a complex one. Signal overage is upside on top of the flat‑license floor.”</div></div>
-      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — who’s the customer</span>“And we define the customer as a <b>division</b>, not necessarily the whole company. Builders like Lennar or D.R. Horton roll this out division by division to get insights faster. So ‘four implementations’ can be four divisions or four companies — either way growth compounds per division. That’s why the floor is conservative.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — pricing model</span><ul class="beats">
+        <li>“The model is <b>signal‑based</b> — the natural AI‑native unit.</li>
+        <li>A customer licenses a package of signals: ~$10K/month for ~20 signals, ~$20K/month for ~45.</li>
+        <li>Implementation is separate, one‑time — ~$100K average, $50K for a clean stack up to $350K for a complex one.</li>
+        <li>Signal overage is upside on top of the flat‑license floor.”</li>
+      </ul></div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — who’s the customer</span><ul class="beats">
+        <li>“We define the customer as a <b>division</b>, not necessarily the whole company.</li>
+        <li>Big builders roll this out division by division to get insights faster.</li>
+        <li>So ‘four implementations’ can be four divisions or four companies — either way growth compounds per division. That’s why the floor is conservative.”</li>
+      </ul></div></div>
       <div class="qa">
         <div class="qh">The question Teresa predicts they’ll ask</div>
         <div class="qrow"><div class="q">“How do you pay me back faster — in three years, not four?”</div><div class="a">A dedicated salesperson. The slower payback is the floor with no sales motion. Fund the salesperson from the raise and payback moves up a full year — and that’s still just Layer 1. Two and three are upside we haven’t even put in these numbers.</div></div>
