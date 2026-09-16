@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tessera VC — Presenter Teleprompter</title>
+<style>
+  :root{
+    --void:#070C0C; --surface:#0E1615; --surface-2:#0C1413;
+    --accent:#31DDC3; --accent-dim:#1f9f8c;
+    --ink:#F8F9F7; --ink-2:#A4AEAA; --ink-3:#6f807a;
+    --line:rgba(255,255,255,.10);
+    --you:#31DDC3; --maen:#7FB4FF; --teresa:#F5B971; --raman:#C89BFF; --vc:#FF8A70;
+    --display:"Plus Jakarta Sans","Inter",system-ui,sans-serif;
+    --body:"Inter",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--void);color:var(--ink);font-family:var(--body);}
+  body{padding-bottom:180px;}
+
+  /* ---------- top control bar ---------- */
+  .bar{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:12px 20px; background:rgba(7,12,12,.92); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .bar .brand{font:800 15px/1 var(--display);letter-spacing:.18em;color:var(--accent);}
+  .bar .brand small{display:block;font:500 9px/1.4 var(--mono);letter-spacing:.16em;color:var(--ink-3);margin-top:4px;text-transform:uppercase;}
+  .bar .spacer{flex:1;}
+  .btn{
+    border:1px solid var(--line); background:var(--surface); color:var(--ink);
+    font:600 12px/1 var(--body); padding:9px 13px; border-radius:8px; cursor:pointer;
+    letter-spacing:.02em; user-select:none;
+  }
+  .btn:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.primary{background:var(--accent);color:#04110e;border-color:var(--accent);font-weight:700;}
+  .btn.primary.paused{background:transparent;color:var(--accent);}
+  .ctl{display:flex;align-items:center;gap:8px;font:600 11px/1 var(--mono);color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase;}
+  .ctl input[type=range]{width:110px;accent-color:var(--accent);}
+  .pos{font:600 11px/1 var(--mono);color:var(--ink-3);letter-spacing:.08em;}
+
+  /* ---------- progress ---------- */
+  .track{position:fixed;top:0;left:0;right:0;height:3px;background:transparent;z-index:60;}
+  .track .fill{height:100%;width:0;background:var(--accent);transition:width .15s linear;}
+
+  /* ---------- content ---------- */
+  main{max-width:1000px;margin:0 auto;padding:120px 28px 40px;}
+  .lead-note{
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;
+    background:var(--surface-2);padding:18px 22px;margin-bottom:28px;
+  }
+  .lead-note h2{margin:0 0 10px;font:800 18px/1.2 var(--display);letter-spacing:-.01em;}
+  .lead-note p{margin:6px 0;font-size:15px;line-height:1.6;color:var(--ink-2);}
+  .lead-note b{color:var(--ink);}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font:600 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;}
+  .legend span{display:inline-flex;align-items:center;gap:7px;color:var(--ink-2);}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+  .slide{scroll-margin-top:110px;margin:0 0 20px;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden;}
+  .slide.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(49,221,195,.18),0 16px 44px rgba(49,221,195,.10);}
+  .slide-head{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    padding:16px 24px;background:linear-gradient(120deg,rgba(49,221,195,.06),var(--surface) 60%);
+    border-bottom:1px solid var(--line);
+  }
+  .slide-head .n{font:800 14px/1 var(--display);color:var(--accent);letter-spacing:.04em;}
+  .slide-head .t{font:800 20px/1.2 var(--display);letter-spacing:-.02em;color:var(--ink);}
+  .slide-head .screen{font:600 11px/1.4 var(--mono);letter-spacing:.04em;color:var(--ink-3);width:100%;text-transform:uppercase;}
+  .slide-body{padding:18px 24px 22px;}
+
+  /* speaker lines */
+  .line{display:grid;grid-template-columns:112px 1fr;gap:16px;padding:12px 0;border-top:1px solid var(--line);}
+  .line:first-child{border-top:0;}
+  .who{font:700 11px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding-top:3px;}
+  .who.you{color:var(--you);} .who.maen{color:var(--maen);} .who.teresa{color:var(--teresa);}
+  .who.raman{color:var(--raman);} .who.vc{color:var(--vc);} .who.cue{color:var(--ink-3);}
+  .say{font-size:17px;line-height:1.62;color:var(--ink);}
+  .say.muted{color:var(--ink-2);font-size:15.5px;}
+  .say b{color:#fff;}
+
+  /* YOUR turn — highlighted block */
+  .line.mine{background:linear-gradient(120deg,rgba(49,221,195,.10),transparent 70%);
+    border-radius:10px;padding:14px 16px;margin:4px 0;border-top:0;grid-template-columns:112px 1fr;}
+  .line.mine .say{font-size:18.5px;line-height:1.66;}
+  .mine-tag{display:inline-block;font:700 9px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    color:#04110e;background:var(--accent);padding:4px 8px;border-radius:5px;margin-bottom:8px;}
+
+  /* cue rows */
+  .line.cuerow{background:transparent;}
+  .cuebox{border:1px dashed var(--line);border-radius:8px;padding:9px 13px;font:600 12.5px/1.5 var(--mono);color:var(--ink-3);letter-spacing:.02em;}
+  .cuebox.act{border-color:var(--accent);color:var(--accent);}
+
+  /* Q&A block */
+  .qa{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;}
+  .qa .qh{font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--vc);margin-bottom:8px;}
+  .qa .qrow{margin:8px 0;}
+  .qa .q{font-size:14.5px;line-height:1.5;color:var(--vc);}
+  .qa .a{font-size:15px;line-height:1.6;color:var(--ink);margin-top:4px;}
+  .qa .a::before{content:"→ ";color:var(--accent);font-weight:700;}
+
+  .anchors{margin-top:8px}
+  .anchors li{font-size:15px;line-height:1.7;color:var(--ink);}
+
+  /* ---------- bottom nav ---------- */
+  .foot{
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;gap:12px;
+    padding:12px 20px;background:rgba(7,12,12,.94);backdrop-filter:blur(8px);
+    border-top:1px solid var(--line);
+  }
+  .foot .jump{flex:1;display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+    font:600 10px/1 var(--mono);letter-spacing:.06em;padding:7px 9px;border-radius:6px;cursor:pointer;text-transform:uppercase;}
+  .chip:hover{border-color:var(--accent);color:var(--accent);}
+  .chip.active{background:var(--accent);color:#04110e;border-color:var(--accent);}
+  .hint{font:500 10px/1.5 var(--mono);color:var(--ink-3);letter-spacing:.04em;}
+
+  @media(max-width:640px){
+    .line,.line.mine{grid-template-columns:1fr;gap:5px;}
+    .who{padding-top:0;}
+    .bar .brand small{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="track"><div class="fill" id="fill"></div></div>
+
+<div class="bar">
+  <div class="brand">TESSERA<small>Presenter Teleprompter · Bhavdeep</small></div>
+  <div class="spacer"></div>
+  <div class="ctl">Speed <input id="speed" type="range" min="10" max="120" value="45" /></div>
+  <div class="ctl">Text <button class="btn" id="fontDown">A−</button><button class="btn" id="fontUp">A+</button></div>
+  <button class="btn primary paused" id="play">▶ Auto‑scroll</button>
+  <div class="pos" id="pos">00 / 11</div>
+</div>
+
+<main id="main">
+
+  <div class="lead-note" id="s0">
+    <h2>How to run this room (three presenters)</h2>
+    <p><b>Maen</b> — quick intros only, then steps back. (“Do the quick introductions… don’t wear the Lennar shirt.”)</p>
+    <p><b>Teresa</b> — the kickoff and the frame. She opens with why she’s here and why builders want this, sets up the three layers (“Layer 1 is critical — without it we can’t build 2 or 3”), states the problem and what each layer <b>is</b> at a high level, then hands to you. She jumps back in for the business color on <b>Layer 2</b> (warranty, blockchain/crypto, the “true home‑fax”) and <b>Layer 3</b> (marketplace, JVs, monetization), and she <b>closes the financials</b>.</p>
+    <p><b>You (Bhavdeep)</b> — you own the technology and <b>walk the actual slides</b>. Teresa’s handoff: “Bhavdeep is going to walk you through how we actually solve each layer technically… then walk them through the slides for Layer 1, 2 and 3.” Pattern all the way down: <b>Teresa frames it high‑level → you say “here’s how we do it” and run the slide.</b> Raman backs you on technical detail.</p>
+    <p>Your north star: <b>Layer 1 is the wedge — the data it creates earns the right to build Layers 2 &amp; 3.</b> Keep it interactive; let them lead. Full run ~15–20 min, so keep it tight.</p>
+    <p style="color:var(--accent)"><b>The teal blocks are YOUR lines.</b> Everything else is context so you know exactly when you come in.</p>
+    <div class="legend">
+      <span><i style="background:var(--you)"></i>You (Bhavdeep)</span>
+      <span><i style="background:var(--maen)"></i>Maen</span>
+      <span><i style="background:var(--teresa)"></i>Teresa</span>
+      <span><i style="background:var(--raman)"></i>Raman</span>
+      <span><i style="background:var(--vc)"></i>VC / anticipated Q</span>
+    </div>
+  </div>
+
+  <!-- ================= SLIDE 00 · INTRO ================= -->
+  <section class="slide" id="sIntro">
+    <div class="slide-head"><span class="n">00</span><span class="t">Open the room</span>
+      <span class="screen">Before slide 1. Introductions, then Teresa’s kickoff.</span></div>
+    <div class="slide-body">
+      <div class="line maen"><div class="who maen">Maen</div><div class="say muted">Quick introductions of the three of you and a warm open. Keeps it short, then hands to Teresa. (Not presenting the deck.)</div></div>
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Kickoff — the “why.” Why she’s interested, why she’s here, and why this is exactly what builders are asking for right now (down market, margin pressure). Sets up the frame: “We’re going to show you three layers. Layer 1 is critical — without it we can’t build 2 or 3. Bhavdeep is going to walk you through the technology and how we solve each layer.” Then hands to you.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You take the mic when Teresa says “…I’ll turn it over to Bhavdeep.” You now own the slides.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 01 ================= -->
+  <section class="slide" id="s1">
+    <div class="slide-head"><span class="n">01</span><span class="t">Cover — The intelligence layer for the home</span>
+      <span class="screen">On screen: three layer cards (Layer 1 lit as the wedge), thesis line at the bottom.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames it: this is an intelligence layer that sits <b>above</b> the systems a builder already runs. Three layers — Layer 1 predicts execution risk before the close; Layer 2 is a persistent record of the home; Layer 3 uses that record after closing. And the key point she plants: <b>Layer 1 is the wedge — without it we can’t build 2 or 3.</b> Then: “Bhavdeep is going to walk you through how we actually do it.”</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Teresa hands to you. Take it from here and drive the slides.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — take the mic</span>“Thanks, Teresa. So the way I’d frame the technology: the whole thing sits <b>on top</b> of what the builder already owns — we don’t rip anything out. Layer 1 predicts what’s happening to a home before it closes, Layer 2 turns that into a permanent record, Layer 3 uses it after close. And the reason we start at Layer 1 — it’s the wedge. Every home we score becomes data, and that data is what earns us the right to build 2 and 3. Let me show you the problem it solves first.”</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 02 ================= -->
+  <section class="slide" id="s2">
+    <div class="slide-head"><span class="n">02</span><span class="t">The Problem — the outcome happens between the systems</span>
+      <span class="screen">On screen: five silos all “on track,” red seams between them → “All green. Still slips.”</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Sets up the problem from her operator seat — why builders feel this. This is what she’s hearing from builders in her advisory / fractional‑COO work. She may frame it as “the reason it’s a down market and why these tools matter.” Then leaves the mechanics to you.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You walk the actual slide — the five silos and the seams. This is yours.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk the slide</span>“Here’s the problem concretely. A builder doesn’t have one system that runs the home — construction is in one place, mortgage in another, title, sales, finance, land all elsewhere. Each team sees its own lane. The outcome happens <b>between</b> those systems: every one can read ‘on track’ and the home still misses close, because nobody owns the dependencies in between. By the time someone spots it, the window to act is gone. The problem isn’t missing data — builders have tons. It’s that nobody connects it early enough to say what’s actually going to happen.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the validation</span>“And this isn’t hypothetical. The earnings calls of the top‑20 builders already show it — they’re losing a real slice of revenue to it every year, and it grows as margins compress. Their own CEOs are saying the way they protect margin now is <b>better technology</b>. That’s exactly the gap we fill.”</div></div>
+      <div class="line cuerow"><div class="who cue">Note</div><div class="cuebox">Don’t name every tool unless they ask — 30‑min meeting, stay high level. Conclude with: “that’s the problem we solve.”</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 03 ================= -->
+  <section class="slide" id="s3">
+    <div class="slide-head"><span class="n">03</span><span class="t">Layer 1 — AI Predictability Engine</span>
+      <span class="screen">On screen: Predict → Explain → Intervene; live screenshot (1245 Elm Ct, 24% confidence, CRITICAL, ranked causes); data‑moat callout.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Opens Layer 1 at a high level — “Layer 1 is critical; without it we can’t build 2 or 3. Bhavdeep will show you how we get there.” Then hands to you for the technical walk.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your slide. Walk Predict → Explain → Intervene, then land the graph and the moat.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — what it is</span>“In plain terms, this gives the builder a <b>closing confidence score</b> for every home — but the score isn’t the product; what’s behind it is. We answer three questions: <b>what’s going to happen</b> — on‑track, delayed, or at‑risk; <b>why</b> — the dependency driving the risk, in plain language; and <b>what to do</b> — the path to resolve or escalate before it slips. Not another red‑and‑green dashboard. And we read across the whole ecosystem without asking them to rip out any system.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — why it’s hard to copy</span>“And the part that’s hard to copy: we don’t just wire the systems together. Behind it is a graph — a <b>neurosymbolic</b> approach. We’ve mapped how these systems <b>should</b> interact at the level of a single home, so when signals come in we already know the dependencies and we watch the <b>seams</b> between them. That’s where the risk actually lives — and no single builder tool can see it.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the compounding moat</span>“And it compounds: every prediction plus its real outcome becomes <b>labeled training data</b>. The engine sharpens with every close — and that data asset is exactly what earns us the right to build Layers 2 and 3.”</div></div>
+      <div class="qa">
+        <div class="qh">Likely questions</div>
+        <div class="qrow"><div class="q">“Is this real or a mockup?”</div><div class="a">Real — the MVP is built. 7 systems mapped, 2 live, 51 signal types, 500+ tests on the full pipeline. The raise turns it into a production platform and proves it on real builder data.</div></div>
+        <div class="qrow"><div class="q">“Don’t their existing systems already flag this?”</div><div class="a">No — each system sees only its own lane. The buyer picks the lender, so the mortgage system changes every deal. No single builder tool can reach across all three owners of the data. We do.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 04 ================= -->
+  <section class="slide" id="s4">
+    <div class="slide-head"><span class="n">04</span><span class="t">How It Works</span>
+      <span class="screen">On screen: live confidence‑meter animation; ~$160K/mo preventable loss per division vs ~$671/mo to run; VP dashboard; Ecosystem → Inference → Action.</span></div>
+    <div class="slide-body">
+      <div class="line cuerow"><div class="who cue">Cue</div><div class="cuebox act">Play the signal animation (great visual). Talk over it — this slide is yours, it’s the mechanics.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the mechanism</span>“Here’s how it works in practice. We take the signals that already exist across the builder ecosystem. The engine looks for the <b>dependencies</b> that change the probability of the outcome. Then we turn that into action — instead of ‘your mortgage is delayed,’ we say ‘the mortgage dependency is now putting <b>1245 Elm Court</b> at risk for closing — here’s the likely impact, and here’s who needs to fix it.’ No migration, no rip‑and‑replace.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the economics</span>“And the economics are simple. A single division runs ~2,100 homes a year, ~175 closings a month. Builders carry roughly $2K a day per deal during a delay — so a handful of stuck closings is a month of carry. That’s ~$160K a month of preventable loss per division, against ~$671 a month to run us. That ratio is the pitch.”</div></div>
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Good spot for Teresa to reinforce “why builders want this now” from her operator lens, before you move to Layer 2.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 05 ================= -->
+  <section class="slide" id="s5">
+    <div class="slide-head"><span class="n">05</span><span class="t">Layer 2 — Home Passport</span>
+      <span class="screen">On screen: one record / multiple participants; live passport (100 trust score, merkle root, on‑chain owner); “where the ledger lives”; attestor queue.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Sets it up (she said she’ll jump in here): a persistent record of the home, attached to the <b>home, not the person</b>, that survives ownership changes — the “only reliable home‑fax,” not unverified Zillow data. Then hands the “how” to you.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your favorite part — but the trap is over‑selling “blockchain.” Your job is precision on what we actually do. Own this.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — what it is</span>“So the Home Passport is a persistent digital identity for the home — from the land deal, through construction and handoff, and through the life of the property. It carries plans, materials, appliances, HVAC, inspections, warranties, repairs, even smart‑home devices — attached to the home, not the person. Think Carfax for a house: when it sells, the record moves with it.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — blockchain precision</span>“Let me be precise, because it’s our differentiator. We do <b>not</b> put documents or personal data on a blockchain. The actual records stay where they belong — in the builder’s own cloud. On‑chain we store only a <b>32‑byte fingerprint</b>, a hash, of each record. The chain acts as a <b>notary</b>: it proves the record hasn’t been tampered with, and it’s permanent by design. And each chain has its own value — title‑and‑ownership is one lineage, construction‑and‑maintenance is another. We’re not selling storage — we’re selling a trusted, permanent way to <b>verify</b> the home’s history.”</div></div>
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Takes the business color: warranty pain today, and the crypto/syndication angle — Lennar’s Bitcoin fund, crypto as a legal path to invest in a home, community syndication. Per the call this is a <b>soundbite, not the core sell</b> — let her lead it and read the room.</div></div>
+      <div class="line cuerow"><div class="who cue">Note</div><div class="cuebox">Don’t lead with crypto. It’s an unlock the ledger enables, not the reason for the ledger.</div></div>
+      <div class="qa">
+        <div class="qh">Likely questions</div>
+        <div class="qrow"><div class="q">“If the key goes to the homeowner, does the builder lose the data?” (Maen asked this exact thing)</div><div class="a">No. The chain entry is just a public fingerprint. What it unlocks — and where the real record lives — stays controlled. The builder keeps their copy; a copy hands off to the homeowner. Both can use their data. Nothing sensitive is ever on the chain.</div></div>
+        <div class="qrow"><div class="q">“Why blockchain at all?”</div><div class="a">Because it gives a record that persists and stays trustworthy even as ownership changes — the provenance layer. It also happens to unlock crypto payments in markets like Dubai, but that’s a bonus, not the reason.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 06 ================= -->
+  <section class="slide" id="s6">
+    <div class="slide-head"><span class="n">06</span><span class="t">Layer 3 — Maintenance AI</span>
+      <span class="screen">On screen: homeowner tiles (AC filter 120 days, warranty, service routing, devices); builder‑value strip; live forecast screenshot.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames the “why it matters after close” — a first‑time buyer doesn’t know the HVAC filter is due, what’s under warranty, or who the builder recommends. The data keeps giving. Hands the mechanics to you.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">Your slide — walk the homeowner value and how it’s generated. Then hand to Teresa for monetization.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — walk it</span>“Because we have the data from the wedge through the Passport, we turn it into action for the homeowner: ‘it’s been 120 days, time to change your AC filter,’ warranty guidance, device setup, and service routed to the right preferred trade — delivered by email and push, no app to check. And every one of these is derived from the home’s <b>attested</b> records — each card cites its source. It’s not guessing; it’s reading the home’s own history. For the builder, that’s fewer calls, less warranty friction, and marketplace revenue on every referral.”</div></div>
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Takes the big‑picture monetization: marketplace ownership, joint ventures, “who owns the marketplace” strategy — the endless upside.</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 07 ================= -->
+  <section class="slide" id="s7">
+    <div class="slide-head"><span class="n">07</span><span class="t">The System — the moat compounds from construction</span>
+      <span class="screen">On screen: Tessera spine (Builder Data → Predict → Passport → Maintain → Lifecycle Data); Replace / Integrate / Augment; competitors.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">This is the high‑level, vision slide — hand it to Teresa if she wants it. “The moat compounds” is her kind of line. Thesis: we don’t build another system of record — builders have those. We sit above and connect them, replacing the manual spreadsheet reconciliation. Every time we understand another part of the home’s lifecycle, the system gets smarter.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You own the competitive landscape here — you prepped this. Be ready to explain each competitor and why we’re different.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the moat, plainly</span>“The moat is simple: the more of the home’s lifecycle we understand, the better the intelligence gets — and we have the data to learn from what actually happened. Start with builder data, predict, create the passport, serve after close, and the lifecycle data feeds back in. Our only real competitor today is <b>a spreadsheet</b> — four systems merged by hand every Monday. We land inside the pipeline meeting they already hold.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — competition</span>“On the field: <b>Higharc</b> raised $170M+ but is design‑to‑build, upstream. <b>ALICE</b> and <b>nPlan</b> only see construction slippage. <b>Scaffold</b> — Horton and Pulte just put $15M in — automates the trades below the builder. <b>Digs</b> is post‑close docs. <b>ICE</b> is the closest — funding to recording, but not construction. None of them reach the actual close. And builders funding Scaffold <b>proves our thesis</b>: they’ll pay to unify fragmented data.”</div></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 08 ================= -->
+  <section class="slide" id="s8">
+    <div class="slide-head"><span class="n">08</span><span class="t">Pre‑Seed — the ask</span>
+      <span class="screen">On screen: raise / runway / equity; use of funds; “already built” proof (7 systems, 51 signals, 45‑milestone graph, 500+ tests).</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Frames the ask: the MVP is built — that’s not what the money is for. This raise lets the team go full‑time and build. Lean — engineers hired against milestones, sales on commission. Then to you for the team detail.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You own the team plan — you defined the four hires. Frame the raise number as flexible.</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — the team</span>“The money is for good engineers and a sales motion — that’s the heart of the company. I’m thinking a lean team of four, not all at once: an <b>NLP engineer</b> to streamline the signals and sharpen the engine, a <b>blockchain engineer</b> for the passport, a <b>go‑to‑market engineer</b> to automate our sales and outreach processes, and a <b>UX</b> hire. Over the first year that grows to four or five as the runway allows.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">If they ask the number</span>“The raise figure is a starting point tied to an ~18‑month runway — it can flex up or down depending on how fast we build the team. We’d rather have the conversation with you than anchor hard. And we have engineers and partners ready to go — we’re not starting a hiring search.”</div></div>
+      <div class="qa">
+        <div class="qh">Likely questions</div>
+        <div class="qrow"><div class="q">“What do we get for it?” / “Is the valuation crazy?”</div><div class="a">Let Teresa / the cap‑table framing lead: a standard pre‑seed equity stake at a post‑money cap. If pushed on valuation, it’s conservative and grounded in TAM/SAM bottom‑up — not a wild number. Redirect to the ROI slide.</div></div>
+        <div class="qrow"><div class="q">“Are you looking to sell?”</div><div class="a">No. We think this is bigger than a quick flip — it can be revolutionary in the construction space, and we want to run it.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 09 ================= -->
+  <section class="slide" id="s9">
+    <div class="slide-head"><span class="n">09</span><span class="t">The Business Case — ROI</span>
+      <span class="screen">On screen: Year‑5 revenue, payback year, floor vs signal‑model chart, forward P&amp;L table.</span></div>
+    <div class="slide-body">
+      <div class="line teresa"><div class="who teresa">Teresa</div><div class="say">Teresa leads this — it’s her slide and her strength. Frames it as the most conservative possible view: signal‑based licensing, sales from Year 2, and it’s still just Layer 1. The floor pays back on its own; a dedicated salesperson pulls payback forward.</div></div>
+      <div class="line cuerow"><div class="who cue">Your cue</div><div class="cuebox act">You back the unit economics and pricing when the VC digs in. Cody/Teresa own the model; you own the “how the number is built.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — pricing model</span>“The model is <b>signal‑based</b> — it’s the natural AI‑native unit. A customer licenses a package of signals; roughly $10K/month for ~20 signals, ~$20K/month for ~45. Implementation is separate and one‑time — about $100K on average, from $50K for a clean stack up to $350K for a complex one. Signal overage is upside on top of the flat‑license floor.”</div></div>
+      <div class="line mine"><div class="who you">You</div><div class="say"><span class="mine-tag">Your line — who’s the customer</span>“And we define the customer as a <b>division</b>, not necessarily the whole company. Builders like Lennar or D.R. Horton roll this out division by division to get insights faster. So ‘four implementations’ can be four divisions or four companies — either way growth compounds per division. That’s why the floor is conservative.”</div></div>
+      <div class="qa">
+        <div class="qh">The question Teresa predicts they’ll ask</div>
+        <div class="qrow"><div class="q">“How do you pay me back faster — in three years, not four?”</div><div class="a">A dedicated salesperson. The slower payback is the floor with no sales motion. Fund the salesperson from the raise and payback moves up a full year — and that’s still just Layer 1. Two and three are upside we haven’t even put in these numbers.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ANCHORS ================= -->
+  <section class="slide" id="s10">
+    <div class="slide-head"><span class="n">★</span><span class="t">Pocket anchors — one‑liners to keep ready</span></div>
+    <div class="slide-body">
+      <ul class="anchors">
+        <li>“Layer 1 is the wedge — the data earns the right to build 2 and 3.”</li>
+        <li>“We don’t replace anything. Read‑only overlay above the existing stack.”</li>
+        <li>“There’s a graph behind it — we watch the <b>seams</b> between systems.”</li>
+        <li>“The buyer picks the lender, so no builder ERP can cross that line. We do.”</li>
+        <li>“We store a fingerprint, not the data. The chain is a notary.”</li>
+        <li>“Our only real competitor is a spreadsheet merged by hand every Monday.”</li>
+        <li>“Customer = division. A dedicated salesperson pulls payback forward a year.”</li>
+        <li>“The MVP is built. The money builds the company.”</li>
+        <li>“We’re not selling the technology — we’re selling the problem and ourselves. The tech is how we prove it.”</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<div class="foot">
+  <button class="btn" id="prev">◀ Prev</button>
+  <button class="btn" id="next">Next ▶</button>
+  <div class="jump" id="jump"></div>
+  <span class="hint">Space play/pause · ↑↓ scroll · ←→ section · +/− text</span>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide, .lead-note')];
+  const ids = ['s0','sIntro','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
+  const labels = ['Guide','00','01','02','03','04','05','06','07','08','09','★'];
+  const TOTAL = ids.length - 1;
+  const jump = document.getElementById('jump');
+  const pos = document.getElementById('pos');
+  const fill = document.getElementById('fill');
+
+  // build jump chips
+  ids.forEach((id,i)=>{
+    const c=document.createElement('div');
+    c.className='chip'; c.textContent=labels[i]; c.dataset.id=id;
+    c.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+    jump.appendChild(c);
+  });
+  const chips=[...jump.children];
+
+  // active-section tracking + progress
+  function onScroll(){
+    const y=window.scrollY, h=document.body.scrollHeight-window.innerHeight;
+    fill.style.width=(h>0?(y/h*100):0)+'%';
+    let idx=0;
+    slides.forEach((s,i)=>{ if(s.getBoundingClientRect().top<180) idx=i; });
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx && s.classList.contains('slide')));
+    chips.forEach((c,i)=>c.classList.toggle('active', i===idx));
+    pos.textContent=String(Math.min(idx,TOTAL)).padStart(2,'0')+' / '+String(TOTAL).padStart(2,'0');
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  // auto-scroll
+  let playing=false, raf=null, acc=0;
+  const speedEl=document.getElementById('speed');
+  const playBtn=document.getElementById('play');
+  function loop(){
+    if(!playing) return;
+    const pxPerFrame=speedEl.value/30;
+    window.scrollBy(0,pxPerFrame);
+    if(window.scrollY+window.innerHeight>=document.body.scrollHeight-2){ stop(); }
+    raf=requestAnimationFrame(loop);
+  }
+  function play(){ playing=true; playBtn.textContent='❚❚ Pause'; playBtn.classList.remove('paused'); raf=requestAnimationFrame(loop); }
+  function stop(){ playing=false; playBtn.textContent='▶ Auto‑scroll'; playBtn.classList.add('paused'); if(raf)cancelAnimationFrame(raf); }
+  function toggle(){ playing?stop():play(); }
+  playBtn.onclick=toggle;
+
+  // section nav
+  function current(){ let idx=0; slides.forEach((s,i)=>{ if(s.getBoundingClientRect().top<180) idx=i; }); return idx; }
+  function go(d){ const i=Math.max(0,Math.min(slides.length-1,current()+d)); slides[i].scrollIntoView({behavior:'smooth',block:'start'}); }
+  document.getElementById('next').onclick=()=>go(1);
+  document.getElementById('prev').onclick=()=>go(-1);
+
+  // font size
+  let fs=17;
+  function setFont(){ document.querySelectorAll('.say').forEach(e=>e.style.fontSize=fs+'px'); document.querySelectorAll('.line.mine .say').forEach(e=>e.style.fontSize=(fs+1.5)+'px'); }
+  document.getElementById('fontUp').onclick=()=>{fs=Math.min(30,fs+1);setFont();};
+  document.getElementById('fontDown').onclick=()=>{fs=Math.max(12,fs-1);setFont();};
+
+  // keyboard
+  document.addEventListener('keydown',e=>{
+    if(e.code==='Space'){e.preventDefault();toggle();}
+    else if(e.key==='ArrowRight'){e.preventDefault();go(1);}
+    else if(e.key==='ArrowLeft'){e.preventDefault();go(-1);}
+    else if(e.key==='ArrowDown'){window.scrollBy(0,60);}
+    else if(e.key==='ArrowUp'){window.scrollBy(0,-60);}
+    else if(e.key==='+'||e.key==='='){fs=Math.min(30,fs+1);setFont();}
+    else if(e.key==='-'){fs=Math.max(12,fs-1);setFont();}
+  });
+</script>
+</body>
+</html>
