@@ -287,6 +287,17 @@
   }
   footer code { font-family: var(--mono); font-size: 12px; color: var(--ink-mute); }
 
+  /* Intermediate: below the design width the fixed side columns squeeze the
+     middle column and clip the meter. Keep towers + milestones side by side,
+     but drop the meter onto its own full-width row so nothing is cut off. */
+  @media (max-width: 1080px) {
+    .stage {
+      grid-template-columns: minmax(140px, 168px) minmax(0, 1fr);
+    }
+    .meter { grid-column: 1 / -1; }
+    .gauge { max-width: 240px; }
+  }
+
   @media (max-width: 880px) {
     .stage { grid-template-columns: 1fr; }
     .towers { flex-direction: row; flex-wrap: wrap; }
@@ -316,9 +327,11 @@
   body.embed .console-top { margin-bottom: 2px; }
   body.embed .ticker { margin-top: 8px; }
   /* Keep the desktop 3-column stage even though the iframe viewport is narrow;
-     the JS scale handles fitting. Overrides the max-width:880px collapse. */
+     the JS scale handles fitting. Overrides the responsive collapses above.
+     minmax on the outer columns lets the meter shrink instead of clipping if
+     the JS scale hasn't applied yet. */
   body.embed .stage {
-    grid-template-columns: 168px 1fr 232px !important;
+    grid-template-columns: 168px minmax(0, 1fr) minmax(200px, 232px) !important;
   }
   body.embed .towers { flex-direction: column !important; flex-wrap: nowrap !important; gap: 6px; }
   body.embed .tower { flex: 0 0 auto !important; }
