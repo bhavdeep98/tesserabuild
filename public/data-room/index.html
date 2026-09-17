@@ -89,6 +89,29 @@
   .doc.feature { grid-column: 1 / -1; border-color: var(--accent); background: linear-gradient(150deg, rgba(45,125,111,0.09), rgba(45,125,111,0.015)); }
   .doc.feature .ic { background: var(--accent); color: #fff; }
 
+  /* team + timeline */
+  .team-lead { font-size: 15.5px; color: var(--text-2); max-width: 74ch; margin: 4px 0 22px 36px; }
+  .team-lead b { color: var(--text); }
+  .fulltime { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 22px; }
+  .person { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; transition: border-color .3s, transform .3s; }
+  .person:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  .person .av { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font: 800 15px/1 var(--display); color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.16), rgba(45,125,111,0.03)); border: 1px solid var(--line-2); margin-bottom: 12px; }
+  .person h4 { font-size: 15.5px; margin-bottom: 2px; }
+  .person .role { font: 600 11px/1.3 var(--mono); letter-spacing: 0.02em; color: var(--accent); margin-bottom: 8px; }
+  .person p { font-size: 12.5px; color: var(--text-2); line-height: 1.5; }
+  .person .ft { display: inline-block; margin-top: 10px; font: 700 9px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); border: 1px solid var(--line-2); border-radius: 999px; padding: 4px 9px; }
+
+  .timeline { position: relative; margin: 8px 0 4px; padding-left: 4px; }
+  .timeline::before { content:""; position: absolute; left: 9px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--accent), rgba(45,125,111,0.15)); }
+  .tstep { position: relative; padding: 0 0 20px 34px; }
+  .tstep:last-child { padding-bottom: 0; }
+  .tstep .mk { position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); z-index: 1; }
+  .tstep .when { font: 700 11px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
+  .tstep h4 { font-size: 15.5px; margin-bottom: 4px; }
+  .tstep p { font-size: 13.5px; color: var(--text-2); max-width: 74ch; }
+  @media (max-width: 760px) { .fulltime { grid-template-columns: 1fr 1fr; } .team-lead { margin-left: 0; } }
+  @media (max-width: 460px) { .fulltime { grid-template-columns: 1fr; } }
+
   /* start-here row */
   .starthere { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
 
@@ -225,6 +248,67 @@
         <p>The full evidence base — 100+ cited data points from earnings calls, NAHB, Census and industry research behind every number we use.</p>
         <div class="meta"><span class="kind">Evidence</span><span class="go">Open →</span></div>
       </a>
+    </div>
+  </div>
+</section>
+
+<!-- THE TEAM -->
+<section class="sec" id="team">
+  <div class="wrap">
+    <div class="sec-title rv"><span class="n">4</span><h2>The team &amp; how we got here</h2></div>
+    <div class="sec-sub rv">Who is building this, who is full-time, and the path from first meetings to a working MVP.</div>
+    <p class="team-lead rv">Lean and full-time where it counts. <b>One full-time engineer has built the platform over the last six months.</b> The founding group spent three months meeting and shaping the product before an MVP existed, and operational leadership joined full-time after leaving a top national builder. The MVP is built; the raise is to turn it into a company.</p>
+
+    <div class="fulltime rv">
+      <div class="person">
+        <div class="av">BS</div>
+        <h4>Bhavdeep Singh</h4>
+        <div class="role">Engineering / Product</div>
+        <p>Sole developer — architected and built the entire platform: connectors, graph engine, scoring, portal.</p>
+        <span class="ft">Full-time · 6 months</span>
+      </div>
+      <div class="person">
+        <div class="av">MN</div>
+        <h4>Maen Najdawi</h4>
+        <div class="role">Founder / Business</div>
+        <p>Drove the founding vision and the builder-side business case from day one of the three-month build-up.</p>
+        <span class="ft">Founding team</span>
+      </div>
+      <div class="person">
+        <div class="av">RK</div>
+        <h4>Ramandeep Kaur</h4>
+        <div class="role">Founder / Domain</div>
+        <p>Part of the founding trio that met for three months straight and shaped the MVP against real builder workflows.</p>
+        <span class="ft">Founding team</span>
+      </div>
+      <div class="person">
+        <div class="av">TL</div>
+        <h4>Teresa Lynch</h4>
+        <div class="role">Operations / Strategy</div>
+        <p>Joined full-time to guide the company after completing her responsibilities at a top national builder (Lennar).</p>
+        <span class="ft">Full-time · joined later</span>
+      </div>
+    </div>
+
+    <div class="timeline rv">
+      <div class="tstep">
+        <span class="mk"></span>
+        <div class="when">Months 1–3 · The build-up</div>
+        <h4>Three founders, meeting straight through</h4>
+        <p>Maen, Bhavdeep and Ramandeep met consistently for three months — pressure-testing the problem and shaping the product — and stood up the first working MVP.</p>
+      </div>
+      <div class="tstep">
+        <span class="mk"></span>
+        <div class="when">Months 1–6 · Full-time development</div>
+        <h4>One engineer, full-time, to a working platform</h4>
+        <p>Bhavdeep has been full-time on development for the last six months — building the connectors, graph engine, scoring and portal to the state it's in today (500+ tests, two live connectors).</p>
+      </div>
+      <div class="tstep">
+        <span class="mk"></span>
+        <div class="when">Month ~3 onward · Leadership joins</div>
+        <h4>Operational leadership comes on full-time</h4>
+        <p>After a soft pitch, Teresa joined full-time to guide the company once she had wrapped her responsibilities at a top national builder — bringing the operator's view of exactly where the pain lives.</p>
+      </div>
     </div>
   </div>
 </section>

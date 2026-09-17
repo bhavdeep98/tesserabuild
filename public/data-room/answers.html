@@ -98,6 +98,30 @@
   .mini h4 { font-size: 15px; margin-bottom: 7px; }
   .mini p { font-size: 13.5px; color: var(--text-2); }
 
+  /* monetization: the "one string" flow + benefit cards */
+  .money-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 22px 0 18px; padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); }
+  .money-flow .src-sys { display: flex; flex-wrap: wrap; gap: 7px; }
+  .money-flow .tok { font: 600 11px/1 var(--mono); color: var(--text-3); background: var(--panel); border: 1px solid var(--line); border-radius: 7px; padding: 7px 9px; opacity: 0; transform: translateY(6px); transition: opacity .45s ease, transform .45s ease; }
+  .money-flow.in .tok { opacity: 1; transform: none; }
+  .money-flow.in .tok:nth-child(1){transition-delay:.05s}.money-flow.in .tok:nth-child(2){transition-delay:.12s}.money-flow.in .tok:nth-child(3){transition-delay:.19s}.money-flow.in .tok:nth-child(4){transition-delay:.26s}.money-flow.in .tok:nth-child(5){transition-delay:.33s}
+  .money-flow .mf-arrow { color: var(--accent); font-size: 1.3rem; opacity: 0; transition: opacity .5s ease .4s; }
+  .money-flow.in .mf-arrow { opacity: 1; }
+  .money-flow .one-string { display: flex; align-items: center; gap: 9px; font-family: var(--display); font-weight: 800; color: var(--accent); font-size: 15px; padding: 9px 14px; border-radius: 9px; background: linear-gradient(145deg, rgba(45,125,111,0.14), rgba(45,125,111,0.03)); border: 1px solid var(--line-2); opacity: 0; transform: scale(.94); transition: opacity .5s ease .5s, transform .5s ease .5s; }
+  .money-flow.in .one-string { opacity: 1; transform: none; }
+  .money-flow .one-string .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 rgba(45,125,111,0.5); animation: mpulse 2.4s infinite; }
+  @keyframes mpulse { 0%{box-shadow:0 0 0 0 rgba(45,125,111,0.45)} 70%{box-shadow:0 0 0 9px rgba(45,125,111,0)} 100%{box-shadow:0 0 0 0 rgba(45,125,111,0)} }
+
+  .moneycards { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 20px 0; }
+  .mcard { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px 18px; overflow: hidden; transition: border-color .3s, transform .3s, box-shadow .3s; }
+  .mcard::before { content:""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); opacity: 0; transition: opacity .3s; }
+  .mcard:hover { border-color: var(--line-2); transform: translateY(-3px); box-shadow: 0 14px 30px rgba(32,53,47,0.08); }
+  .mcard:hover::before { opacity: 1; }
+  .mcard .mc-ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; font-size: 19px; background: var(--teal-50); margin-bottom: 12px; }
+  .mcard h4 { font-size: 16px; margin-bottom: 7px; }
+  .mcard p { font-size: 13.5px; color: var(--text-2); }
+  .mcard .who { margin-top: 12px; font: 600 10.5px/1.4 var(--mono); letter-spacing: 0.03em; color: var(--accent); border-top: 1px dashed var(--line); padding-top: 9px; }
+  @media (max-width: 760px) { .moneycards { grid-template-columns: 1fr; } }
+
   /* highlight callout */
   .call { margin: 20px 0; padding: 18px 22px; border-radius: 12px; background: var(--teal-50); border: 1px solid var(--teal-100); font-size: 15px; color: var(--teal-800); }
   .call b { color: var(--teal-800); }
@@ -200,7 +224,7 @@
     </div>
 
     <div class="call rv">
-      This is also why we start with <b>new construction</b>, not existing homes. With a new build we capture the record at the source, accurate and verified. Retrofitting an existing home means plugging AI into someone's email to guess when the HVAC was last serviced — a data-entry mess. New construction is a clean data-entry problem we solve at the origin. (Existing homes via Zillow / Redfin data are a later expansion, not the wedge.)
+      This is also why we start at the <b>builder's source systems</b>. Because Layer 1 connects directly to those systems, we capture the record at the origin — accurate and verified — and the same connection lets us query the <em>historical</em> data already sitting in them, not just new activity. That's very different from an arbitrary existing home with no builder connection, where you'd be scraping email and receipts to guess when the HVAC was last serviced. Builder-originated homes are a clean data problem we solve at the source; homes with no system of record (via Zillow / Redfin and public data) are a later, broader expansion.
     </div>
 
     <div class="chips rv">
@@ -230,14 +254,46 @@
 
     <div class="body-copy rv">
       <p>The honest framing is that we're <strong>not</strong> asking the builder to take on a data project for someone else's future benefit. While we collect the data for the passport, we're simultaneously giving them the predictability and risk tool that justifies the spend on its own. They don't have to build additional customer-care products on top of it — they take what they already have and get the chain for free.</p>
-      <p>Then comes the bigger prize: <strong>post-close monetization.</strong> Every large builder is trying to figure out how to upsell the homeowner after the sale — you see it in the joint ventures across the industry, in insurance and home-energy partnerships, in builders chasing another slice of the pie. Some have launched marketplaces; they tend to stall. The common reason is that <em>the data needed to power one is fragmented, and no one agrees on how it ties together</em>. The passport pulls it into one string.</p>
+      <p>Then comes the bigger prize: <strong>post-close monetization.</strong> Every large builder is trying to figure out how to upsell the homeowner after the sale — you see it in the joint ventures across the industry, in home-insurance and energy partnerships, in builders chasing another slice of the pie. Several have launched homeowner marketplaces; they tend to stall. The common reason is that <em>the data needed to power one is fragmented, and no one agrees on how it ties together</em>. The passport pulls it into one string:</p>
     </div>
 
-    <div class="cards rv">
-      <div class="mini"><h4>No new customer-care stack</h4><p>They reuse the data they already have. We layer predictability and the chain on top — nothing to build internally.</p></div>
-      <div class="mini"><h4>A working post-close channel</h4><p>Maintenance requests route homeowner → trade directly, instead of homeowner → Lennar/Pulte/DHI as a warranty ticket.</p></div>
-      <div class="mini"><h4>Fast-tracked JVs</h4><p>Having lived on the investment side of a builder, this cleans up the groundwork that makes insurance/services JVs easier to strike.</p></div>
-      <div class="mini"><h4>Optional crypto &amp; syndication</h4><p>Because records sit on a chain, it becomes an easier path to accept crypto or syndicate communities to investors — if the builder chooses.</p></div>
+    <div class="money-flow rv" id="moneyflow">
+      <div class="src-sys">
+        <span class="tok">Construction</span>
+        <span class="tok">Mortgage</span>
+        <span class="tok">Title</span>
+        <span class="tok">Sales</span>
+        <span class="tok">Warranty</span>
+      </div>
+      <span class="mf-arrow">→</span>
+      <div class="one-string"><span class="dot"></span> One verified home record</div>
+    </div>
+
+    <div class="moneycards rv">
+      <div class="mcard">
+        <div class="mc-ic">🧱</div>
+        <h4>No new customer-care stack to build</h4>
+        <p>The builder reuses data they already own. We layer predictability and the record on top — there's nothing new for their IT team to stand up.</p>
+        <div class="who">Benefit to → the builder, day one</div>
+      </div>
+      <div class="mcard">
+        <div class="mc-ic">🔗</div>
+        <h4>A working post-close channel</h4>
+        <p>Service needs route the homeowner straight to the right trade, instead of piling up as warranty tickets on the builder's customer-care desk.</p>
+        <div class="who">Benefit to → builder + homeowner</div>
+      </div>
+      <div class="mcard">
+        <div class="mc-ic">🤝</div>
+        <h4>Joint ventures, fast-tracked</h4>
+        <p>Clean, unified data is the groundwork that makes the insurance, energy and services JVs builders already chase far easier to strike and measure.</p>
+        <div class="who">Benefit to → builder revenue</div>
+      </div>
+      <div class="mcard">
+        <div class="mc-ic">₿</div>
+        <h4>Optional crypto &amp; syndication</h4>
+        <p>Because the record sits on a chain, it opens an easier path to accept crypto or syndicate communities to investors — entirely at the builder's option.</p>
+        <div class="who">Benefit to → builder, elective</div>
+      </div>
     </div>
 
     <div class="honest rv">
