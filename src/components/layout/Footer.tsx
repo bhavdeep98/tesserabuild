@@ -23,13 +23,35 @@ export function Footer() {
                 {nav.map((item) => (
                   <li key={item.href}>
                     <a
-                      href={item.href}
+                      href={`/${item.href}`}
                       className="text-[14px] text-ink-2 transition-colors duration-300 hover:text-accent"
                     >
                       {item.label}
                     </a>
                   </li>
                 ))}
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-eyebrow uppercase text-ink-3">The case</h2>
+              <ul className="mt-5 space-y-3">
+                <li>
+                  <a
+                    href="/why-we-win/"
+                    className="text-[14px] text-ink-2 transition-colors duration-300 hover:text-accent"
+                  >
+                    Why we win
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/for-builders/"
+                    className="text-[14px] text-ink-2 transition-colors duration-300 hover:text-accent"
+                  >
+                    For builders
+                  </a>
+                </li>
               </ul>
             </div>
 
