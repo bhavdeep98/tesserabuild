@@ -1,0 +1,11 @@
+# Tessera investor data room — hidden, link-only, never indexed.
+[build]
+  publish = "."
+
+# Belt-and-suspenders: no crawler should ever index this, even if a link leaks.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Referrer-Policy = "no-referrer"
+    X-Content-Type-Options = "nosniff"

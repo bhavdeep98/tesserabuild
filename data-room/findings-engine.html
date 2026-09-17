@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Passport — A Findings Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f7f4ed;
+        --bg-card: #fcfaf6;
+        --text: #20352f;
+        --text-2: #4a5c56;
+        --text-3: #5f6f68;
+        --accent: #397c70;
+        --teal-50: #e6f5f2;
+        --teal-100: #ccebe5;
+        --teal-700: #2d655b;
+        --teal-800: #1f4f47;
+        --border: rgba(43,75,66,0.13);
+        --r: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 56px 32px 80px; }
+    h1, h2, h3 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+    h1 { font-size: 2.4rem; line-height: 1.15; margin-bottom: 14px; }
+    h2 { font-size: 1.4rem; margin-bottom: 12px; }
+    h3 { font-size: 0.95rem; color: var(--teal-700); margin-bottom: 6px; }
+    p { color: var(--text-2); margin: 0 0 14px; }
+    .lede { font-size: 1.06rem; color: var(--text-2); }
+    .eyebrow {
+        font-size: 0.72rem; font-weight: 600; color: var(--accent);
+        text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 10px;
+    }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 32px; margin-bottom: 40px; }
+    .meta { font-size: 0.82rem; color: var(--text-3); margin-top: 18px; }
+    section { margin-bottom: 46px; }
+    .badge {
+        display: inline-block; background: var(--teal-50); color: var(--teal-700);
+        padding: 3px 11px; border-radius: 999px; font-size: 0.72rem;
+        font-weight: 600; white-space: nowrap;
+    }
+    .badge-orange { background: #fff3e0; color: #b34700; }
+    .badge-blue   { background: #e3f2fd; color: #12539e; }
+    .badge-plain  { background: rgba(43,75,66,0.07); color: var(--text-2); }
+
+    /* ── Method diagram ───────────────────────────────────────── */
+    .diagram {
+        background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 26px 24px; margin: 8px 0 20px;
+    }
+    .band { border-radius: var(--r); padding: 14px 16px 16px; }
+    .band-symbolic { background: var(--teal-50); border: 1px solid var(--teal-100); }
+    .band-model { background: #eef3fb; border: 1px solid #d8e4f5; }
+    h3.band-label {
+        display: block; font-size: 0.68rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 12px;
+        font-family: 'Inter', sans-serif;
+    }
+    .band-symbolic .band-label { color: var(--teal-700); }
+    .band-model .band-label { color: #12539e; }
+    .band-cards { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+    .dcard {
+        flex: 1 1 0; min-width: 150px; background: var(--bg-card);
+        border: 1px solid var(--border); border-radius: 9px; padding: 11px 13px;
+    }
+    .dcard strong { display: block; font-size: 0.84rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .dcard span { display: block; font-size: 0.76rem; color: var(--text-3); line-height: 1.4; margin-top: 3px; }
+    .darrow {
+        display: flex; align-items: center; color: var(--accent);
+        font-size: 1.1rem; font-weight: 700; flex: 0 0 auto;
+    }
+    .exchange {
+        display: flex; gap: 18px; justify-content: center;
+        padding: 12px 0; flex-wrap: wrap;
+    }
+    .exchange div { display: flex; align-items: center; gap: 8px; }
+    .exchange .glyph { color: var(--accent); font-size: 1.1rem; font-weight: 700; }
+    .exchange span.txt { font-size: 0.78rem; color: var(--text-2); font-weight: 500; }
+    .dresult {
+        margin-top: 14px; background: var(--bg-card);
+        border: 1px solid var(--border); border-left: 3px solid var(--accent);
+        border-radius: 0 var(--r) var(--r) 0; padding: 13px 16px;
+    }
+    .dresult strong { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; }
+    .dresult p { margin: 4px 0 9px; font-size: 0.84rem; }
+    .basis-row { display: flex; gap: 7px; flex-wrap: wrap; }
+
+    /* ── Tables ───────────────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    caption { text-align: left; font-size: 0.84rem; color: var(--text-3); padding-bottom: 10px; }
+    th {
+        background: var(--teal-50); color: var(--teal-700);
+        padding: 9px 12px; text-align: left; font-weight: 600;
+        font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--teal-100);
+    }
+    td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.88rem; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(252,250,246,0.7); }
+    td.finding { color: var(--text); font-weight: 500; width: 27%; }
+    td.example { color: var(--text-2); width: 40%; }
+    td.example em { font-style: normal; color: var(--text); font-weight: 500; }
+    td.mech { color: var(--text-2); }
+    td.narrow { width: 1%; white-space: nowrap; }
+    .dep { display: block; margin-top: 6px; }
+
+    .note {
+        background: var(--teal-50); border-left: 3px solid var(--accent);
+        border-radius: 0 var(--r) var(--r) 0; padding: 12px 16px; margin-top: 20px;
+    }
+    .note p { color: var(--teal-800); margin: 0; font-size: 0.9rem; font-weight: 500; }
+    .note p + p { margin-top: 8px; }
+
+    @media (max-width: 720px) {
+        .wrap { padding: 36px 18px 60px; }
+        h1 { font-size: 1.8rem; }
+        .band-cards { flex-direction: column; }
+        .darrow { transform: rotate(90deg); justify-content: center; }
+        table, thead, tbody, tr, td, th { display: block; }
+        thead { display: none; }
+        tbody tr { border-bottom: 1px solid var(--border); padding: 10px 0; }
+        td { border: none; padding: 4px 0; }
+        td.finding, td.example, td.narrow { width: auto; }
+    }
+    @media print {
+        body { background: #fff; }
+        .wrap { max-width: none; padding: 0; }
+        section { break-inside: avoid; }
+        tbody tr { break-inside: avoid; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <p class="eyebrow">Proposal &middot; July 2026</p>
+    <h1>Home Passport:<br>A Findings Engine</h1>
+    <p class="lede">We ship one product surface. The pipeline underneath supports two dozen.</p>
+    <p class="meta">Author: Engineering &middot; Status: Proposal</p>
+</header>
+
+<section>
+    <h2>Summary</h2>
+    <p>We ship one product surface: a Closing Confidence Score. The pipeline underneath it supports roughly two dozen distinct findings. The method that unlocks them is neuro-symbolic: a symbolic scaffold of domain axioms, postulates, and a dependency graph, with state-of-the-art models reasoning inside it. The scaffold sets what is possible, the models find what is likely, and together they surface interactions across 51 signal types and six domains that no superintendent would catch by inspection.</p>
+</section>
+
+<section>
+    <h2>Context</h2>
+    <p>Running today: seven read-only connectors above the builder's stack, 51 signal types, a 45-node dependency graph per home, gradient-boosted classification with SHAP attribution, anomaly detection, and a 500-home reference corpus across 3 divisions and 15 communities.</p>
+    <p>We have never enumerated what that data can prove. The score answers one question and flattens all the evidence into a single integer, while the pipeline quietly retains a full event log per home, every revision to every declared close date, cohort keys down to community and plan, and monetary fields nothing reads.</p>
+</section>
+
+<section>
+    <h2>The method</h2>
+    <p>Findings are derived, not reported. The structure is Euclidean, and the models work inside it.</p>
+
+    <div class="diagram">
+        <div class="band band-symbolic">
+            <h3 class="band-label">Symbolic scaffold</h3>
+            <div class="band-cards">
+                <div class="dcard">
+                    <strong>Axioms</strong>
+                    <span>What a connected system observes: event times, confirmed absences, declared dates, revisions, amounts</span>
+                </div>
+                <div class="darrow" aria-hidden="true">&rarr;</div>
+                <div class="dcard">
+                    <strong>Postulates</strong>
+                    <span>Construction has fixed physical order. Same community and plan shares a duration distribution. Lending has a minimum duration.</span>
+                </div>
+                <div class="darrow" aria-hidden="true">&rarr;</div>
+                <div class="dcard">
+                    <strong>Lemmas</strong>
+                    <span>Built once, reused everywhere: phase intervals, cohort distributions, precedence closure, critical path</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="exchange">
+            <div><span class="glyph" aria-hidden="true">&darr;</span><span class="txt">Graph topology handed down as features</span></div>
+            <div><span class="glyph" aria-hidden="true">&uarr;</span><span class="txt">Physical coherence filters what comes back</span></div>
+        </div>
+
+        <div class="band band-model">
+            <h3 class="band-label">Learned models</h3>
+            <div class="band-cards">
+                <div class="dcard">
+                    <strong>Structural features</strong>
+                    <span>Critical path position and precedence depth, not recoverable from counts and ratios</span>
+                </div>
+                <div class="darrow" aria-hidden="true">&rarr;</div>
+                <div class="dcard">
+                    <strong>Inference</strong>
+                    <span>Probability and effect size inside the bounds the scaffold sets</span>
+                </div>
+                <div class="darrow" aria-hidden="true">&rarr;</div>
+                <div class="dcard">
+                    <strong>Hypothesis search</strong>
+                    <span>High-order interactions across signals, cohorts, and topology</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dresult">
+            <strong>Theorems: the findings</strong>
+            <p>Each one traceable to the axioms, postulates, and inferences it consumed. Every finding declares its basis.</p>
+            <div class="basis-row">
+                <span class="badge">Constraint &middot; bounded by postulates and graph</span>
+                <span class="badge-blue badge">Cohort &middot; statistical against peers</span>
+                <span class="badge-orange badge">Hybrid &middot; inference inside symbolic bounds</span>
+                <span class="badge-plain badge">Model &middot; learned</span>
+            </div>
+        </div>
+    </div>
+
+    <p>The two layers compound rather than compete. The graph masks predictions that are physically impossible, so drywall never precedes framing. Cross-domain couplings the template already encodes, such as drywall completion gating the appraisal, are handed over as prior structure instead of left for a model to rediscover. And a candidate pattern only becomes a finding once it holds up against the graph and the postulates, which is what keeps false positives low enough for an operator to keep trusting the alerts.</p>
+
+    <p>Coverage is therefore enumerable. Salesforce alone audits schedule credibility. Add any construction system and a close date becomes falsifiable. Attributing a delay to a domain requires two domains connected. That turns integration talks into a specific list per connector.</p>
+</section>
+
+<section>
+    <h2>Shippable now</h2>
+    <table>
+        <caption>Tier maps to build cost. Quick is hours, Standard is days, Deep is weeks.</caption>
+        <thead>
+            <tr>
+                <th scope="col">Finding</th>
+                <th scope="col">Example</th>
+                <th scope="col">Basis</th>
+                <th scope="col">Tier</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="finding">Remaining work exceeds remaining calendar</td>
+                <td class="example">Lot 118 is promised for Sept 12. Rough-in is still open, and <em>the fastest this community has ever gone rough-in to CO is 74 days.</em> There are 46 left.</td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">One community trails the others on the same plans</td>
+                <td class="example">Sawgrass Point averages 148 days on the same three plans Coral Springs closes in 127. <em>The entire gap sits in exterior and interior finish.</em></td>
+                <td class="narrow"><span class="badge-blue badge">Cohort</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">Your master schedule is wrong, quantified per phase</td>
+                <td class="example">The template allows 14 days for framing. <em>Your last 180 homes averaged 19, and no community has beaten 15.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">Close date revisions and cumulative drift</td>
+                <td class="example">Miami-Dade North moved 38% of its close dates at least twice last quarter. <em>Broward moved 11%, on the same plan mix.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Quick</td>
+            </tr>
+            <tr>
+                <td class="finding">Construction is done, lending has not started</td>
+                <td class="example">Lot 204 reaches CO in 18 days. The appraisal has not been ordered, and <em>underwriting to clear-to-close has never run under 31 days here.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">Delays ranked by dollars rather than duration</td>
+                <td class="example">Your longest delay is 22 days on a $310K home. <em>Your most expensive is 6 days across nine $740K homes, and it costs three times as much.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">Deal silent, abnormally, for this phase</td>
+                <td class="example">Lot 77 has produced no signal for 11 days at drywall, against a community median of 4. <em>Connector health confirmed, so this is the deal, not the pipe.</em></td>
+                <td class="narrow"><span class="badge-blue badge">Cohort</span></td>
+                <td class="narrow">Quick</td>
+            </tr>
+            <tr>
+                <td class="finding">Plans that cost extra days on every sale</td>
+                <td class="example">Bayshore and Magnolia run 9 days longer than the community average every single time, <em>concentrated entirely in interior trim.</em></td>
+                <td class="narrow"><span class="badge-blue badge">Cohort</span></td>
+                <td class="narrow">Standard</td>
+            </tr>
+            <tr>
+                <td class="finding">Quantified value of connecting a system</td>
+                <td class="example">Title is invisible to us today. <em>Connecting it would let us prove escrow readiness on 143 active deals</em> and flag the tenth that fail on title.</td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Quick</td>
+            </tr>
+            <tr>
+                <td class="finding">Measured effect of our own alerts</td>
+                <td class="example">Deals escalated within 48 hours closed <em>6 days earlier than matched deals that were not.</em></td>
+                <td class="narrow"><span class="badge-blue badge">Cohort</span></td>
+                <td class="narrow">Quick</td>
+            </tr>
+            <tr>
+                <td class="finding">Revenue reforecast into the month it actually closes</td>
+                <td class="example"><em>$4.2M of the $11.8M you have booked for September closes in October.</em></td>
+                <td class="narrow"><span class="badge-orange badge">Hybrid</span></td>
+                <td class="narrow">Deep</td>
+            </tr>
+            <tr>
+                <td class="finding">Cancellation risk with five weeks of lead time</td>
+                <td class="example">Six active deals carry cancellation risk above 40%. <em>Four share one pattern: appraisal delay plus two close date moves.</em></td>
+                <td class="narrow"><span class="badge-orange badge">Hybrid</span></td>
+                <td class="narrow">Deep</td>
+            </tr>
+            <tr>
+                <td class="finding">Rate locks expiring ahead of any feasible close</td>
+                <td class="example">Four locks expire before the earliest date those homes can physically close. <em>Two are inside ten days.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Deep</td>
+            </tr>
+            <tr>
+                <td class="finding">Change order margin leakage by plan</td>
+                <td class="example">Change orders on the Magnolia average $14K of cost against $9K of revenue. <em>You are subsidizing upgrades on that plan.</em></td>
+                <td class="narrow"><span class="badge">Constraint</span></td>
+                <td class="narrow">Deep</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note">
+        <p>Highest leverage item is schedule calibration: measured actuals written back into the template. Expected durations and lag days are hand-authored constants today, and every date we emit inherits their error.</p>
+    </div>
+</section>
+
+<section>
+    <h2>Where the analytics goes next</h2>
+    <table>
+        <caption>These compose the same lemmas into heavier machinery. Each is a distinct sale.</caption>
+        <thead>
+            <tr>
+                <th scope="col">Finding</th>
+                <th scope="col">Example</th>
+                <th scope="col">Mechanism</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="finding">Graph-aware scoring
+                    <span class="dep"><span class="badge-plain badge">Needs precedence closure</span></span></td>
+                <td class="example">Two deals both sit at 60% complete and score differently, <em>because one's remaining work is on the critical path and the other's is not.</em></td>
+                <td class="mech">Critical path position, precedence depth, and centrality added to the feature vector</td>
+            </tr>
+            <tr>
+                <td class="finding">Schedule risk simulation
+                    <span class="dep"><span class="badge-plain badge">Needs calibrated distributions</span></span></td>
+                <td class="example">If the drywall crew slips a week in Coral Springs, <em>14 closings move and $1.9M shifts out of the quarter.</em></td>
+                <td class="mech">Monte Carlo across the dependency graph using per-phase duration distributions</td>
+            </tr>
+            <tr>
+                <td class="finding">Intervention ranking
+                    <span class="dep"><span class="badge-plain badge">Needs calibrated graph</span></span></td>
+                <td class="example"><em>Ordering the appraisal today recovers 11 days. Expediting the punch list recovers 2.</em> Do the first one.</td>
+                <td class="mech">Recompute critical path under perturbed milestone timings, diff the outcomes</td>
+            </tr>
+            <tr>
+                <td class="finding">Close date as a range, not a class label
+                    <span class="dep"><span class="badge-plain badge">Needs transition history</span></span></td>
+                <td class="example">Lot 118 closes <em>between Sept 28 and Oct 14 at 80% confidence</em>, instead of being labelled AT_RISK.</td>
+                <td class="mech">Survival model over right-censored phase transitions</td>
+            </tr>
+            <tr>
+                <td class="finding">Causal path attribution
+                    <span class="dep"><span class="badge-plain badge">Needs outcome volume</span></span></td>
+                <td class="example">Late selections cost you 8 days, and <em>the path runs through drywall gating the appraisal</em>, not through construction directly.</td>
+                <td class="mech">Effect sizes estimated along specific graph edges, so a driver names its mechanism</td>
+            </tr>
+            <tr>
+                <td class="finding">Hypothesis discovery
+                    <span class="dep"><span class="badge-plain badge">Needs structural features</span></span></td>
+                <td class="example">When HVAC rough-in trails electrical by more than 6 days and the appraisal is still open, close dates slip 18 days. <em>Nobody was tracking that pair.</em></td>
+                <td class="mech">Frontier math and analytics models search high-order interactions; the scaffold filters for physical coherence</td>
+            </tr>
+            <tr>
+                <td class="finding">Learned postulates
+                    <span class="dep"><span class="badge-plain badge">Needs history at volume</span></span></td>
+                <td class="example">The data says permit revision consistently precedes foundation by 9 days in Broward. <em>Confirm it and we add the edge to the graph.</em></td>
+                <td class="mech">Dependencies inferred from consistent co-occurrence and lag, proposed as graph edges for human ratification</td>
+            </tr>
+            <tr>
+                <td class="finding">Partner scorecards
+                    <span class="dep"><span class="badge-plain badge">Needs partner ID extraction</span></span></td>
+                <td class="example"><em>Lender A clears underwriting in 24 days. Lender B takes 39</em>, on the same borrower profiles.</td>
+                <td class="mech">Cycle time and pull-through per partner identifier lifted from payloads</td>
+            </tr>
+            <tr>
+                <td class="finding">Per-home margin waterfall
+                    <span class="dep"><span class="badge-plain badge">Needs amount extraction</span></span></td>
+                <td class="example">The Magnolia pro forma says 21% margin. <em>Actuals land at 16%, and carry plus change orders account for the whole gap.</em></td>
+                <td class="mech">Change order amounts, cost variance, carry, and incentives joined per home</td>
+            </tr>
+            <tr>
+                <td class="finding">Absorption versus build capacity
+                    <span class="dep"><span class="badge-plain badge">Needs throughput series</span></span></td>
+                <td class="example">You are signing 14 homes a month in Sawgrass and completing 9. <em>Dates promised past March are not achievable.</em></td>
+                <td class="mech">Signing rate extrapolated against completion throughput to forecast backlog and date feasibility</td>
+            </tr>
+            <tr>
+                <td class="finding">Market benchmarking across builders
+                    <span class="dep"><span class="badge-plain badge">Needs multi-tenant volume</span></span></td>
+                <td class="example"><em>Your title step runs 40% slower than the market median</em> for comparable Florida communities.</td>
+                <td class="mech">Anonymized cohort distributions across tenants</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note">
+        <p>Two of these change the product's category. Schedule risk simulation and intervention ranking move us from reporting on a deal to testing a decision before it is made.</p>
+        <p>One compounds indefinitely. Learned postulates mean the symbolic layer grows from the data it ingests: models infer candidate rules, humans ratify them, the graph gets richer, and every model trained on that graph gets sharper. Volume does not just improve accuracy, it expands what the system can prove.</p>
+    </div>
+</section>
+
+</div>
+</body>
+</html>

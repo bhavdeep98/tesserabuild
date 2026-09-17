@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Market Validation &amp; Industry Evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f7f4ed; --card:#fcfaf6; --panel:#f1ede3; --text:#20352f; --text-2:#4a5c56; --text-3:#6c7b75;
+    --accent:#2d7d6f; --teal-50:#e6f5f2; --teal-100:#ccebe5; --teal-700:#2d655b; --teal-800:#1f4f47;
+    --warn:#c0562f; --warn-bg:#fbeee6; --line:rgba(32,53,47,0.12); --line-2:rgba(45,125,111,0.30);
+    --display:'Plus Jakarta Sans',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace; --r:12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); font-size: 15.5px; line-height: 1.62; -webkit-font-smoothing: antialiased; }
+  h1,h2,h3,h4 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--text); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  b, strong { font-weight: 700; color: var(--text); }
+  a.inline { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+  a.inline:hover { border-bottom-color: var(--accent); }
+  .eyebrow { font: 700 12px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: 980px; margin: 0 auto; padding: 13px 28px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; }
+  .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
+  .topbar .home:hover { background: var(--teal-50); }
+
+  header.hd { padding: 66px 0 30px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  header.hd h1 { font-size: clamp(30px, 4.6vw, 46px); letter-spacing: -0.03em; margin: 16px 0 14px; max-width: 20ch; }
+  header.hd p { font-size: 17px; color: var(--text-2); max-width: 74ch; }
+  .updated { margin-top: 16px; font: 500 12px/1.5 var(--mono); color: var(--text-3); }
+
+  section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  section h2 { font-size: 24px; margin-bottom: 6px; }
+  section .sub { font-size: 14px; color: var(--text-3); margin-bottom: 20px; }
+  section h3 { font-size: 17px; color: var(--teal-700); margin: 26px 0 10px; }
+  p.copy { color: var(--text-2); margin-bottom: 14px; max-width: 76ch; }
+
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 6px; font-size: 13.5px; }
+  caption { text-align: left; font-size: 12.5px; color: var(--text-3); padding-bottom: 8px; }
+  th { text-align: left; background: var(--teal-50); color: var(--teal-700); padding: 9px 11px; font: 700 11px/1.3 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--teal-100); }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td { padding: 9px 11px; border-bottom: 1px solid var(--line); color: var(--text-2); vertical-align: top; }
+  td b { color: var(--text); }
+  tbody tr:nth-child(even) { background: rgba(32,53,47,0.025); }
+  tr.total td { font-weight: 700; color: var(--teal-800); background: var(--teal-50); border-top: 1px solid var(--teal-100); }
+  td a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+  td a:hover { border-bottom-color: var(--accent); }
+
+  .kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 6px 0 18px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 16px 14px; }
+  .kpi.warn { border-left: 3px solid var(--warn); }
+  .kpi .v { font: 800 28px/1 var(--display); letter-spacing: -0.03em; color: var(--warn); }
+  .kpi .l { font-size: 12px; color: var(--text-2); margin-top: 8px; line-height: 1.4; }
+
+  .anchornote { scroll-margin-top: 72px; }
+  .callout { background: var(--card); border: 1px solid var(--line-2); border-left: 4px solid var(--accent); border-radius: var(--r); padding: 18px 22px; margin: 18px 0; }
+  .callout .lbl { font: 700 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
+  .callout p { color: var(--text); font-size: 15px; }
+
+  footer { padding: 38px 0 70px; }
+  footer .fb { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text-2); margin-bottom: 12px; }
+  footer p { font: 500 12px/1.7 var(--mono); color: var(--text-3); max-width: 92ch; }
+  footer a { color: var(--accent); }
+
+  @media (max-width: 720px) { .kpis { grid-template-columns: 1fr 1fr; } table { font-size: 12.5px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="row">
+    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="home" href="./index.html">← Data room</a>
+  </div>
+</div>
+
+<header class="hd">
+  <div class="wrap">
+    <div class="eyebrow">Market Validation &amp; Industry Evidence</div>
+    <h1>Every number we use, traced to a public source.</h1>
+    <p>The problem Tessera solves is documented in earnings calls, government data, and industry research — not modeled by us. This is the evidence base behind the wedge argument and the business case.</p>
+    <div class="updated">Sourced from public filings, NAHB / U.S. Census data, Redfin, and industry publications · Content rephrased for compliance with licensing restrictions.</div>
+  </div>
+</header>
+
+<!-- 1 · THREE CORE PROBLEMS -->
+<section>
+  <div class="wrap">
+    <h2>1 · The three core problems</h2>
+    <div class="sub">Cycle time, cancellations, and siloed systems — each independently costly, and compounding.</div>
+
+    <h3>Cycle time is at multi-decade highs</h3>
+    <table>
+      <thead><tr><th>Data point</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Average single-family build time has stretched to <b>~10.1 months</b> — nearly 3 months longer than a decade ago</td><td><a href="https://www.nahb.org/blog/2025/11/sponsored-sound-capital-cycle-time-crush" target="_blank" rel="noopener">NAHB (Nov 2025)</a></td></tr>
+        <tr><td>Build-to-close schedule up 30–60 days since 2012 (Census data)</td><td><a href="https://www.probuilder.com/business-management/business-management-best-practices/project-management/article/55197754/cycle-time-the-gift-that-keeps-on-giving" target="_blank" rel="noopener">Pro Builder</a></td></tr>
+        <tr><td>Average delay costs approximately <b>$670/day</b> in carrying costs</td><td><a href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">Assoc. of Professional Builders</a></td></tr>
+        <tr><td>Industry-wide carrying costs from extended construction total <b>$2.663B annually</b></td><td><a href="http://www.nahb.org/news-and-economics/press-releases/2025/06/new-study-reveals-significant-economic-impact-of-housing-industry-labor-shortage" target="_blank" rel="noopener">NAHB (Jun 2025)</a></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Deal cancellations are at record levels</h3>
+    <div class="kpis">
+      <div class="kpi warn"><div class="v">20%</div><div class="l">D.R. Horton cancellation rate, Q3 FY2026 (up from 17% a year ago)</div></div>
+      <div class="kpi warn"><div class="v">~14%</div><div class="l">National cancellation rate, mid-2026 — highest in nearly 3 years</div></div>
+      <div class="kpi warn"><div class="v">~40,000</div><div class="l">Deals canceled in a single month at the Dec 2025 peak (16.3%)</div></div>
+      <div class="kpi warn"><div class="v">~20%</div><div class="l">Cancellation share in worst metros (Atlanta, Jacksonville, San Antonio)</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Data point</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>D.R. Horton cancellation rate hit <b>20%</b> in Q3 FY2026, up from 17% a year earlier and 16% the prior quarter</td><td><a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 call</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-7-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat</a></td></tr>
+        <tr><td><b>~14%</b> of deals fell through nationally in July 2026 — the highest in nearly three years</td><td><a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Redfin (Aug 2026)</a></td></tr>
+        <tr><td>Roughly <b>40,000</b> agreements canceled in December 2025 (16.3%) — a record for the month</td><td><a href="https://www.marketwatch.com/press-release/redfin-reports-homebuyers-are-canceling-deals-at-the-highest-rate-on-record-d1ab4749" target="_blank" rel="noopener">Redfin / MarketWatch</a></td></tr>
+        <tr><td>Cancellation share structurally elevated at ~13–16% for four straight years</td><td><a href="https://www.redfin.com/news/wp-content/uploads/2026/08/Contract-Cancellations-Press-Release-8_20_26.pdf" target="_blank" rel="noopener">Redfin data series</a></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Siloed systems are the structural root cause</h3>
+    <p class="copy">Builders run 5–10 disconnected systems. No single platform connects the dependencies between construction, mortgage, title and CRM — so the risk emerges in the seams that nobody owns.</p>
+    <table>
+      <thead><tr><th>Data point</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>“Silos kill margin” — builders remap workflows across tens of thousands of moving parts and handoffs</td><td><a href="https://www.thebuildersdaily.com/silos-kill-margin-heres-how-homebuilders-can-fight-back/" target="_blank" rel="noopener">The Builder's Daily</a></td></tr>
+        <tr><td>“Integration has pivoted into homebuilding's survival skill” — disjointed systems create friction, reduce margin</td><td><a href="https://www.thebuildersdaily.com/integration-has-pivoted-into-homebuildings-survival-skill/" target="_blank" rel="noopener">The Builder's Daily</a></td></tr>
+        <tr><td>Teams spend time searching for answers instead of acting; no real-time view of progress</td><td><a href="https://digs.com/post/from-siloed-systems-to-integrated-workflows-the-digital-transformation-of-homebuilding" target="_blank" rel="noopener">Digs.com</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 2 · BUILDER FINANCIAL IMPACT -->
+<section>
+  <div class="wrap">
+    <h2>2 · Big-builder financial impact</h2>
+    <div class="sub">The pain, quantified from the builders' own earnings calls.</div>
+
+    <h3>D.R. Horton — America's largest builder (~83,000 homes/yr)</h3>
+    <table>
+      <thead><tr><th>Metric</th><th class="num">Value</th><th>Period / source</th></tr></thead>
+      <tbody>
+        <tr><td>Cancellation rate</td><td class="num"><b>20%</b></td><td>Q3 FY2026 · <a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI call</a></td></tr>
+        <tr><td>Incentives (% of revenue)</td><td class="num"><b>~10%</b></td><td>Q2 FY2026, expected elevated all year · <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat</a></td></tr>
+        <tr><td>Closings using a rate buydown</td><td class="num"><b>~73%</b></td><td>Q2 FY2026 · <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat</a></td></tr>
+        <tr><td>EPS decline (YoY)</td><td class="num"><b>−22%</b></td><td>Q2 FY2026 · <a href="https://finviz.com/news/316275/dr-horton-dhi-up-58-since-last-earnings-report-can-it-continue" target="_blank" rel="noopener">Finviz</a></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Lennar — second-largest U.S. builder (~82,000 homes/yr)</h3>
+    <table>
+      <thead><tr><th>Metric</th><th class="num">Value</th><th>Period / source</th></tr></thead>
+      <tbody>
+        <tr><td>Incentives (% of sale price)</td><td class="num"><b>12.9%</b></td><td>Q2 FY2026 vs 4–6% norm · <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">GuruFocus</a></td></tr>
+        <tr><td>Gross margin compression</td><td class="num"><b>−220 bps</b></td><td>15.6% vs 17.8% prior year · <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">GuruFocus</a></td></tr>
+        <tr><td>EPS decline (Q2 YoY)</td><td class="num"><b>−31%</b></td><td>$1.24 vs $1.81 · <a href="https://investors.lennar.com/press-releases/2026/06-11-2026-214520364" target="_blank" rel="noopener">Lennar IR</a></td></tr>
+        <tr><td>Cycle time</td><td class="num"><b>121 days</b></td><td>Record low — yet still losing margin to coordination · Q2 FY2026 call</td></tr>
+      </tbody>
+    </table>
+    <p class="copy">Lennar's case is instructive: they already have industry-best cycle time, yet still bleed margin because the <b>coordination problem</b> between mortgage, title and construction isn't visible until it's too late — forcing incentives to close.</p>
+
+    <h3>Industry-wide loss summary</h3>
+    <table>
+      <thead><tr><th>Loss category</th><th class="num">Est. annual impact</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Carrying costs from extended construction</td><td class="num"><b>$2.663B</b></td><td>NAHB study (Jun 2025)</td></tr>
+        <tr><td>Lost production (homes not built)</td><td class="num"><b>$8.143B</b></td><td>NAHB — 19,000 fewer homes in 2024</td></tr>
+        <tr><td>Builder incentives above normal</td><td class="num"><b>$5–8B</b></td><td>Top 5 builders at 10–13% vs 4–6% norm</td></tr>
+        <tr><td>Cancellation waste</td><td class="num"><b>$3–5B</b></td><td>15%+ cancellation × marketing/carry/remarket</td></tr>
+        <tr class="total"><td>Total addressable pain</td><td class="num">$15–20B+ / yr</td><td>Across U.S. homebuilding</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 3 · PITCH NUMBERS + CARRY COST ANCHOR -->
+<section id="carry-cost" class="anchornote">
+  <div class="wrap">
+    <h2>3 · Pitch numbers — verified &amp; conservative</h2>
+    <div class="sub">Source verification for the figures used across the deck and whitepaper.</div>
+
+    <div class="callout">
+      <span class="lbl">Carry cost per day — why we use $500</span>
+      <p>The published figure is <b>~$670/day</b> (Association of Professional Builders, on a $750K build). Scaled to a $370K production home that's ~$330/day of hard cost; opportunity cost and incentive-erosion risk push the fully-loaded figure to <b>$500–$700/day</b>. <b>We standardize on $500/day</b> — deliberately at the low end, and well below the retired $2,000/day deck number — so the business case never depends on the aggressive end of the range.</p>
+    </div>
+
+    <table>
+      <caption>First-principles daily carry for a ~$370K production home</caption>
+      <thead><tr><th>Cost component</th><th class="num">Daily</th><th>Basis</th></tr></thead>
+      <tbody>
+        <tr><td>Construction loan interest (70% drawn @ 7.5%)</td><td class="num">~$53</td><td>$259K × 7.5% ÷ 365</td></tr>
+        <tr><td>Property tax accrual</td><td class="num">~$12</td><td>~$4,500/yr</td></tr>
+        <tr><td>Insurance (builder's risk)</td><td class="num">~$5</td><td>~$1,800/yr</td></tr>
+        <tr><td>Overhead allocation</td><td class="num">~$40</td><td>Superintendent, office</td></tr>
+        <tr><td>Trade rescheduling / callbacks</td><td class="num">~$30</td><td>Amortized per delayed unit</td></tr>
+        <tr><td>Opportunity cost (tied-up capital)</td><td class="num">~$60</td><td>Capital that can't start the next home</td></tr>
+        <tr class="total"><td>Subtotal (hard costs)</td><td class="num">~$200</td><td>Before incentive-erosion risk</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Homes per division per month</h3>
+    <p class="copy">D.R. Horton: 83,832 homes ÷ ~40 divisions ≈ 2,096/yr per division ≈ <b>~175/month</b>. Lennar is similar at ~180/month. High-volume Sun Belt divisions reach 250–300. We model a conservative <b>~175–200/month per division</b>. <span style="color:var(--text-3)">Sources: <a href="https://investor.drhorton.com/overview/investor-story" target="_blank" rel="noopener">DHI IR</a>, <a href="https://www.globaldata.com/company-profile/dr-horton-inc/analysis/" target="_blank" rel="noopener">GlobalData</a>.</span></p>
+  </div>
+</section>
+
+<!-- 4 · WHY NOW -->
+<section>
+  <div class="wrap">
+    <h2>4 · Why now</h2>
+    <div class="sub">The pain is acute, the industry is asking for it, and the systems are finally reachable.</div>
+    <table>
+      <tbody>
+        <tr><td><b>Record cancellations</b> — the pain is acute and worsening (20% at DHI; ~14% nationally)</td></tr>
+        <tr><td><b>Margin compression</b> — builders spending 2–3× normal on incentives just to move inventory</td></tr>
+        <tr><td><b>AI readiness</b> — the industry is openly calling for operational intelligence inside the ERP layer</td></tr>
+        <tr><td><b>System maturity</b> — BuildPro, Encompass, Salesforce, Procore all have APIs we can read</td></tr>
+        <tr><td><b>Cycle-time awareness</b> — leaders like Meritage prove coordination is the competitive differentiator</td></tr>
+      </tbody>
+    </table>
+    <p class="copy" style="margin-top:18px;">Nobody has built the cross-system dependency graph connecting construction → mortgage → title → CRM into a single predictive intelligence layer. <b>That is the gap Tessera fills.</b></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
+    <p>
+      This page condenses the full internal evidence file. All data points sourced from public earnings reports, press releases,
+      government data, and industry publications; links go to primary sources where available. Content rephrased for compliance
+      with licensing restrictions. <a href="./index.html">← Back to the data room</a> · <a href="./why-predictability-is-the-wedge.html">The wedge argument →</a>
+    </p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera — Interactive Business &amp; Scale Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f7f4ed; --bg-card: #fcfaf6; --text: #20352f; --text-2: #4a5c56; --text-3: #5f6f68;
+        --accent: #397c70; --teal-50: #e6f5f2; --teal-100: #ccebe5; --teal-700: #2d655b; --teal-800: #1f4f47;
+        --border: rgba(43,75,66,0.13); --horiz: #12539e; --horiz-bg: #e3f2fd; --vert: #b34700; --vert-bg: #fff3e0;
+        --r: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.55; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 40px 28px 64px; }
+    h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+    h1 { font-size: 2rem; line-height: 1.12; margin-bottom: 10px; }
+    h2 { font-size: 1.12rem; margin-bottom: 4px; }
+    h4 { font-size: 0.88rem; margin-bottom: 8px; }
+    p { color: var(--text-2); margin: 0 0 12px; }
+    .lede { font-size: 1rem; color: var(--text-2); max-width: 920px; }
+    .eyebrow { font-size: 0.7rem; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 9px; }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 22px; margin-bottom: 26px; }
+    .meta { font-size: 0.8rem; color: var(--text-3); margin-top: 12px; }
+
+    /* Layout: controls left, outputs right */
+    .layout { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+    .panel { position: sticky; top: 16px; background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 18px 18px 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
+    .panel h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .panel .phint { font-size: 0.78rem; color: var(--text-3); margin-bottom: 14px; }
+    .grp { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+    .grp:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .grp .gt { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 10px; }
+    .ctrl { margin-bottom: 13px; }
+    .ctrl .lrow { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+    .ctrl label { font-size: 0.8rem; color: var(--text-2); font-weight: 500; }
+    .ctrl .cv { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 0.86rem; color: var(--teal-800);
+        font-variant-numeric: tabular-nums; }
+    .ctrl input[type=range] { width: 100%; margin: 6px 0 0; accent-color: var(--accent); height: 4px; }
+    .ctrl .sub { font-size: 0.7rem; color: var(--text-3); }
+    .btn { width: 100%; margin-top: 6px; padding: 9px; border: 1px solid var(--accent); background: transparent;
+        color: var(--accent); border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700;
+        font-size: 0.84rem; cursor: pointer; }
+    .btn:hover { background: var(--teal-50); }
+
+    /* Outputs */
+    section { margin-bottom: 30px; }
+    .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .sec-num { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.8rem; color: #fff;
+        background: var(--accent); width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+    .kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 11px; }
+    .kpi { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 14px 13px; }
+    .kpi .val { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--teal-800);
+        line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+    .kpi .lab { font-size: 0.72rem; color: var(--text-3); margin-top: 7px; line-height: 1.35; }
+    .kpi.hero { background: var(--teal-800); border-color: var(--teal-800); }
+    .kpi.hero .val { color: #fff; } .kpi.hero .lab { color: #cfe4df; }
+    .kpi.flash { animation: flash 0.5s ease; }
+    @keyframes flash { 0% { background: var(--teal-50); } 100% { } }
+    .kpi.hero.flash { animation: flashh 0.5s ease; }
+    @keyframes flashh { 0% { background: var(--teal-700); } 100% { } }
+
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .cols-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; }
+    .card.accent { border-left: 3px solid var(--accent); }
+    .card.land { border-left: 3px solid var(--horiz); }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 2px; }
+    th { background: var(--teal-50); color: var(--teal-700); padding: 7px 10px; text-align: left; font-weight: 600;
+        font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--teal-100); }
+    th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.85rem; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(43,75,66,0.028); }
+    td.lbl { font-weight: 500; color: var(--text); }
+    tr.total td { font-weight: 700; color: var(--teal-800); background: var(--teal-50); border-top: 2px solid var(--teal-100); }
+    .pos { color: var(--accent); font-weight: 600; }
+    .src { color: var(--text-3); font-size: 0.78rem; }
+    .out { font-variant-numeric: tabular-nums; }
+
+    .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; }
+    .badge.h { background: var(--horiz-bg); color: var(--horiz); }
+    .badge.v { background: var(--vert-bg); color: var(--vert); }
+    .note { font-size: 0.79rem; color: var(--text-3); font-style: italic; margin-top: 8px; }
+
+    /* Bar for path-to-100M */
+    .bar-wrap { margin-top: 4px; }
+    .barrow { display: grid; grid-template-columns: 130px 1fr 120px; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .barrow .bl { font-size: 0.82rem; }
+    .barrow .track { background: rgba(43,75,66,0.08); border-radius: 6px; height: 22px; overflow: hidden; }
+    .barrow .fill { background: var(--accent); height: 100%; border-radius: 6px; transition: width 0.25s ease; }
+    .barrow .bv { font-size: 0.82rem; text-align: right; font-variant-numeric: tabular-nums; color: var(--teal-800); font-weight: 600; }
+    .barrow.over .fill { background: var(--vert); }
+
+    footer { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 4px; font-size: 0.76rem; color: var(--text-3); }
+
+    @media (max-width: 1000px) {
+        .layout { grid-template-columns: 1fr; }
+        .panel { position: static; max-height: none; }
+        .kpis { grid-template-columns: repeat(2,1fr); }
+        .cols-2, .cols-3 { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">Interactive Model · Drag any assumption</div>
+    <h1>Tessera — Live Business &amp; Scale Model</h1>
+    <p class="lede">
+        Every number below is computed from the assumptions on the left. Move a slider and the value envelope,
+        per-division P&amp;L, unit economics, TAM/SAM/SOM, path-to-$100M ARR, and the land layer all recompute instantly.
+        Defaults match the sourced baseline: <strong>$818/home envelope · $500K ACV · ~98% margin · $170M wedge TAM · 58 builders to $100M ARR</strong>.
+    </p>
+    <div class="meta">Base unit = one monitored closing · Contract unit = a division · Prices are internal value-model hypotheses, validated in pilots</div>
+</header>
+
+<div class="layout">
+
+<!-- ═══════════════ CONTROLS ═══════════════ -->
+<aside class="panel">
+    <h3>Assumptions</h3>
+    <div class="phint">Drag to explore. Everything on the right updates live.</div>
+
+    <div class="grp">
+        <div class="gt">Value envelope — delay</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="carry">Carry cost / day</label><span class="cv" id="carry_v">$500</span></div>
+            <input type="range" id="carry" min="200" max="2000" step="25" value="500">
+            <div class="sub">APB ~$670 · retired deck figure $2,000</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="delayed">% of closings delayed</label><span class="cv" id="delayed_v">12%</span></div>
+            <input type="range" id="delayed" min="0" max="40" step="1" value="12">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="prevent">% of delays preventable</label><span class="cv" id="prevent_v">35%</span></div>
+            <input type="range" id="prevent" min="0" max="100" step="5" value="35">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="days">Avg delay (days)</label><span class="cv" id="days_v">18</span></div>
+            <input type="range" id="days" min="0" max="45" step="1" value="18">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Value envelope — cancellation</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="cancrate">Cancellation rate</label><span class="cv" id="cancrate_v">16%</span></div>
+            <input type="range" id="cancrate" min="0" max="30" step="1" value="16">
+            <div class="sub">D.R. Horton reported 16–18%</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="canccost">Cost per cancellation</label><span class="cv" id="canccost_v">$15,000</span></div>
+            <input type="range" id="canccost" min="0" max="40000" step="1000" value="15000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="cancprev">% cancellations prevented</label><span class="cv" id="cancprev_v">10%</span></div>
+            <input type="range" id="cancprev" min="0" max="50" step="1" value="10">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Value envelope — change orders</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="coleak">Leakage / affected home</label><span class="cv" id="coleak_v">$1,000</span></div>
+            <input type="range" id="coleak" min="0" max="5000" step="100" value="1000">
+            <div class="sub">$14K cost vs $9K revenue on affected plans</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="coaffect">% of homes affected</label><span class="cv" id="coaffect_v">20%</span></div>
+            <input type="range" id="coaffect" min="0" max="50" step="1" value="20">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Pricing &amp; contract</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="capture">Value-capture %</label><span class="cv" id="capture_v">31%</span></div>
+            <input type="range" id="capture" min="10" max="50" step="1" value="31">
+            <div class="sub">Standard SaaS capture 20–30% of value created</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="closings">Closings / division / yr</label><span class="cv" id="closings_v">2,000</span></div>
+            <input type="range" id="closings" min="500" max="3000" step="100" value="2000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="divs">Divisions / national logo</label><span class="cv" id="divs_v">40</span></div>
+            <input type="range" id="divs" min="1" max="60" step="1" value="40">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Cost &amp; go-to-market</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="cogs">COGS / division / month</label><span class="cv" id="cogs_v">$671</span></div>
+            <input type="range" id="cogs" min="0" max="3000" step="25" value="671">
+            <div class="sub">Verified AWS; ~$0 under BYOC</div>
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="cac">CAC per logo</label><span class="cv" id="cac_v">$50,000</span></div>
+            <input type="range" id="cac" min="10000" max="150000" step="5000" value="50000">
+        </div>
+    </div>
+
+    <div class="grp">
+        <div class="gt">Market &amp; expansion</div>
+        <div class="ctrl">
+            <div class="lrow"><label for="usclose">US new-home closings / yr</label><span class="cv" id="usclose_v">679,083</span></div>
+            <input type="range" id="usclose" min="500000" max="800000" step="1000" value="679083">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="top200">Top-200 closings / yr (SAM)</label><span class="cv" id="top200_v">535,000</span></div>
+            <input type="range" id="top200" min="300000" max="600000" step="5000" value="535000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="suite">Full-suite price / closing</label><span class="cv" id="suite_v">$650</span></div>
+            <input type="range" id="suite" min="250" max="2000" step="50" value="650">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="lots">Lots in development (land)</label><span class="cv" id="lots_v">1,500,000</span></div>
+            <input type="range" id="lots" min="0" max="2500000" step="50000" value="1500000">
+        </div>
+        <div class="ctrl">
+            <div class="lrow"><label for="lotprice">Price / lot monitored</label><span class="cv" id="lotprice_v">$50</span></div>
+            <input type="range" id="lotprice" min="0" max="200" step="5" value="50">
+        </div>
+    </div>
+
+    <button class="btn" id="reset">↺ Reset to sourced defaults</button>
+</aside>
+
+<!-- ═══════════════ OUTPUTS ═══════════════ -->
+<main>
+
+    <!-- 1. Value envelope + P&L -->
+    <section>
+        <div class="sec-head"><span class="sec-num">1</span><h2>Unit economics — live</h2></div>
+        <div class="kpis">
+            <div class="kpi" id="k_env"><div class="val out">$818</div><div class="lab">Value prevented / home / yr</div></div>
+            <div class="kpi" id="k_price"><div class="val out">$250</div><div class="lab">Price / monitored closing</div></div>
+            <div class="kpi" id="k_cogs"><div class="val out">$8K</div><div class="lab">COGS / division / yr</div></div>
+            <div class="kpi hero" id="k_margin"><div class="val out">98%</div><div class="lab">Gross margin / division</div></div>
+            <div class="kpi" id="k_roi"><div class="val out">3.3×</div><div class="lab">Builder net ROI</div></div>
+        </div>
+
+        <div class="cols-2" style="margin-top:16px;">
+            <div class="card">
+                <h4>Value envelope — per home / yr</h4>
+                <table>
+                    <thead><tr><th>Source</th><th class="num">$ / home / yr</th></tr></thead>
+                    <tbody>
+                        <tr><td class="lbl">Avoidable delay</td><td class="num out" id="e_delay">$378</td></tr>
+                        <tr><td class="lbl">Cancellation prevention</td><td class="num out" id="e_canc">$240</td></tr>
+                        <tr><td class="lbl">Change-order leakage</td><td class="num out" id="e_co">$200</td></tr>
+                        <tr class="total"><td>Total envelope</td><td class="num out" id="e_total">$818</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">Delay = carry × %delayed × %preventable × days. Cancellation = rate × cost × prevent%. Change-order = leakage × %affected.</p>
+            </div>
+            <div class="card accent">
+                <h4>Per-division P&amp;L</h4>
+                <table>
+                    <thead><tr><th>Line</th><th class="num">Per division / yr</th></tr></thead>
+                    <tbody>
+                        <tr><td class="lbl">Closings monitored</td><td class="num out" id="p_close">2,000</td></tr>
+                        <tr><td class="lbl">Value created</td><td class="num out" id="p_value">$1.64M</td></tr>
+                        <tr><td class="lbl">Revenue (ACV)</td><td class="num out pos" id="p_acv">$500K</td></tr>
+                        <tr><td class="lbl">Infrastructure COGS</td><td class="num out" id="p_cogs">$8K</td></tr>
+                        <tr class="total"><td>Gross profit · margin</td><td class="num out" id="p_gp">$492K · 98%</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">Fee as % of builder home-sales revenue: <span class="out" id="p_revpct">0.07%</span> (rises to ~0.15% at full-suite pricing). Invisible in their P&amp;L.</p>
+            </div>
+        </div>
+
+        <div class="cols-3" style="margin-top:14px;">
+            <div class="card">
+                <h4>LTV / CAC</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">ACV / division</td><td class="num out" id="u_acv">$500K</td></tr>
+                        <tr><td class="lbl">Gross profit / yr</td><td class="num out" id="u_gp">$492K</td></tr>
+                        <tr><td class="lbl">CAC / logo</td><td class="num out" id="u_cac">$50K</td></tr>
+                        <tr><td class="lbl">LTV/CAC (5-yr, 1 div)</td><td class="num out pos" id="u_ltv">49×</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h4>Payback</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Gross profit / mo</td><td class="num out" id="pb_gpm">$41K</td></tr>
+                        <tr><td class="lbl">CAC</td><td class="num out" id="pb_cac">$50K</td></tr>
+                        <tr><td class="lbl">Payback (months)</td><td class="num out pos" id="pb_mo">1.2</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">Single landed division pays back CAC.</p>
+            </div>
+            <div class="card">
+                <h4>One national logo</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Divisions</td><td class="num out" id="l_divs">40</td></tr>
+                        <tr><td class="lbl">Wedge ARR / logo</td><td class="num out pos" id="l_wedge">$20M</td></tr>
+                        <tr><td class="lbl">Full-suite ARR / logo</td><td class="num out pos" id="l_suite">$52M</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. TAM/SAM/SOM + path to 100M -->
+    <section>
+        <div class="sec-head"><span class="sec-num">2</span><h2>Market &amp; path to $100M ARR</h2></div>
+        <div class="cols-2">
+            <div class="card">
+                <h4>TAM / SAM / SOM <span class="badge v">vertical price walk</span></h4>
+                <table>
+                    <thead><tr><th>Layer</th><th class="num">Wedge</th><th class="num">Full suite</th></tr></thead>
+                    <tbody>
+                        <tr><td class="lbl">TAM (all US closings)</td><td class="num out" id="m_tam_w">$170M</td><td class="num out" id="m_tam_s">$441M</td></tr>
+                        <tr><td class="lbl">SAM (top-200)</td><td class="num out" id="m_sam_w">$134M</td><td class="num out" id="m_sam_s">$348M</td></tr>
+                        <tr><td class="lbl">SOM (9.3% of SAM)</td><td class="num out" id="m_som_w">$12.5M</td><td class="num out" id="m_som_s">$32M</td></tr>
+                    </tbody>
+                </table>
+                <p class="note">TAM = closings × price. SAM = top-200 closings × price. SOM = 9.3% of SAM.</p>
+            </div>
+            <div class="card">
+                <h4>Builders needed for $100M ARR <span class="badge h">horizontal reach</span></h4>
+                <div class="bar-wrap" id="bars"></div>
+                <p class="note">Avg builder ACV = (top-200 ÷ 200) × price. Bar caps at the 200-builder universe; red = exceeds it.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Land layer -->
+    <section>
+        <div class="sec-head"><span class="sec-num">3</span><h2>Land layer — expand upstream <span class="badge h" style="margin-left:6px;">horizontal · earlier revenue</span></h2></div>
+        <div class="cols-3">
+            <div class="card land">
+                <h4>Land-layer TAM</h4>
+                <div class="kpi" style="border:none;padding:0;"><div class="val out" id="land_tam" style="font-size:1.7rem;">$75M</div><div class="lab">lots × price / lot</div></div>
+                <p class="note" style="margin-top:12px;">Additive to the closing wedge — a lot monitored today converts to a monitored closing later.</p>
+            </div>
+            <div class="card">
+                <h4>Funnel width</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Lots in development</td><td class="num out" id="land_lots">1.5M</td></tr>
+                        <tr><td class="lbl">Annual closings</td><td class="num out" id="land_close">679K</td></tr>
+                        <tr><td class="lbl">Upstream funnel multiple</td><td class="num out pos" id="land_mult">2.2×</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h4>Combined market</h4>
+                <table>
+                    <tbody>
+                        <tr><td class="lbl">Wedge TAM</td><td class="num out" id="comb_wedge">$170M</td></tr>
+                        <tr><td class="lbl">+ Land TAM</td><td class="num out" id="comb_land">$75M</td></tr>
+                        <tr class="total"><td>Total addressable</td><td class="num out" id="comb_total">$245M</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <strong>Formulas &amp; sources.</strong> Envelope, prices, and market figures from <em>MARKET-SIZING.md</em> (Aug 2026, source of truth) and <em>market-validation-and-industry-evidence.md</em>, anchored to D.R. Horton / Lennar FY2026 earnings, NAHB cycle-time data, and APB carry-cost methodology. COGS verified against the AWS Price List Bulk API (Sept 2026). Default value-capture 31% is set so the envelope × capture ≈ the $250 sourced wedge price; adjust freely. Land / lot figures are illustrative — upstream buyer budget authority is an open pilot question. All prices are internal value-model hypotheses, not published benchmarks. <em>Content rephrased for compliance with licensing restrictions.</em>
+    </footer>
+
+</main>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    // ── Input registry: id → default ──
+    var DEFAULTS = {
+        carry: 500, delayed: 12, prevent: 35, days: 18,
+        cancrate: 16, canccost: 15000, cancprev: 10,
+        coleak: 1000, coaffect: 20,
+        capture: 31, closings: 2000, divs: 40,
+        cogs: 671, cac: 50000,
+        usclose: 679083, top200: 535000, suite: 650,
+        lots: 1500000, lotprice: 50
+    };
+    var IDS = Object.keys(DEFAULTS);
+
+    // ── Formatting helpers ──
+    function money(n) {
+        var neg = n < 0; n = Math.abs(n);
+        var s;
+        if (n >= 1e9) s = "$" + (n / 1e9).toFixed(2).replace(/\.?0+$/, "") + "B";
+        else if (n >= 1e6) s = "$" + (n / 1e6).toFixed(2).replace(/\.?0+$/, "") + "M";
+        else if (n >= 1e3) s = "$" + (n / 1e3).toFixed(n >= 1e5 ? 0 : 0) + "K";
+        else s = "$" + Math.round(n);
+        return (neg ? "-" : "") + s;
+    }
+    function moneyFull(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+    function pct(n, d) { return (n).toFixed(d === undefined ? 0 : d) + "%"; }
+    function num(n) { return Math.round(n).toLocaleString("en-US"); }
+    function mult(n) { return n.toFixed(n >= 10 ? 0 : 1) + "×"; }
+
+    function get(id) { return parseFloat(document.getElementById(id).value); }
+    function setText(id, txt) {
+        var el = document.getElementById(id);
+        if (el) { var t = el.querySelector(".out") || el.querySelector(".val"); (t || el).textContent = txt; }
+    }
+    function setOut(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+
+    // ── The model ──
+    function compute() {
+        var v = {}; IDS.forEach(function (id) { v[id] = get(id); });
+
+        // Value envelope per home / yr
+        var eDelay = v.carry * (v.delayed / 100) * (v.prevent / 100) * v.days;
+        var eCanc = (v.cancrate / 100) * v.canccost * (v.cancprev / 100);
+        var eCO = v.coleak * (v.coaffect / 100);
+        var envelope = eDelay + eCanc + eCO;
+
+        // Price per closing = envelope × capture%
+        var price = envelope * (v.capture / 100);
+
+        // Per-division
+        var valuePerDiv = envelope * v.closings;
+        var acv = price * v.closings;
+        var cogsYr = v.cogs * 12;
+        var grossProfit = acv - cogsYr;
+        var margin = acv > 0 ? (grossProfit / acv) * 100 : 0;
+        var roi = acv > 0 ? valuePerDiv / acv : 0;
+
+        // Builder revenue % (avg new-home price ~ $370K)
+        var HOME_PRICE = 370000;
+        var builderRev = v.closings * HOME_PRICE;
+        var revPct = builderRev > 0 ? (acv / builderRev) * 100 : 0;
+
+        // LTV/CAC (5-yr retention, single division)
+        var ltv = grossProfit * 5;
+        var ltvcac = v.cac > 0 ? ltv / v.cac : 0;
+        var gpMonth = grossProfit / 12;
+        var paybackMo = gpMonth > 0 ? v.cac / gpMonth : Infinity;
+
+        // One logo
+        var wedgeLogo = acv * v.divs;
+        var suiteAcvPerDiv = v.suite * v.closings;
+        var suiteLogo = suiteAcvPerDiv * v.divs;
+
+        // Market
+        var tamW = v.usclose * price, tamS = v.usclose * v.suite;
+        var samW = v.top200 * price, samS = v.top200 * v.suite;
+        var somW = samW * 0.093, somS = samS * 0.093;
+
+        // Path to $100M ARR: avg builder = (top200/200) closings; ACV = that × price
+        var avgClose = v.top200 / 200;
+        var TARGET = 100e6;
+        var scenarios = [
+            { name: "Wedge $" + Math.round(price), p: price },
+            { name: "Full suite $" + Math.round(v.suite), p: v.suite },
+            { name: "Mature $1,500", p: 1500 }
+        ];
+
+        // Land layer
+        var landTam = v.lots * v.lotprice;
+        var funnelMult = v.usclose > 0 ? v.lots / v.usclose : 0;
+        var combTotal = tamW + landTam;
+
+        return {
+            eDelay: eDelay, eCanc: eCanc, eCO: eCO, envelope: envelope, price: price,
+            valuePerDiv: valuePerDiv, acv: acv, cogsYr: cogsYr, grossProfit: grossProfit,
+            margin: margin, roi: roi, revPct: revPct, ltvcac: ltvcac, gpMonth: gpMonth,
+            paybackMo: paybackMo, closings: v.closings, divs: v.divs,
+            wedgeLogo: wedgeLogo, suiteLogo: suiteLogo,
+            tamW: tamW, tamS: tamS, samW: samW, samS: samS, somW: somW, somS: somS,
+            scenarios: scenarios, avgClose: avgClose, target: TARGET,
+            landTam: landTam, funnelMult: funnelMult, lots: v.lots, usclose: v.usclose, combTotal: combTotal
+        };
+    }
+
+    function flash(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+    }
+
+    function render() {
+        var r = compute();
+
+        // KPIs
+        setText("k_env", moneyFull(r.envelope));
+        setText("k_price", moneyFull(r.price));
+        setText("k_cogs", money(r.cogsYr));
+        setText("k_margin", pct(r.margin, r.margin >= 99.5 || r.margin % 1 === 0 ? 0 : 0));
+        setText("k_roi", mult(r.roi));
+        ["k_env","k_price","k_cogs","k_margin","k_roi"].forEach(flash);
+
+        // Envelope table
+        setOut("e_delay", moneyFull(r.eDelay));
+        setOut("e_canc", moneyFull(r.eCanc));
+        setOut("e_co", moneyFull(r.eCO));
+        setOut("e_total", moneyFull(r.envelope));
+
+        // P&L
+        setOut("p_close", num(r.closings));
+        setOut("p_value", money(r.valuePerDiv));
+        setOut("p_acv", money(r.acv));
+        setOut("p_cogs", money(r.cogsYr));
+        setOut("p_gp", money(r.grossProfit) + " · " + pct(r.margin));
+        setOut("p_revpct", r.revPct.toFixed(2) + "%");
+
+        // LTV/CAC
+        setOut("u_acv", money(r.acv));
+        setOut("u_gp", money(r.grossProfit));
+        setOut("u_cac", money(get("cac")));
+        setOut("u_ltv", isFinite(r.ltvcac) ? mult(r.ltvcac) : "—");
+
+        // Payback
+        setOut("pb_gpm", money(r.gpMonth));
+        setOut("pb_cac", money(get("cac")));
+        setOut("pb_mo", isFinite(r.paybackMo) ? r.paybackMo.toFixed(1) : "—");
+
+        // Logo
+        setOut("l_divs", num(r.divs));
+        setOut("l_wedge", money(r.wedgeLogo));
+        setOut("l_suite", money(r.suiteLogo));
+
+        // Market
+        setOut("m_tam_w", money(r.tamW)); setOut("m_tam_s", money(r.tamS));
+        setOut("m_sam_w", money(r.samW)); setOut("m_sam_s", money(r.samS));
+        setOut("m_som_w", money(r.somW)); setOut("m_som_s", money(r.somS));
+
+        // Path-to-100M bars
+        var bars = document.getElementById("bars");
+        bars.innerHTML = "";
+        r.scenarios.forEach(function (s) {
+            var acvB = r.avgClose * s.p;
+            var needed = acvB > 0 ? r.target / acvB : Infinity;
+            var over = needed > 200;
+            var widthPct = Math.min(100, (needed / 200) * 100);
+            var row = document.createElement("div");
+            row.className = "barrow" + (over ? " over" : "");
+            row.innerHTML =
+                '<div class="bl">' + s.name + '</div>' +
+                '<div class="track"><div class="fill" style="width:' + widthPct.toFixed(1) + '%"></div></div>' +
+                '<div class="bv">' + (isFinite(needed) ? Math.ceil(needed) : "—") +
+                (over ? " ⚠ &gt;200" : "") + '</div>';
+            bars.appendChild(row);
+        });
+
+        // Land
+        setOut("land_tam", money(r.landTam));
+        setOut("land_lots", num(r.lots).replace(/,000,000$/, "M").replace(/,000$/, "K"));
+        setOut("land_lots", (r.lots >= 1e6 ? (r.lots/1e6).toFixed(1)+"M" : (r.lots/1e3).toFixed(0)+"K"));
+        setOut("land_close", (r.usclose/1e3).toFixed(0)+"K");
+        setOut("land_mult", mult(r.funnelMult));
+        setOut("comb_wedge", money(r.tamW));
+        setOut("comb_land", money(r.landTam));
+        setOut("comb_total", money(r.combTotal));
+    }
+
+    // ── Wire up controls ──
+    var LABELS = {
+        carry: function (x) { return "$" + num(x); },
+        delayed: function (x) { return x + "%"; },
+        prevent: function (x) { return x + "%"; },
+        days: function (x) { return x + ""; },
+        cancrate: function (x) { return x + "%"; },
+        canccost: function (x) { return "$" + num(x); },
+        cancprev: function (x) { return x + "%"; },
+        coleak: function (x) { return "$" + num(x); },
+        coaffect: function (x) { return x + "%"; },
+        capture: function (x) { return x + "%"; },
+        closings: function (x) { return num(x); },
+        divs: function (x) { return x + ""; },
+        cogs: function (x) { return "$" + num(x); },
+        cac: function (x) { return "$" + num(x); },
+        usclose: function (x) { return num(x); },
+        top200: function (x) { return num(x); },
+        suite: function (x) { return "$" + num(x); },
+        lots: function (x) { return num(x); },
+        lotprice: function (x) { return "$" + num(x); }
+    };
+
+    function syncLabel(id) {
+        var el = document.getElementById(id + "_v");
+        if (el) el.textContent = LABELS[id](get(id));
+    }
+
+    IDS.forEach(function (id) {
+        var input = document.getElementById(id);
+        input.addEventListener("input", function () { syncLabel(id); render(); });
+    });
+
+    document.getElementById("reset").addEventListener("click", function () {
+        IDS.forEach(function (id) {
+            document.getElementById(id).value = DEFAULTS[id];
+            syncLabel(id);
+        });
+        render();
+    });
+
+    // Init
+    IDS.forEach(syncLabel);
+    render();
+})();
+</script>
+
+</body>
+</html>

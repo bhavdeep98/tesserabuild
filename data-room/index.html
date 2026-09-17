@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Data Room</title>
+<meta name="description" content="Private investor data room for Tessera.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f7f4ed;
+    --surface:   #fdfbf6;
+    --card:      #fcfaf6;
+    --panel:     #f1ede3;
+    --text:      #20352f;
+    --text-2:    #4a5c56;
+    --text-3:    #6c7b75;
+    --accent:    #2d7d6f;
+    --teal-50:   #e6f5f2;
+    --teal-100:  #ccebe5;
+    --teal-700:  #2d655b;
+    --teal-800:  #1f4f47;
+    --warn:      #c0562f;
+    --gold:      #9a7b1f;
+    --line:      rgba(32,53,47,0.12);
+    --line-2:    rgba(45,125,111,0.30);
+    --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --body: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --r: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); font-weight: 450; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  body::before { content:""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(55% 40% at 88% -8%, rgba(45,125,111,0.08), transparent 60%), radial-gradient(50% 40% at 0% 6%, rgba(45,125,111,0.05), transparent 55%); }
+  h1,h2,h3,h4 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.12; color: var(--text); }
+  .accent { color: var(--accent); }
+  b, strong { font-weight: 700; color: var(--text); }
+  .wrap { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+  .eyebrow { font: 700 12px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; }
+  .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
+
+  /* topbar */
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: 1060px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--text); text-decoration: none; }
+  .topbar .tag { font: 600 11px/1 var(--mono); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
+
+  /* hero */
+  .hero { padding: 76px 0 40px; }
+  .hero h1 { font-size: clamp(34px, 5.4vw, 60px); letter-spacing: -0.035em; max-width: 16ch; margin: 20px 0 20px; }
+  .hero .lede { font-size: clamp(17px, 2vw, 21px); color: var(--text-2); max-width: 64ch; }
+  .hero .thesis { margin-top: 26px; border-left: 3px solid var(--accent); padding: 4px 0 4px 20px; max-width: 70ch; font-size: 16px; color: var(--text); }
+
+  /* three-layer strip */
+  .layers { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 34px 0 8px; }
+  .layer { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; position: relative; }
+  .layer.wedge { border-color: var(--accent); background: linear-gradient(150deg, rgba(45,125,111,0.10), rgba(45,125,111,0.015)); box-shadow: 0 10px 30px rgba(45,125,111,0.10); }
+  .layer .ly { font: 700 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+  .layer.wedge .ly { color: var(--accent); }
+  .layer h3 { font-size: 18px; margin: 9px 0 5px; }
+  .layer p { font-size: 13px; color: var(--text-2); }
+  .layer .pill { position: absolute; top: 16px; right: 16px; font: 700 9px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; }
+  .layer.wedge .pill { color: var(--accent); border: 1px solid var(--line-2); }
+  .layer .pill.next { color: var(--text-3); border: 1px solid var(--line); }
+
+  /* section heads */
+  .sec { padding: 40px 0 10px; }
+  .sec-title { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .sec-title h2 { font-size: 22px; }
+  .sec-title .n { font: 800 13px/1 var(--mono); color: #fff; background: var(--accent); width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; }
+  .sec-sub { font-size: 14px; color: var(--text-3); margin-bottom: 18px; margin-left: 36px; }
+
+  /* doc cards */
+  .docs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .doc { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 20px 22px; text-decoration: none; transition: border-color .25s, transform .25s, box-shadow .25s; }
+  .doc:hover { border-color: var(--line-2); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(32,53,47,0.07); }
+  .doc .dt { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+  .doc .ic { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: var(--teal-50); color: var(--accent); font-size: 16px; }
+  .doc h3 { font-size: 16.5px; line-height: 1.25; }
+  .doc p { font-size: 13.5px; color: var(--text-2); flex: 1; }
+  .doc .meta { margin-top: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .doc .kind { font: 600 10px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); border: 1px solid var(--line); border-radius: 999px; padding: 4px 9px; }
+  .doc .go { font: 700 12px/1 var(--mono); color: var(--accent); }
+  .doc.feature { grid-column: 1 / -1; border-color: var(--accent); background: linear-gradient(150deg, rgba(45,125,111,0.09), rgba(45,125,111,0.015)); }
+  .doc.feature .ic { background: var(--accent); color: #fff; }
+
+  /* start-here row */
+  .starthere { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 72px; margin-top: 40px; }
+  footer .fb { font: 800 13px/1 var(--display); letter-spacing: 0.26em; color: var(--text-2); margin-bottom: 12px; }
+  footer p { font: 500 12px/1.7 var(--mono); color: var(--text-3); max-width: 92ch; }
+
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .55s ease, transform .55s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .layers, .docs, .starthere { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="row">
+    <span class="bk">TESSERA</span>
+    <span class="tag">Private · Investor Data Room</span>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">The Intelligence Layer for the Home</div>
+    <h1 class="rv">Everything we said in the room — with the receipts.</h1>
+    <p class="lede rv">A single place to review Tessera end to end: why the AI Predictability Engine is the wedge, how it becomes the Home Passport and Maintenance AI, the business case, the architecture, and direct answers to the questions you raised.</p>
+    <div class="thesis rv"><b>The wedge is Layer 1.</b> It solves an urgent, billion-dollar builder problem today — and the verified data it creates is what earns Tessera the right to build Layers 2 and 3.</div>
+
+    <div class="layers rv">
+      <div class="layer wedge">
+        <span class="pill">Where we start</span>
+        <div class="ly">Layer 01</div>
+        <h3>AI Predictability Engine</h3>
+        <p>Predict execution risk before it impacts the close. The builder pays for this today.</p>
+      </div>
+      <div class="layer">
+        <span class="pill next">Built on L1</span>
+        <div class="ly">Layer 02</div>
+        <h3>Home Passport</h3>
+        <p>A persistent, verified digital identity for the home — built from builder data.</p>
+      </div>
+      <div class="layer">
+        <span class="pill next">Built on L2</span>
+        <div class="ly">Layer 03</div>
+        <h3>Maintenance AI</h3>
+        <p>Use the home record to reduce avoidable service and warranty friction after closing.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- START HERE -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-title rv"><span class="n">1</span><h2>Start here</h2></div>
+    <div class="sec-sub rv">The two documents built specifically for this conversation.</div>
+    <div class="starthere">
+      <a class="doc feature rv" href="./answers.html" style="grid-column:auto;">
+        <div class="dt"><span class="ic">✦</span><h3>Answers to your questions</h3></div>
+        <p>Direct answers to the four things you raised: how Layer 1 connects to the passport, why the builder cares, why we'll win, and why blockchain.</p>
+        <div class="meta"><span class="kind">Built for you</span><span class="go">Read →</span></div>
+      </a>
+      <a class="doc feature rv" href="./why-predictability-is-the-wedge.html" style="grid-column:auto;">
+        <div class="dt"><span class="ic">◆</span><h3>Why the Predictability Engine is the wedge</h3></div>
+        <p>The full logical argument — how big the problem is (with cited sources), why builders leap at it, and why Layer 1 is the forced entry point.</p>
+        <div class="meta"><span class="kind">Whitepaper</span><span class="go">Read →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- THE PRODUCT -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-title rv"><span class="n">2</span><h2>The product &amp; the three layers</h2></div>
+    <div class="sec-sub rv">What we're building and how the pieces fit together.</div>
+    <div class="docs">
+      <a class="doc rv" href="./home-passport-overview.html">
+        <div class="dt"><span class="ic">🏠</span><h3>Home Passport — Overview</h3></div>
+        <p>The full product story across all three layers: predict, remember, maintain — and the trust model behind the record.</p>
+        <div class="meta"><span class="kind">Slides</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./findings-engine.html">
+        <div class="dt"><span class="ic">🧭</span><h3>The Findings Engine</h3></div>
+        <p>What the data can actually prove — the neuro-symbolic method, 51 signals, and the two dozen findings the pipeline supports.</p>
+        <div class="meta"><span class="kind">One-pager</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./interactive-model.html">
+        <div class="dt"><span class="ic">🎛️</span><h3>Interactive Model</h3></div>
+        <p>Explore the confidence score and the dependency graph interactively — see how a single delayed milestone moves the outcome.</p>
+        <div class="meta"><span class="kind">Interactive</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./connector-architecture-technical.html">
+        <div class="dt"><span class="ic">🔌</span><h3>Connector Architecture (Technical)</h3></div>
+        <p>How we integrate read-only across BuildPro, Encompass, Qualia, Salesforce and JDE — the cross-system layer no single vendor has.</p>
+        <div class="meta"><span class="kind">Technical</span><span class="go">Open →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- THE BUSINESS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-title rv"><span class="n">3</span><h2>The business &amp; the strategy</h2></div>
+    <div class="sec-sub rv">Unit economics, the path to scale, and the strategic case.</div>
+    <div class="docs">
+      <a class="doc rv" href="./business-strategy-onepager.html">
+        <div class="dt"><span class="ic">📊</span><h3>Business Strategy — One-Pager</h3></div>
+        <p>Unit economics from a single closing up: the $818 value envelope, ~98% margin, land-and-expand, and the path to $100M ARR.</p>
+        <div class="meta"><span class="kind">One-pager</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./execution-strategy.html">
+        <div class="dt"><span class="ic">🧮</span><h3>Execution Strategy</h3></div>
+        <p>The forward business case and what it means for us — an interactive model of clients, revenue, P&amp;L, payback and ROI.</p>
+        <div class="meta"><span class="kind">Interactive</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./strategy-frameworks.html">
+        <div class="dt"><span class="ic">♟️</span><h3>Strategic Analysis</h3></div>
+        <p>Six frameworks — PESTLE, Porter's Five Forces, SWOT, VRIO, Ansoff, Balanced Scorecard — and where we sit in the landscape.</p>
+        <div class="meta"><span class="kind">Analysis</span><span class="go">Open →</span></div>
+      </a>
+      <a class="doc rv" href="./evidence-market-validation.html">
+        <div class="dt"><span class="ic">📎</span><h3>Market Validation &amp; Evidence</h3></div>
+        <p>The full evidence base — 100+ cited data points from earnings calls, NAHB, Census and industry research behind every number we use.</p>
+        <div class="meta"><span class="kind">Evidence</span><span class="go">Open →</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
+    <p>
+      Private data room — shared by link, not indexed publicly. Product state as of September 2026: seven builder systems
+      mapped (two live), 51 signal types, a 45-node milestone graph, 500+ tests passing; the closing-confidence score is
+      currently rule-based and provisional pending ML calibration. Figures in the business documents include internal
+      value-model hypotheses to be validated in paid pilots. Content rephrased for compliance with licensing restrictions.
+    </p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>

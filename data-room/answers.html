@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Answers to Your Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f7f4ed;
+    --surface:   #fdfbf6;
+    --card:      #fcfaf6;
+    --panel:     #f1ede3;
+    --text:      #20352f;
+    --text-2:    #4a5c56;
+    --text-3:    #6c7b75;
+    --accent:    #2d7d6f;
+    --accent-2:  #397c70;
+    --teal-50:   #e6f5f2;
+    --teal-100:  #ccebe5;
+    --teal-700:  #2d655b;
+    --teal-800:  #1f4f47;
+    --warn:      #c0562f;
+    --warn-bg:   #fbeee6;
+    --gold:      #9a7b1f;
+    --line:      rgba(32,53,47,0.12);
+    --line-2:    rgba(45,125,111,0.30);
+    --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --body: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --r: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); font-weight: 450; line-height: 1.62; -webkit-font-smoothing: antialiased; }
+  body::before { content:""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(60% 42% at 85% -5%, rgba(45,125,111,0.07), transparent 60%), radial-gradient(50% 38% at 3% 10%, rgba(45,125,111,0.05), transparent 55%); }
+  h1,h2,h3,h4 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.12; color: var(--text); }
+  .accent { color: var(--accent); }
+  b, strong { font-weight: 700; color: var(--text); }
+  em { font-style: italic; }
+  .wrap { position: relative; z-index: 1; max-width: 940px; margin: 0 auto; padding: 0 28px; }
+
+  .eyebrow { font: 700 12px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; }
+  .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
+
+  /* top nav */
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: 940px; margin: 0 auto; padding: 13px 28px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; }
+  .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
+  .topbar .home:hover { background: var(--teal-50); }
+
+  /* hero */
+  .hero { padding: 74px 0 30px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 52px); letter-spacing: -0.03em; max-width: 18ch; margin: 20px 0 18px; }
+  .hero p { font-size: clamp(16px, 1.9vw, 19px); color: var(--text-2); max-width: 68ch; }
+  .hero .ctx { margin-top: 20px; font: 500 13px/1.6 var(--mono); color: var(--text-3); border-left: 3px solid var(--line-2); padding-left: 16px; max-width: 70ch; }
+
+  /* jump nav */
+  .jump { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 34px 0 10px; }
+  .jump a { display: flex; gap: 14px; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; text-decoration: none; transition: border-color .25s, transform .25s; }
+  .jump a:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .jump .qn { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--teal-50); color: var(--accent); font: 800 14px/1 var(--display); }
+  .jump .qt { font-family: var(--display); font-weight: 700; font-size: 14.5px; color: var(--text); line-height: 1.35; }
+
+  /* Q blocks */
+  section.q { padding: 54px 0; border-top: 1px solid var(--line); }
+  .q-head { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 22px; }
+  .q-badge { flex: 0 0 auto; width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; font: 800 22px/1 var(--display); color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.13), rgba(45,125,111,0.02)); border: 1px solid var(--line-2); }
+  .q-head .qq { font-size: clamp(20px, 2.5vw, 27px); line-height: 1.25; }
+  .q-head .asked { font: 600 11px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 9px; }
+
+  .short { background: var(--card); border: 1px solid var(--line-2); border-left: 4px solid var(--accent); border-radius: var(--r); padding: 20px 24px; margin-bottom: 22px; }
+  .short .lbl { font: 700 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 9px; }
+  .short p { font-size: 17px; color: var(--text); line-height: 1.55; }
+  .short p + p { margin-top: 10px; }
+
+  .body-copy p { font-size: 15.5px; color: var(--text-2); margin-bottom: 14px; max-width: 74ch; }
+  .body-copy p strong { color: var(--text); }
+
+  /* flow: builder -> passport -> maintenance */
+  .flow { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; margin: 22px 0; }
+  .flow .node { flex: 1 1 0; min-width: 200px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .flow .node .k { font: 700 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  .flow .node h4 { margin: 9px 0 6px; font-size: 17px; }
+  .flow .node p { font-size: 13px; color: var(--text-2); margin: 0; }
+  .flow .node.lit { border-color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.10), rgba(45,125,111,0.02)); box-shadow: 0 10px 30px rgba(45,125,111,0.10); }
+  .flow .arrow { display: flex; align-items: center; color: var(--accent); font-size: 1.4rem; }
+
+  /* card grids */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .cards.c3 { grid-template-columns: repeat(3,1fr); }
+  .mini { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .mini h4 { font-size: 15px; margin-bottom: 7px; }
+  .mini p { font-size: 13.5px; color: var(--text-2); }
+
+  /* highlight callout */
+  .call { margin: 20px 0; padding: 18px 22px; border-radius: 12px; background: var(--teal-50); border: 1px solid var(--teal-100); font-size: 15px; color: var(--teal-800); }
+  .call b { color: var(--teal-800); }
+
+  .warncall { margin: 20px 0; padding: 16px 20px; border-radius: 12px; background: var(--warn-bg); border: 1px solid rgba(192,86,47,0.25); font-size: 14px; color: var(--warn); }
+  .warncall b { color: var(--warn); }
+
+  /* honest / open items */
+  .honest { margin: 18px 0; padding: 16px 20px; border-radius: 12px; border: 1px dashed var(--line-2); background: rgba(45,125,111,0.035); font-size: 14px; color: var(--text-2); }
+  .honest b { color: var(--accent); }
+
+  a.inline { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); font-weight: 600; }
+  a.inline:hover { border-bottom-color: var(--accent); }
+
+  /* proof chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chips a, .chips span { font: 600 11px/1.3 var(--mono); color: var(--accent); text-decoration: none; padding: 5px 11px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); }
+  .chips a:hover { background: var(--teal-50); }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 70px; margin-top: 10px; }
+  footer .fb { font: 800 13px/1 var(--display); letter-spacing: 0.26em; color: var(--text-2); margin-bottom: 12px; }
+  footer p { font: 500 12px/1.7 var(--mono); color: var(--text-3); max-width: 92ch; }
+  footer a { color: var(--accent); }
+
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .jump, .cards, .cards.c3 { grid-template-columns: 1fr; }
+    .flow .arrow { transform: rotate(90deg); }
+    .q-badge { width: 44px; height: 44px; font-size: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="row">
+    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="home" href="./index.html">← Data room</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">Answers to Your Questions</div>
+    <h1 class="rv">The four things you asked us to make clear.</h1>
+    <p class="rv">You raised the right questions in the room — how the enterprise and consumer sides connect, why a builder would actually want the passport, why we have the right to win, and why any of this needs a blockchain. Here are direct answers, with the receipts.</p>
+    <div class="ctx rv">Each answer opens with the short version, then the reasoning. Every claim links to a supporting document in this data room or a public source.</div>
+
+    <div class="jump rv">
+      <a href="#q1"><span class="qn">1</span><span class="qt">How does the builder tool (Layer 1) connect to the homeowner passport — why is one a wedge into the others?</span></a>
+      <a href="#q2"><span class="qn">2</span><span class="qt">Does the builder even care that the passport exists — is it more work, or a benefit?</span></a>
+      <a href="#q3"><span class="qn">3</span><span class="qt">Why do you have the right to win? Why won't a builder just build it?</span></a>
+      <a href="#q4"><span class="qn">4</span><span class="qt">Why blockchain? Why isn't a normal database enough?</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- Q1 -->
+<section class="q" id="q1">
+  <div class="wrap">
+    <div class="q-head rv">
+      <div class="q-badge">1</div>
+      <div>
+        <div class="asked">You asked</div>
+        <h2 class="qq">“Layer 1 feels like enterprise SaaS for builders; the passport feels consumer. How do those two connect, and why is one a wedge into the others?”</h2>
+      </div>
+    </div>
+
+    <div class="short rv">
+      <span class="lbl">Short answer</span>
+      <p>They connect because <b>it is all one data set, captured once and reused three times.</b> Layer 1 pulls the builder's fragmented data into one place to predict the close. That same verified data <em>becomes</em> the home's passport (Layer 2). And the passport is what makes maintenance intelligence possible (Layer 3). One is a wedge into the others because <b>the later layers are literally built from the data the first layer creates</b> — you can't start with the record or the maintenance, because neither exists until the builder data has been captured and verified.</p>
+    </div>
+
+    <div class="body-copy rv">
+      <p>Think of it as one pipeline, not three products. The builder has the same information a homeowner will eventually need — what's in the home, who installed it, what the warranty is, which permits were pulled. Today that information is scattered across BuildPro, Encompass, Qualia, Salesforce and JDE, and most of it never reaches the homeowner. Layer 1 is the reason to go get all of it, verify it, and organize it — because the builder pays us <em>now</em> to predict their closings from exactly that data.</p>
+      <p>So the sequence is not a roadmap of separate bets. It's a single flow where each stage hands its output to the next:</p>
+    </div>
+
+    <div class="flow rv">
+      <div class="node lit">
+        <div class="k">Layer 1 · The wedge</div>
+        <h4>Predict</h4>
+        <p>Pull fragmented builder data into one place. Score every home's on-time-close probability. <b>The builder pays for this today.</b></p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="k">Layer 2 · The record</div>
+        <h4>Remember</h4>
+        <p>That same verified data becomes the home's passport — a “Carfax for the home,” handed to the owner at closing.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="k">Layer 3 · The service</div>
+        <h4>Maintain</h4>
+        <p>The passport lets us predict care — “your AC filter is due in 120 days,” “check your shingles in year two” — each citing its source.</p>
+      </div>
+    </div>
+
+    <div class="call rv">
+      This is also why we start with <b>new construction</b>, not existing homes. With a new build we capture the record at the source, accurate and verified. Retrofitting an existing home means plugging AI into someone's email to guess when the HVAC was last serviced — a data-entry mess. New construction is a clean data-entry problem we solve at the origin. (Existing homes via Zillow / Redfin data are a later expansion, not the wedge.)
+    </div>
+
+    <div class="chips rv">
+      <a href="./why-predictability-is-the-wedge.html" target="_blank" rel="noopener">The full wedge argument →</a>
+      <a href="./home-passport-overview.html" target="_blank" rel="noopener">Home Passport overview →</a>
+      <a href="./findings-engine.html" target="_blank" rel="noopener">What the data can prove →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Q2 -->
+<section class="q" id="q2">
+  <div class="wrap">
+    <div class="q-head rv">
+      <div class="q-badge">2</div>
+      <div>
+        <div class="asked">You asked</div>
+        <h2 class="qq">“Does the builder care that the passport exists? Is it more work for them — or are you just solving their problem and happen to build a valuable data set on the side?”</h2>
+      </div>
+    </div>
+
+    <div class="short rv">
+      <span class="lbl">Short answer</span>
+      <p>The builder's <b>built-in win is Layer 1</b> — real-time predictability and risk management on data they already own, with <em>zero</em> new work, because we're read-only and sit on top of their stack. The passport is a byproduct of doing that well, not extra work we ask of them.</p>
+      <p>And it hands them something every big builder is chasing and none has cracked: <b>a clean way to monetize the homeowner after closing.</b></p>
+    </div>
+
+    <div class="body-copy rv">
+      <p>The honest framing is that we're <strong>not</strong> asking the builder to take on a data project for someone else's future benefit. While we collect the data for the passport, we're simultaneously giving them the predictability and risk tool that justifies the spend on its own. They don't have to build additional customer-care products on top of it — they take what they already have and get the chain for free.</p>
+      <p>Then comes the part the room responded to: <strong>post-close monetization.</strong> Every large builder is trying to figure out how to upsell the homeowner after the sale. You see it in their JVs — Lennar with Hippo insurance, with Base Power; builders chasing another slice of the pie. Pulte has a limited marketplace; Lennar has tried one more than once. They keep struggling because <em>not everyone agrees on what data is needed or how it ties together</em> to make a marketplace work. The passport pulls it into one string.</p>
+    </div>
+
+    <div class="cards rv">
+      <div class="mini"><h4>No new customer-care stack</h4><p>They reuse the data they already have. We layer predictability and the chain on top — nothing to build internally.</p></div>
+      <div class="mini"><h4>A working post-close channel</h4><p>Maintenance requests route homeowner → trade directly, instead of homeowner → Lennar/Pulte/DHI as a warranty ticket.</p></div>
+      <div class="mini"><h4>Fast-tracked JVs</h4><p>Having lived on the investment side of a builder, this cleans up the groundwork that makes insurance/services JVs easier to strike.</p></div>
+      <div class="mini"><h4>Optional crypto &amp; syndication</h4><p>Because records sit on a chain, it becomes an easier path to accept crypto or syndicate communities to investors — if the builder chooses.</p></div>
+    </div>
+
+    <div class="honest rv">
+      <b>Where we're honest about the open question:</b> whether the builder takes a slice of the marketplace revenue, or whether that rev-share stays with the platform, is <b>not yet decided</b> — we're still doing the research on their existing JVs to model the benefit. It's a lever in the deal, not a settled number. Saying that plainly is stronger than pretending we've solved it.
+    </div>
+
+    <div class="chips rv">
+      <a href="./business-strategy-onepager.html" target="_blank" rel="noopener">Business model &amp; unit economics →</a>
+      <a href="./execution-strategy.html" target="_blank" rel="noopener">Execution &amp; the numbers →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Q3 -->
+<section class="q" id="q3">
+  <div class="wrap">
+    <div class="q-head rv">
+      <div class="q-badge">3</div>
+      <div>
+        <div class="asked">You asked</div>
+        <h2 class="qq">“Why do you have the right to win here? Some of the smartest people in the space could build their own — why won't they?”</h2>
+      </div>
+    </div>
+
+    <div class="short rv">
+      <span class="lbl">Short answer</span>
+      <p>It's less “right to win” and more <b>why we will win: we've lived this.</b> The team came from inside a top builder's operations and strategic-investment side. We've watched these exact gaps, we know what the builders' systems strategically can and cannot do, and we've figured out how to read <em>across</em> them. That cross-system view is the secret sauce — and it's not something you can hire overnight.</p>
+    </div>
+
+    <div class="body-copy rv">
+      <p>Two structural reasons a builder won't just build this internally:</p>
+    </div>
+
+    <div class="cards rv">
+      <div class="mini"><h4>It sits <em>between</em> systems — and it's not an ERP</h4><p>We don't change or replace anyone's system. We sit on top, read-only. The value is in the seams no single system owns. A builder's internal team lives inside one stack; the loss lives between stacks.</p></div>
+      <div class="mini"><h4>The lender boundary can't be crossed internally</h4><p>The buyer picks the lender, so the mortgage system changes deal to deal. No builder ERP can reach across into a lender's and a title company's systems on a neutral, read-only basis. A third party can.</p></div>
+    </div>
+
+    <div class="body-copy rv">
+      <p>And on the competitive landscape: the tools that exist today focus on <strong>construction lifecycle or the home's identity in isolation</strong>. Nobody combines cross-system closing prediction, a persistent verified record, and post-close intelligence for production builders. Our real competitor today is <strong>a spreadsheet</strong> — the pipeline meeting where four systems get merged by hand every Monday.</p>
+    </div>
+
+    <div class="call rv">
+      The blunt version, in the team's own words: <b>“I wouldn't call it a right to win — I'd call it why we <em>will</em> win. We've all lived this. We've been watching these gaps, we know what they can and can't do to fill them, and we've figured out how to start filling them.”</b>
+    </div>
+
+    <div class="chips rv">
+      <a href="./strategy-frameworks.html" target="_blank" rel="noopener">Strategy frameworks (VRIO, Porter, SWOT) →</a>
+      <a href="./connector-architecture-technical.html" target="_blank" rel="noopener">How the cross-system integration works →</a>
+      <a href="./why-predictability-is-the-wedge.html#" target="_blank" rel="noopener">Objections, answered →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Q4 -->
+<section class="q" id="q4">
+  <div class="wrap">
+    <div class="q-head rv">
+      <div class="q-badge">4</div>
+      <div>
+        <div class="asked">The question every generalist asks</div>
+        <h2 class="qq">“Why blockchain? Why isn't a normal database enough?”</h2>
+      </div>
+    </div>
+
+    <div class="short rv">
+      <span class="lbl">Short answer</span>
+      <p>Because the value of the record is <b>trust that outlives the builder</b>, between parties who don't inherently trust each other. We don't store anyone's data on-chain — we store a <b>hash</b> (a fingerprint) of each record on a public chain, so anyone can verify a record was never tampered with, and the record keeps proving itself long after Lennar or Pulte says “your warranty's up, don't call us.”</p>
+    </div>
+
+    <div class="body-copy rv">
+      <p><strong>Layer 1 does not need a blockchain</strong> — we say that plainly. The chain earns its place at Layer 2, where the record has to be portable, multi-party, and permanent. A regular database owned by the builder works right up until the moment the homeowner no longer has access to the builder's system — which is exactly when they need the record (the insurance company calls after a tree falls; what shingles do I have?).</p>
+      <p>How the trust is built in by default:</p>
+    </div>
+
+    <div class="cards c3 rv">
+      <div class="mini"><h4>Off-chain data</h4><p>The actual records stay in the builder's own cloud. We never take custody of personal data.</p></div>
+      <div class="mini"><h4>On-chain fingerprint</h4><p>Only a hash per record goes on a neutral public chain — never documents, never PII. It proves the record hasn't changed.</p></div>
+      <div class="mini"><h4>Verified by others</h4><p>The record is self-reported until an independent party signs it. We provide the framework; we never become the verifier.</p></div>
+    </div>
+
+    <div class="call rv">
+      The plain-English test: it's a <b>Carfax for the home</b>. A record that's locked down, verifiable by anyone, and <b>lives with the home — not the builder's login</b>. That permanence and neutrality is the one thing a private database can't give you, and it's the reason each chain (title/ownership, construction lineage) carries its own standalone value.
+    </div>
+
+    <div class="honest rv">
+      <b>Scoping it honestly:</b> we're not defending blockchain on principle. Layer 1 ships without it. It matters when the record must be trusted by parties who don't trust each other and must outlive any single company's systems — and that's Layer 2's job, not the wedge's.
+    </div>
+
+    <div class="chips rv">
+      <a href="./home-passport-overview.html" target="_blank" rel="noopener">Home Passport &amp; the trust model →</a>
+      <a href="./connector-architecture-technical.html" target="_blank" rel="noopener">Technical architecture →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
+    <p>
+      Answers grounded in the Sept 2026 investor discussion and the current source-of-truth documents in this data room.
+      Product state as of September 2026: seven builder systems mapped (two live — Salesforce, Procore), 51 signal types, a
+      45-node milestone graph, 500+ tests passing; the closing-confidence score is currently rule-based and provisional
+      pending ML calibration. Post-close revenue-share terms are an open commercial question. Content rephrased for
+      compliance with licensing restrictions. <a href="./index.html">← Back to the data room</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>

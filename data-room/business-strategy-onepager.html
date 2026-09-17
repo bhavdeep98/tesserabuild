@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera — Business Strategy One-Pager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f7f4ed;
+        --bg-card: #fcfaf6;
+        --text: #20352f;
+        --text-2: #4a5c56;
+        --text-3: #5f6f68;
+        --accent: #397c70;
+        --teal-50: #e6f5f2;
+        --teal-100: #ccebe5;
+        --teal-700: #2d655b;
+        --teal-800: #1f4f47;
+        --border: rgba(43,75,66,0.13);
+        --gold: #b8860b;
+        --gold-bg: #fbf3df;
+        --r: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 15px;
+        line-height: 1.55;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 44px 32px 64px; }
+    h1, h2, h3, h4 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+    h1 { font-size: 2.15rem; line-height: 1.12; margin-bottom: 10px; }
+    h2 { font-size: 1.15rem; margin-bottom: 4px; }
+    h4 { font-size: 0.9rem; margin-bottom: 4px; }
+    p { color: var(--text-2); margin: 0 0 12px; }
+    .lede { font-size: 1.02rem; color: var(--text-2); max-width: 900px; }
+    .eyebrow {
+        font-size: 0.7rem; font-weight: 600; color: var(--accent);
+        text-transform: uppercase; letter-spacing: 0.09em; margin-bottom: 9px;
+    }
+    header { border-bottom: 1px solid var(--border); padding-bottom: 26px; margin-bottom: 34px; }
+    .meta { font-size: 0.8rem; color: var(--text-3); margin-top: 14px; }
+
+    section { margin-bottom: 40px; }
+    .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+    .sec-num {
+        font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+        font-size: 0.82rem; color: #fff; background: var(--accent);
+        width: 26px; height: 26px; border-radius: 7px; display: flex;
+        align-items: center; justify-content: center; flex: 0 0 auto;
+    }
+    .sec-sub { font-size: 0.86rem; color: var(--text-3); margin-left: auto; text-align: right; max-width: 46%; }
+
+    /* KPI band */
+    .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 4px 0 8px; }
+    .kpi {
+        background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 15px 15px 14px;
+    }
+    .kpi .val { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+        font-size: 1.55rem; color: var(--teal-800); line-height: 1; letter-spacing: -0.03em; }
+    .kpi .lab { font-size: 0.74rem; color: var(--text-3); margin-top: 7px; line-height: 1.35; }
+    .kpi.hero { background: var(--teal-800); border-color: var(--teal-800); }
+    .kpi.hero .val { color: #fff; }
+    .kpi.hero .lab { color: #cfe4df; }
+
+    /* Cards / columns */
+    .cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .cols-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .card {
+        background: var(--bg-card); border: 1px solid var(--border);
+        border-radius: var(--r); padding: 18px 20px;
+    }
+    .card.accent { border-left: 3px solid var(--accent); }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+    caption { text-align: left; font-size: 0.82rem; color: var(--text-3); padding-bottom: 9px; }
+    th {
+        background: var(--teal-50); color: var(--teal-700);
+        padding: 8px 11px; text-align: left; font-weight: 600;
+        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--teal-100);
+    }
+    th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.86rem; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:nth-child(even) { background: rgba(43,75,66,0.028); }
+    td.lbl { font-weight: 500; color: var(--text); }
+    tr.total td { font-weight: 700; color: var(--teal-800); background: var(--teal-50); border-top: 2px solid var(--teal-100); }
+    .src { color: var(--text-3); font-size: 0.8rem; }
+    .pos { color: var(--accent); font-weight: 600; }
+    .neg { color: #b34700; font-weight: 600; }
+
+    .badge {
+        display: inline-block; background: var(--teal-50); color: var(--teal-700);
+        padding: 2px 9px; border-radius: 999px; font-size: 0.68rem;
+        font-weight: 600; white-space: nowrap;
+    }
+    .badge-gold { background: var(--gold-bg); color: var(--gold); }
+
+    /* Flow */
+    .flow { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; }
+    .flow .step { flex: 1 1 0; min-width: 170px; background: var(--bg-card);
+        border: 1px solid var(--border); border-radius: 10px; padding: 14px 15px; }
+    .flow .step .stage { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.07em; color: var(--accent); margin-bottom: 6px; }
+    .flow .step strong { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.98rem; display: block; }
+    .flow .step .price { font-size: 0.8rem; color: var(--text-2); margin-top: 3px; }
+    .flow .step .tam { font-size: 0.78rem; color: var(--teal-700); font-weight: 600; margin-top: 6px; }
+    .flow .arrow { display: flex; align-items: center; color: var(--accent); font-size: 1.3rem; font-weight: 700; }
+
+    ul.tight { margin: 6px 0 0; padding-left: 18px; }
+    ul.tight li { font-size: 0.85rem; color: var(--text-2); margin-bottom: 5px; }
+    .note { font-size: 0.8rem; color: var(--text-3); font-style: italic; margin-top: 8px; }
+
+    footer { border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px;
+        font-size: 0.76rem; color: var(--text-3); }
+    footer a { color: var(--accent); }
+
+    @media (max-width: 900px) {
+        .kpis { grid-template-columns: repeat(2,1fr); }
+        .cols-2, .cols-3 { grid-template-columns: 1fr; }
+        .sec-sub { display: none; }
+    }
+    @media print {
+        body { background: #fff; font-size: 12px; }
+        .wrap { padding: 0; max-width: 100%; }
+        section { break-inside: avoid; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <div class="eyebrow">Business Strategy · Pre-Seed</div>
+    <h1>Tessera — Predict the Close, Price the Value, Expand the Logo</h1>
+    <p class="lede">
+        A read-only AI layer above the builder stack that scores every home's on-time-close probability.
+        We charge a fraction of the loss we prevent, run it at near-zero marginal cost, and grow by
+        expanding division-by-division inside builders we already serve. Execution is the moat.
+    </p>
+    <div class="meta">Unit = one monitored closing · Contract unit = a builder division (~2,000 closings/yr) · All figures sourced from instrumented value model + verified AWS pricing</div>
+</header>
+
+<!-- ─────────────────────────────────────────────────────────── 1 -->
+<section>
+    <div class="sec-head">
+        <span class="sec-num">1</span>
+        <h2>Unit economics — the foundation</h2>
+        <span class="sec-sub">Every number rolls up from one home, priced once per contract year, then bundled into a division.</span>
+    </div>
+
+    <div class="kpis">
+        <div class="kpi"><div class="val">$818</div><div class="lab">Quantified loss prevented per home / yr</div></div>
+        <div class="kpi"><div class="val">$250</div><div class="lab">Price per monitored closing (30% capture)</div></div>
+        <div class="kpi"><div class="val">~$8K</div><div class="lab">Annual COGS to run one division</div></div>
+        <div class="kpi hero"><div class="val">~98%</div><div class="lab">Gross margin per division</div></div>
+        <div class="kpi"><div class="val">~3×</div><div class="lab">Net ROI to the builder, year one</div></div>
+    </div>
+
+    <div class="cols-2" style="margin-top:18px;">
+        <div class="card">
+            <h4>The value envelope — what one home is worth to prevent</h4>
+            <table>
+                <thead><tr><th>Value source</th><th class="num">$ / home / yr</th></tr></thead>
+                <tbody>
+                    <tr><td class="lbl">Avoidable delay exposure <span class="src">(12% delayed × 35% preventable × 18 days × $500/day)</span></td><td class="num">$378</td></tr>
+                    <tr><td class="lbl">Cancellation prevention <span class="src">(16% rate × $15K × prevent 10%)</span></td><td class="num">$240</td></tr>
+                    <tr><td class="lbl">Change-order margin leakage <span class="src">(~20% of homes affected)</span></td><td class="num">$200</td></tr>
+                    <tr class="total"><td>Total quantified envelope</td><td class="num">$818</td></tr>
+                </tbody>
+            </table>
+            <p class="note">Conservative by construction: revenue-timing accuracy (material to public builders) is excluded. Carry cost set at $500/day — well below the $670/day published figure and the retired $2K deck number.</p>
+        </div>
+
+        <div class="card accent">
+            <h4>Per-division P&amp;L — where margin lives</h4>
+            <table>
+                <thead><tr><th>Line</th><th class="num">Per division / yr</th></tr></thead>
+                <tbody>
+                    <tr><td class="lbl">Closings monitored</td><td class="num">~2,000</td></tr>
+                    <tr><td class="lbl">Value created (2,000 × $818)</td><td class="num">~$1.64M</td></tr>
+                    <tr><td class="lbl">Revenue — ACV (2,000 × $250)</td><td class="num pos">$500K</td></tr>
+                    <tr><td class="lbl">Infrastructure COGS ($671/mo)</td><td class="num">~$8K</td></tr>
+                    <tr class="total"><td>Gross profit / margin</td><td class="num">$492K · 98%</td></tr>
+                </tbody>
+            </table>
+            <p class="note">Builder pays $500K to avoid $1.64M — a ~3× net return, and the fee is just <strong>0.15% of their home-sales revenue</strong>. Invisible in their P&amp;L, board-approvable fast.</p>
+        </div>
+    </div>
+
+    <div class="cols-3" style="margin-top:16px;">
+        <div class="card">
+            <h4>Margin improves with scale</h4>
+            <p style="margin:0;">39× the homes costs only 12× to run. Cost per closing monitored falls from <strong>$3.84 → $1.14</strong>. Under BYOC (builder's own AWS account) our COGS approaches <strong>~$0</strong> — we keep the model weights, they keep the bill.</p>
+        </div>
+        <div class="card">
+            <h4>Go-to-market economics</h4>
+            <table style="margin-top:0;">
+                <tbody>
+                    <tr><td class="lbl">CAC (enterprise motion)</td><td class="num">$40–60K</td></tr>
+                    <tr><td class="lbl">LTV / CAC</td><td class="num pos">&gt;10×</td></tr>
+                    <tr><td class="lbl">Payback</td><td class="num">6–9 mo</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h4>Retention is structural</h4>
+            <p style="margin:0;">Once wired into six systems (BuildPro, Encompass, Qualia, Salesforce, JDE, Procore) and inside the division's weekly pipeline cadence, removal is disruptive. Switching cost is architectural, not contractual.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── 2 -->
+<section>
+    <div class="sec-head">
+        <span class="sec-num">2</span>
+        <h2>How we run the company — hire against milestones, move fast</h2>
+        <span class="sec-sub">$1.5M · 18 months · lean burn. Engineers hired against milestones, sales on commission.</span>
+    </div>
+
+    <div class="cols-2">
+        <div class="card">
+            <h4>Staged hiring — capital follows proof</h4>
+            <table>
+                <thead><tr><th>Hire</th><th>Start</th><th class="num">Cash / mo</th></tr></thead>
+                <tbody>
+                    <tr><td class="lbl">Founder (build + first sales)</td><td>Month 1</td><td class="num">$10K</td></tr>
+                    <tr><td class="lbl">Full-stack Engineer #1</td><td>Month 4</td><td class="num">$12K</td></tr>
+                    <tr><td class="lbl">Part-time Designer</td><td>Month 6</td><td class="num">$4K</td></tr>
+                    <tr><td class="lbl">Full-stack Engineer #2</td><td>Month 8</td><td class="num">$12K</td></tr>
+                    <tr><td class="lbl">Sales / BD (commission-heavy)</td><td>Month 10</td><td class="num">$5K</td></tr>
+                </tbody>
+            </table>
+            <p class="note">Equity-heavy packages keep cash comp low. No hire lands before the milestone that justifies it.</p>
+        </div>
+        <div class="card accent">
+            <h4>Land-and-expand — the growth engine</h4>
+            <ul class="tight">
+                <li><strong>Land one division.</strong> Beachhead = regional / mid-size builders (500–2,000 closings), lower procurement friction, reference case inside the round.</li>
+                <li><strong>Prove lift, then expand.</strong> One national builder logo ≈ <strong>~40 divisions</strong> — a single logo is a 40-contract runway, not one sale.</li>
+                <li><strong>Net revenue retention &gt;150%</strong> comes from division expansion plus the $250 → $650 price walk as more findings ship.</li>
+                <li><strong>Read-only overlay.</strong> No rip-and-replace, no new workflow, zero risk to their systems — collapses the IT objection.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="kpis" style="margin-top:16px; grid-template-columns: repeat(4,1fr);">
+        <div class="kpi"><div class="val">$1.5M</div><div class="lab">Raising · pre-seed</div></div>
+        <div class="kpi"><div class="val">18 mo</div><div class="lab">Runway · staged hiring</div></div>
+        <div class="kpi"><div class="val">3</div><div class="lab">Paid pilots → seed milestone</div></div>
+        <div class="kpi"><div class="val">$675K</div><div class="lab">Year-1 ARR target (pilot pricing)</div></div>
+    </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── 3 -->
+<section>
+    <div class="sec-head">
+        <span class="sec-num">3</span>
+        <h2>Future potential — the same engine expands the ACV and the market</h2>
+        <span class="sec-sub">One unit, one engine, three horizons. Price walks up as new buyers come online.</span>
+    </div>
+
+    <div class="flow">
+        <div class="step">
+            <div class="stage">Stage 1 · Wedge</div>
+            <strong>Closing Confidence</strong>
+            <div class="price">$250 / closing · buyer: closing coordinator</div>
+            <div class="tam">TAM $170M</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+            <div class="stage">Stage 2 · Platform</div>
+            <strong>Full findings suite</strong>
+            <div class="price">$650 / closing · +CFO, finance, procurement</div>
+            <div class="tam">TAM $441M</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+            <div class="stage">Stage 3 · Ecosystem</div>
+            <strong>Adjacent ICPs + lifecycle</strong>
+            <div class="price">lenders · title · BTR · land · Home Passport</div>
+            <div class="tam">TAM ~$800M–$1B</div>
+        </div>
+    </div>
+
+    <div class="cols-2" style="margin-top:18px;">
+        <div class="card">
+            <h4>Path to $100M ARR — a named, reachable universe</h4>
+            <table>
+                <thead><tr><th>Price / closing</th><th class="num">Avg builder ACV</th><th class="num">Builders for $100M ARR</th></tr></thead>
+                <tbody>
+                    <tr><td class="lbl">$250 (wedge)</td><td class="num">$669K</td><td class="num">150</td></tr>
+                    <tr><td class="lbl badge-row">$650 (full suite)</td><td class="num">$1.74M</td><td class="num pos">58</td></tr>
+                    <tr><td class="lbl">$1,500 (mature)</td><td class="num">$4.01M</td><td class="num">25</td></tr>
+                </tbody>
+            </table>
+            <p class="note">Universe = top-200 builders (78% of all closings), each identifiable and reachable by an enterprise motion. At full-suite pricing, $100M ARR needs 58 of 200 logos.</p>
+        </div>
+        <div class="card">
+            <h4>Why the ROI compounds — the data moat</h4>
+            <ul class="tight">
+                <li>Every prediction + its outcome is <strong>labeled training data</strong>. The engine sharpens with every close.</li>
+                <li>Per-tenant models trained inside each builder's account — one builder's data never trains another's (counsel-safe by architecture).</li>
+                <li>The data earned in Layer 1 is what grants the right to build <strong>Layer 2 (Home Passport)</strong> and <strong>Layer 3 (Maintenance AI)</strong>.</li>
+                <li>Home Passport infra: <strong>$0.0046–$0.167/passport/mo</strong>. At 1M passports ≈ $10M revenue on ~$55K/yr infra.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── 4 -->
+<section>
+    <div class="sec-head">
+        <span class="sec-num">4</span>
+        <h2>Why this ROI beats the base business case</h2>
+        <span class="sec-sub">Same $1.5M in. Higher return — not by inflating numbers, but by naming the unit, pricing to value, and counting divisions.</span>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr><th>Lever</th><th>Base business case</th><th>Value-anchored strategy</th><th>What changed &amp; why</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="lbl">Billing unit</td>
+                    <td>"client" (undefined)</td>
+                    <td><span class="badge">monitored closing → division</span></td>
+                    <td class="src">A unit you can source. Price ties to the $818 value envelope, cost to the $671/mo COGS.</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Price</td>
+                    <td>$120K / yr flat</td>
+                    <td>$500K / division ($250/closing)</td>
+                    <td class="src">Captures ~30% of value created — the textbook ceiling — vs ~6% before.</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Growth</td>
+                    <td>4 logos / yr</td>
+                    <td>land 1 logo, expand ~40 divisions</td>
+                    <td class="src">NRR &gt;150%. One national builder is a 40-contract runway.</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Margin</td>
+                    <td>not modeled ($400K flat opex)</td>
+                    <td><span class="pos">~98%, improving with scale</span></td>
+                    <td class="src">Verified COGS surfaces the margin the flat-opex model hid.</td>
+                </tr>
+                <tr class="total">
+                    <td>Year-5 ARR</td>
+                    <td>$1.92M</td>
+                    <td>$12.5M SOM → $100M+ path</td>
+                    <td class="src">Every upgrade traces to evidence, not optimism.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<footer>
+    <strong>Sources &amp; assumptions.</strong> Value envelope from <em>market-validation-and-industry-evidence.md</em> and <em>MARKET-SIZING.md</em> (Aug 2026, current source of truth), anchored to D.R. Horton / Lennar FY2026 earnings (16–18% cancellation, 10–12.9% incentive), NAHB cycle-time data, and the Association of Professional Builders carry-cost methodology. Carry cost standardized at <strong>$500/day</strong> (conservative; the retired deck figure of $2,000/day was ~3× high per our own evidence file). Infrastructure COGS verified against the AWS Price List Bulk API (us-east-1, on-demand), Sept 2026 — $671/mo per division. The $250 and $650 per-closing prices are internal value-model hypotheses, not adopted or published benchmarks; to be validated in paid pilots. <em>Content rephrased for compliance with licensing restrictions.</em>
+</footer>
+
+</div>
+</body>
+</html>

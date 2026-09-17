@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Why the AI Predictability Engine Is the Wedge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Light theme — warm paper + forest teal (matches business-strategy-onepager) */
+    --void:      #f7f4ed;   /* page background */
+    --surface:   #fdfbf6;   /* subtle raised */
+    --surface-2: #fcfaf6;   /* cards */
+    --surface-3: #f1ede3;   /* deeper panels */
+    --accent:    #2d7d6f;   /* forest teal */
+    --accent-dim:#5f8f86;
+    --ink:       #20352f;   /* primary text */
+    --ink-2:     #4a5c56;   /* secondary text */
+    --ink-3:     #6c7b75;   /* tertiary / captions */
+    --line:      rgba(32,53,47,0.12);
+    --line-2:    rgba(45,125,111,0.30);
+    --warn:      #c0562f;   /* warm rust for the loss stats */
+    --gold:      #9a7b1f;
+    --display: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --body: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --maxw: 1080px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--void);
+    color: var(--ink);
+    font-family: var(--body);
+    font-weight: 500;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ambient background tint (subtle on light paper) */
+  body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(60% 45% at 82% -5%, rgba(45,125,111,0.07), transparent 60%),
+      radial-gradient(55% 40% at 5% 12%, rgba(45,125,111,0.045), transparent 55%),
+      radial-gradient(70% 60% at 50% 110%, rgba(45,125,111,0.04), transparent 60%);
+  }
+
+  h1,h2,h3,h4 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: var(--ink); }
+  .accent { color: var(--accent); }
+  b, strong { font-weight: 700; color: var(--ink); }
+
+  .wrap { position: relative; z-index: 1; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+  /* eyebrow / kicker */
+  .eyebrow {
+    font: 700 12px/1.4 var(--mono); letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent);
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
+
+  /* ============ HERO ============ */
+  .hero {
+    position: relative; min-height: 92vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 0 80px;
+  }
+  .brand {
+    position: absolute; top: 40px; left: 28px;
+    font: 800 15px/1 var(--display); letter-spacing: 0.3em; color: var(--ink);
+  }
+  .hero h1 {
+    font-size: clamp(38px, 6.4vw, 76px);
+    letter-spacing: -0.035em; max-width: 15ch;
+    margin: 22px 0 26px;
+  }
+  .hero-sub { font-size: clamp(17px, 2vw, 21px); color: var(--ink-2); max-width: 62ch; line-height: 1.55; }
+  .hero-thesis {
+    margin-top: 42px; max-width: 68ch;
+    border-left: 3px solid var(--accent); padding: 6px 0 6px 22px;
+    font-size: clamp(16px, 1.7vw, 19px); color: var(--ink); line-height: 1.5;
+  }
+  .scroll-hint {
+    margin-top: 60px; font: 600 11px/1 var(--mono); letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-3);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .scroll-hint .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+  /* ============ SECTION SCAFFOLD ============ */
+  section.step { padding: 84px 0; border-top: 1px solid var(--line); position: relative; }
+  .step-head { display: flex; align-items: flex-start; gap: 22px; margin-bottom: 34px; }
+  .step-num {
+    flex: 0 0 auto; width: 60px; height: 60px; border-radius: 16px;
+    display: grid; place-items: center;
+    font: 800 24px/1 var(--display); color: var(--accent);
+    background: linear-gradient(145deg, rgba(45,125,111,0.14), rgba(45,125,111,0.02));
+    border: 1px solid var(--line-2);
+    box-shadow: 0 0 0 5px rgba(45,125,111,0.05);
+  }
+  .step-head .ht { flex: 1; }
+  .step-head h2 { font-size: clamp(26px, 3.4vw, 40px); margin-top: 4px; }
+  .step-head .claim { font-size: 15px; color: var(--ink-2); margin-top: 12px; max-width: 66ch; }
+  .lead { font-size: 17px; color: var(--ink-2); max-width: 72ch; margin-bottom: 26px; }
+  .lead strong { color: var(--ink); }
+
+  /* concluder callout */
+  .concl {
+    margin-top: 30px; padding: 20px 24px; border-radius: 14px;
+    background: linear-gradient(145deg, rgba(45,125,111,0.08), rgba(45,125,111,0.015));
+    border: 1px solid var(--line-2);
+    font-size: 15.5px; color: var(--ink); line-height: 1.55;
+  }
+  .concl .lbl { font: 700 11px/1 var(--mono); letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
+
+  /* ============ CARDS / GRID ============ */
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .card {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px;
+    transition: border-color .3s, transform .3s;
+  }
+  .card:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  .card h4 { font-size: 16px; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .card .src { display: block; margin-top: 10px; font: 500 11px/1.4 var(--mono); color: var(--ink-3); }
+
+  /* stat cards */
+  .stat { text-align: left; }
+  .stat .v { font: 800 34px/1 var(--display); letter-spacing: -0.03em; color: var(--accent); }
+  .stat .l { font-size: 12.5px; color: var(--ink-2); margin-top: 9px; line-height: 1.4; }
+  .stat.warn .v { color: var(--warn); }
+
+  /* citation links */
+  a.cite, a.cite:visited { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); font-weight: 600; }
+  a.cite:hover { border-bottom-color: var(--accent); background: rgba(45,125,111,0.06); }
+  .stat .cite-row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .stat .cite-row a { font: 600 10px/1.3 var(--mono); letter-spacing: 0.02em; color: var(--accent); text-decoration: none; padding: 2px 7px; border: 1px solid var(--line-2); border-radius: 999px; white-space: nowrap; }
+  .stat .cite-row a:hover { background: rgba(45,125,111,0.08); }
+  /* source strip */
+  .sourcestrip { margin-top: 22px; padding: 16px 20px; border-radius: 12px; background: var(--surface-3); border: 1px solid var(--line); }
+  .sourcestrip .sh { font: 700 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+  .sourcestrip ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 26px; }
+  .sourcestrip li { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .sourcestrip li a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+  .sourcestrip li a:hover { border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { .sourcestrip ul { grid-template-columns: 1fr; } }
+
+  /* ============ SILO VISUAL (§1) ============ */
+  .silos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; position: relative; }
+  .silo {
+    background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--accent-dim);
+    border-radius: 10px; padding: 14px 13px;
+  }
+  .silo .nm { font: 700 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  .silo .fn { margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .silo .ok { margin-top: 12px; font: 700 9px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 6px; }
+  .silo .ok::before { content:""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(45,125,111,0.85); }
+  .seam {
+    margin: 4px 0 0; padding: 16px 20px; border-radius: 12px;
+    background: linear-gradient(145deg, rgba(192,86,47,0.10), rgba(192,86,47,0.02));
+    border: 1px solid rgba(192,86,47,0.28);
+    display: flex; align-items: center; gap: 18px;
+  }
+  .seam .big { font: 800 22px/1.1 var(--display); letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; }
+  .seam .big em { font-style: normal; color: var(--warn); }
+  .seam .sep { width: 1px; align-self: stretch; background: rgba(192,86,47,0.3); }
+  .seam .txt { font-size: 14px; color: var(--ink-2); }
+
+  /* ============ PIPELINE / DEPENDENCY FLOW (§2 / §4) ============ */
+  .flow { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; }
+  .flow .node {
+    flex: 1 1 0; min-width: 190px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px;
+  }
+  .flow .node .k { font: 700 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  .flow .node h4 { margin: 9px 0 5px; font-size: 17px; }
+  .flow .node p { font-size: 13px; color: var(--ink-2); }
+  .flow .arrow { display: flex; align-items: center; color: var(--accent-dim); font-size: 1.5rem; }
+  .flow .node.lit { border-color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.10), rgba(45,125,111,0.02)); box-shadow: 0 12px 40px rgba(45,125,111,0.12); }
+  .flow .node.dim { opacity: 0.6; }
+
+  /* ============ TABLE ============ */
+  .tbl { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 14px; }
+  .tbl th { text-align: left; font: 700 11px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); padding: 10px 12px; border-bottom: 1px solid var(--line-2); }
+  .tbl th.num, .tbl td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tbl td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+  .tbl td b { color: var(--ink); }
+  .tbl tr.total td { color: var(--accent); font-weight: 700; border-top: 1px solid var(--line-2); background: rgba(45,125,111,0.04); }
+  .tbl .src { color: var(--ink-3); font-size: 11.5px; font-family: var(--mono); }
+
+  /* ============ CHAIN SUMMARY (§6) ============ */
+  .chain { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+  .link { display: flex; gap: 20px; padding: 20px 0; position: relative; }
+  .link:not(:last-child)::after { content:""; position: absolute; left: 21px; top: 52px; bottom: -20px; width: 2px; background: linear-gradient(var(--accent), rgba(45,125,111,0.12)); }
+  .link .idx { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--void); border: 2px solid var(--accent); font: 800 17px/1 var(--display); color: var(--accent); z-index: 1; }
+  .link .body { flex: 1; padding-top: 3px; }
+  .link .body h4 { font-size: 17px; margin-bottom: 4px; }
+  .link .body p { font-size: 14px; color: var(--ink-2); }
+  .verdict {
+    margin-top: 34px; padding: 30px 32px; border-radius: 18px;
+    background: linear-gradient(145deg, rgba(45,125,111,0.14), rgba(45,125,111,0.03));
+    border: 1px solid var(--accent); box-shadow: 0 0 0 1px rgba(45,125,111,0.1), 0 24px 60px rgba(45,125,111,0.15);
+  }
+  .verdict .lbl { font: 700 12px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+  .verdict p { font-size: clamp(18px, 2.2vw, 24px); color: var(--ink); line-height: 1.45; margin-top: 14px; font-family: var(--display); font-weight: 700; letter-spacing: -0.01em; }
+
+  /* ============ OBJECTIONS (§7) ============ */
+  .qa { border-left: 2px solid var(--line-2); padding-left: 22px; margin-bottom: 24px; }
+  .qa .q { font-family: var(--display); font-weight: 700; font-size: 17px; color: var(--ink); margin-bottom: 8px; }
+  .qa .q::before { content:"“"; color: var(--accent); font-size: 22px; margin-right: 2px; }
+  .qa .q::after { content:"”"; color: var(--accent); font-size: 22px; margin-left: 2px; }
+  .qa .a { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; }
+
+  /* falsify list */
+  .fals { display: grid; gap: 12px; }
+  .fals .item { background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--warn); border-radius: 12px; padding: 16px 20px; }
+  .fals .item h4 { font-size: 15px; color: var(--warn); margin-bottom: 6px; }
+  .fals .item p { font-size: 14px; color: var(--ink-2); }
+
+  /* honest note */
+  .honest { margin-top: 20px; padding: 16px 20px; border-radius: 12px; border: 1px dashed var(--line-2); background: rgba(45,125,111,0.03); font-size: 13.5px; color: var(--ink-2); }
+  .honest b { color: var(--accent); }
+
+  /* ============ PROOF BAND (how big) ============ */
+  section.proof, section.leap { background:
+    linear-gradient(180deg, rgba(45,125,111,0.04), transparent 30%); }
+  .proof-num { color: var(--accent); font-size: 30px; }
+  .proof-eyebrow { color: var(--accent); }
+
+  .proof-hero {
+    display: grid; grid-template-columns: 1.35fr 1fr; gap: 0;
+    border: 1px solid var(--line-2); border-radius: 18px; overflow: hidden;
+    background: linear-gradient(145deg, rgba(192,86,47,0.06), rgba(252,250,246,0.6));
+  }
+  .ph-left { padding: 26px 28px; border-right: 1px solid var(--line); }
+  .ph-k { font: 700 11px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 20px; }
+  .ph-trend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ph-trend .tp { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .ph-trend .ty { font: 600 10px/1 var(--mono); letter-spacing: 0.06em; color: var(--ink-3); text-transform: uppercase; }
+  .ph-trend .tv { font: 800 30px/1 var(--display); letter-spacing: -0.03em; color: var(--ink-2); }
+  .ph-trend .tp.lo .tv { color: var(--ink); }
+  .ph-trend .tp.hot .tv { color: var(--warn); text-shadow: 0 0 22px rgba(192,86,47,0.5); font-size: 40px; }
+  .ph-trend .tarrow { color: var(--ink-3); font-size: 1.1rem; }
+  .ph-cap { margin-top: 20px; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+  .ph-cap .src { display: block; margin-top: 6px; font: 500 11px/1.4 var(--mono); color: var(--ink-3); }
+  .ph-right { padding: 22px 26px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+  .phr-stat { display: flex; align-items: baseline; gap: 14px; }
+  .phr-stat .v { font: 800 28px/1 var(--display); letter-spacing: -0.03em; color: var(--warn); flex: 0 0 auto; min-width: 84px; }
+  .phr-stat .l { font-size: 13px; color: var(--ink-2); line-height: 1.4; }
+
+  /* scale equation */
+  .scale { border: 1px solid var(--line-2); border-radius: 18px; padding: 28px 30px;
+    background: linear-gradient(145deg, rgba(45,125,111,0.07), rgba(45,125,111,0.015)); }
+  .scale-head h3 { font-size: clamp(20px, 2.6vw, 30px); margin-top: 10px; }
+  .scale-grid { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; margin: 26px 0 6px; }
+  .sc-item { flex: 1 1 0; min-width: 150px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .sc-item .sc-v { font: 800 26px/1 var(--display); letter-spacing: -0.03em; color: var(--warn); }
+  .sc-item.total { border-color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.12), rgba(45,125,111,0.03)); }
+  .sc-item.total .sc-v { color: var(--accent); }
+  .sc-item .sc-l { font-size: 12px; color: var(--ink-2); margin-top: 8px; line-height: 1.4; }
+  .sc-item .sc-l .src { display: block; margin-top: 5px; font: 500 10.5px/1.4 var(--mono); color: var(--ink-3); }
+  .sc-op { display: flex; align-items: center; font: 800 24px/1 var(--display); color: var(--ink-3); }
+  .scale-note { margin-top: 18px; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+
+  /* leap cards */
+  .leapgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .leap-card { position: relative; background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; padding: 24px 24px 22px; overflow: hidden; transition: border-color .3s, transform .3s; }
+  .leap-card:hover { border-color: var(--line-2); transform: translateY(-3px); }
+  .leap-card .lc-num { position: absolute; top: 14px; right: 20px; font: 800 40px/1 var(--display); color: rgba(45,125,111,0.10); letter-spacing: -0.03em; }
+  .leap-card h4 { font-size: 17px; margin-bottom: 9px; max-width: 92%; }
+  .leap-card p { font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+
+  /* pitch box */
+  .pitchbox { position: relative; margin-top: 24px; padding: 34px 40px 30px; border-radius: 18px;
+    border: 1px solid var(--line-2); background: linear-gradient(145deg, rgba(45,125,111,0.09), rgba(45,125,111,0.02)); }
+  .pb-quote-mark { position: absolute; top: 2px; left: 18px; font: 800 90px/1 var(--display); color: rgba(45,125,111,0.16); }
+  .pb-text { position: relative; font-family: var(--display); font-weight: 600; font-size: clamp(17px, 2.1vw, 22px); line-height: 1.5; color: var(--ink); letter-spacing: -0.01em; }
+  .pb-attr { margin-top: 16px; font: 600 12px/1 var(--mono); letter-spacing: 0.06em; color: var(--accent); text-transform: uppercase; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 70px; margin-top: 20px; }
+  footer p { font: 500 12px/1.7 var(--mono); color: var(--ink-3); max-width: 90ch; }
+  .footbrand { font: 800 14px/1 var(--display); letter-spacing: 0.28em; color: var(--ink-2); margin-bottom: 16px; }
+
+  /* reveal-on-scroll */
+  .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .rv.d1 { transition-delay: .08s; } .rv.d2 { transition-delay: .16s; } .rv.d3 { transition-delay: .24s; } .rv.d4 { transition-delay: .32s; }
+
+  @media (max-width: 860px) {
+    .g2, .g3, .g4 { grid-template-columns: 1fr 1fr; }
+    .silos { grid-template-columns: repeat(2, 1fr); }
+    .seam { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .seam .sep { display: none; }
+    .step-head { gap: 14px; }
+    .step-num { width: 48px; height: 48px; font-size: 19px; }
+    .proof-hero { grid-template-columns: 1fr; }
+    .ph-left { border-right: none; border-bottom: 1px solid var(--line); }
+    .leapgrid { grid-template-columns: 1fr; }
+    .scale-grid { flex-direction: column; }
+    .sc-op { justify-content: center; }
+  }
+  @media (max-width: 560px) {
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+    .silos { grid-template-columns: 1fr 1fr; }
+    .ph-trend .tp.hot .tv { font-size: 32px; }
+    .pitchbox { padding: 28px 22px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { opacity: 1; transform: none; transition: none; }
+    .scroll-hint .dot { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brand">TESSERA</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">The Logical Argument</div>
+    <h1 class="rv d1">Why the AI Predictability Engine is the <span class="accent">wedge</span>.</h1>
+    <p class="hero-sub rv d2">
+      Tessera is a three-layer company — a Predictability Engine, a Home Passport, and Maintenance AI.
+      This is not an argument that Layer&nbsp;1 is the biggest layer. It is an argument that it is the only
+      correct place to <em>start</em> — and that it is correct on every axis that matters.
+    </p>
+    <div class="hero-thesis rv d3">
+      <b>Layer&nbsp;1 is the forced entry point</b> — where the pain is most acute, adoption is
+      frictionless, the margin is highest, the defense is structural, and the data that unlocks
+      Layers&nbsp;2 and 3 is manufactured. The wedge is Layer&nbsp;1 because Layer&nbsp;1 is the only point
+      where all five are true at once.
+    </div>
+    <div class="scroll-hint rv d4"><span class="dot"></span> Follow the chain — five links</div>
+  </div>
+</header>
+
+<!-- ============ §1 ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">1</div>
+      <div class="ht">
+        <div class="eyebrow">The Premise</div>
+        <h2>The loss is real, large, and structural.</h2>
+        <p class="claim">A wedge is only a wedge if it is driven into a real crack. The crack here is a recurring, quantified loss the largest builders report on their own earnings calls.</p>
+      </div>
+    </div>
+
+    <div class="grid g4 rv d1" style="margin-bottom:20px;">
+      <div class="card stat warn">
+        <div class="v">20%</div>
+        <div class="l">D.R. Horton cancellation rate, Q3 FY2026 — one in five signed deals, up from 17% a year ago</div>
+        <div class="cite-row">
+          <a class="cite" href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 call ↗</a>
+          <a class="cite" href="https://www.marketbeat.com/earnings/reports/2026-7-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat ↗</a>
+        </div>
+      </div>
+      <div class="card stat warn">
+        <div class="v">~10.1 mo</div>
+        <div class="l">Average single-family build time — nearly 3 months longer than a decade ago</div>
+        <div class="cite-row">
+          <a class="cite" href="https://www.nahb.org/blog/2025/11/sponsored-sound-capital-cycle-time-crush" target="_blank" rel="noopener">NAHB ↗</a>
+        </div>
+      </div>
+      <div class="card stat warn">
+        <div class="v">$500/day</div>
+        <div class="l">Carry cost per delayed home — conservative; below the ~$670 published figure</div>
+        <div class="cite-row">
+          <a class="cite" href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">APB ↗</a>
+          <a class="cite" href="./evidence-market-validation.html#carry-cost" target="_blank" rel="noopener">Our analysis ↗</a>
+        </div>
+      </div>
+      <div class="card stat warn">
+        <div class="v">~10–13%</div>
+        <div class="l">Incentive spend at top builders (DHI ~10%, Lennar 12.9%) vs a 4–6% norm — billions in overspend</div>
+        <div class="cite-row">
+          <a class="cite" href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">Lennar ↗</a>
+          <a class="cite" href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="lead rv d1">
+      The losses are documented in
+      <a class="cite" href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">public filings and national datasets</a>,
+      not invented by us — nationally, <strong>~14% of deals fell through in mid-2026</strong>, the highest in nearly three years, and
+      <strong>~40,000 in a single month</strong> at the December 2025 peak.
+      The root cause is <strong>structural, not operational</strong>: the home is managed <em>inside</em> individual systems while the
+      outcome happens <em>between</em> them. Every silo can read green — and the close still slips.
+    </p>
+
+    <div class="silos rv d2">
+      <div class="silo"><div class="nm">Construction</div><div class="fn">Build progress</div><div class="ok">On track</div></div>
+      <div class="silo"><div class="nm">Mortgage</div><div class="fn">Financing</div><div class="ok">On track</div></div>
+      <div class="silo"><div class="nm">Title</div><div class="fn">Clearance</div><div class="ok">On track</div></div>
+      <div class="silo"><div class="nm">Sales</div><div class="fn">Commitment</div><div class="ok">On track</div></div>
+      <div class="silo"><div class="nm">Finance / Land</div><div class="fn">Exposure</div><div class="ok">On track</div></div>
+    </div>
+    <div class="seam rv d2">
+      <div class="big">All green. <em>Still slips.</em></div>
+      <div class="sep"></div>
+      <div class="txt">Nobody owns the seams. A home looks healthy in five systems while a dependency <b>between</b> them puts the close at risk. The industry press already named it: <b>“silos kill margin.”</b></div>
+    </div>
+
+    <div class="sourcestrip rv d3">
+      <div class="sh">Sources for this section — verify every number</div>
+      <ul>
+        <li>Cancellations, DHI 20% (Q3 FY2026) — <a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 earnings call</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-7-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat</a></li>
+        <li>National cancellations ~14% / 40,000 deals — <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Redfin, Aug 2026</a>, <a href="https://www.marketwatch.com/press-release/redfin-reports-homebuyers-are-canceling-deals-at-the-highest-rate-on-record-d1ab4749" target="_blank" rel="noopener">Dec 2025 record</a></li>
+        <li>Cycle time ~10.1 months — <a href="https://www.nahb.org/blog/2025/11/sponsored-sound-capital-cycle-time-crush" target="_blank" rel="noopener">NAHB (Nov 2025)</a></li>
+        <li>Carry cost ~$670/day — <a href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">Association of Professional Builders</a></li>
+        <li>Incentive spend (DHI ~10%, Lennar 12.9%) — <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">GuruFocus / Lennar</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI Q2 FY26</a></li>
+        <li>“Silos kill margin” — <a href="https://www.thebuildersdaily.com/silos-kill-margin-heres-how-homebuilders-can-fight-back/" target="_blank" rel="noopener">The Builder's Daily</a></li>
+        <li>Our full analysis (100+ cited data points) — <a href="./evidence-market-validation.html" target="_blank" rel="noopener">Market Validation &amp; Industry Evidence →</a></li>
+      </ul>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Conclusion</span>
+      There is a large, recurring, structurally-caused loss. It is wide enough and painful enough to drive a wedge into. <b>This is the crack.</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROOF: HOW BIG ============ -->
+<section class="step proof">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num proof-num">§</div>
+      <div class="ht">
+        <div class="eyebrow proof-eyebrow">The Proof · How Big This Actually Is</div>
+        <h2>This isn't a soft market. It's the biggest builders bleeding, on the record.</h2>
+        <p class="claim">Every number below is from a public earnings call or a national dataset — checkable in minutes. We didn't model the pain. They reported it.</p>
+      </div>
+    </div>
+
+    <!-- Headline: DHI trajectory -->
+    <div class="proof-hero rv d1">
+      <div class="ph-left">
+        <div class="ph-k">D.R. Horton — America's largest builder, ~83,000 homes/yr</div>
+        <div class="ph-trend">
+          <div class="tp"><span class="ty">Q3 '25</span><span class="tv">17%</span></div>
+          <div class="tarrow">→</div>
+          <div class="tp"><span class="ty">Q1 '26</span><span class="tv">18%</span></div>
+          <div class="tarrow">→</div>
+          <div class="tp lo"><span class="ty">Q2 '26</span><span class="tv">16%</span></div>
+          <div class="tarrow">→</div>
+          <div class="tp hot"><span class="ty">Q3 '26</span><span class="tv">20%</span></div>
+        </div>
+        <div class="ph-cap">Cancellation rate — <b>one in five signed deals now falls through</b>, the highest in years. <span class="src">Source: DHI Q3 FY2026 earnings call.</span></div>
+      </div>
+      <div class="ph-right">
+        <div class="phr-stat"><div class="v">~73%</div><div class="l">of DHI closings needed a mortgage-rate buydown to get done</div></div>
+        <div class="phr-stat"><div class="v">~10%</div><div class="l">of revenue spent on incentives — expected to stay elevated all year</div></div>
+        <div class="phr-stat"><div class="v">−22%</div><div class="l">EPS year-over-year — the pain is hitting the bottom line</div></div>
+      </div>
+    </div>
+
+    <p class="lead rv d1" style="margin-top:32px;">
+      This is not one struggling company. It's the pattern across the whole top tier — and it has been
+      structurally elevated for <strong>four straight years</strong>, not a one-quarter blip.
+    </p>
+
+    <div class="grid g4 rv d2" style="margin-bottom:12px;">
+      <div class="card stat warn"><div class="v">~40,000</div><div class="l">U.S. deals canceled in a single month (Dec 2025) — 16.3%, a record</div></div>
+      <div class="card stat warn"><div class="v">14%</div><div class="l">National cancellation rate mid-2026 — highest in nearly 3 years</div></div>
+      <div class="card stat warn"><div class="v">~20%</div><div class="l">Cancellation share in the worst metros (Atlanta, Jacksonville, San Antonio)</div></div>
+      <div class="card stat warn"><div class="v">4 yrs</div><div class="l">That cancellations have held at ~13–16% — this is the new normal</div></div>
+    </div>
+    <p class="rv d2" style="font:500 12px/1.5 var(--mono);color:var(--ink-3);margin-bottom:32px;">
+      Sources: Redfin / PRNewswire (Aug 2026), MarketWatch (Jan 2026). National figures via Redfin's contract-cancellation series.
+    </p>
+
+    <!-- The scale translation -->
+    <div class="scale rv d2">
+      <div class="scale-head">
+        <div class="eyebrow">What that means in dollars — for ONE national builder</div>
+        <h3>A single logo is losing <span class="accent">~$1.9 billion a year</span> to problems Tessera is built to see.</h3>
+      </div>
+      <div class="scale-grid">
+        <div class="sc-item">
+          <div class="sc-v">~$281M</div>
+          <div class="sc-l">Cancellation carrying waste <span class="src">~13,400 canceled deals × $700/day × 30 days wasted progress</span></div>
+        </div>
+        <div class="sc-op">+</div>
+        <div class="sc-item">
+          <div class="sc-v">~$1.52B</div>
+          <div class="sc-l">Excess incentive spend <span class="src">10% actual vs 5% normalized, across 83,832 homes</span></div>
+        </div>
+        <div class="sc-op">+</div>
+        <div class="sc-item">
+          <div class="sc-v">~$127M</div>
+          <div class="sc-l">Delayed-closing carry <span class="src">12% delayed × $700/day × 18 days</span></div>
+        </div>
+        <div class="sc-op">=</div>
+        <div class="sc-item total">
+          <div class="sc-v">~$1.9B</div>
+          <div class="sc-l">Total annual pain envelope, one builder</div>
+        </div>
+      </div>
+      <p class="scale-note">Even the narrowly <em>preventable</em> slice — the delays visibility catches — is <b>~$44M/year</b> at one builder. And there are <b>~40 divisions</b> inside that logo, each carrying its own share.</p>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Why this matters for the wedge</span>
+      The problem is not niche, not cyclical noise, and not self-inflicted incompetence. It is a <b>billion-dollar, multi-year, industry-wide</b> loss that the biggest, most sophisticated builders cannot fix with the tools they own — because no tool they own can see across the systems where the loss is created.
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY THEY LEAP ============ -->
+<section class="step leap">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num proof-num">➔</div>
+      <div class="ht">
+        <div class="eyebrow proof-eyebrow">Why They Leap At Us</div>
+        <h2>The math makes it a decision a CFO makes in one meeting.</h2>
+        <p class="claim">Builders don't adopt software because it's clever. They adopt it when the return is obvious, the risk is zero, and it fits how they already work. Tessera is all three.</p>
+      </div>
+    </div>
+
+    <div class="leapgrid rv d1">
+      <div class="leap-card">
+        <div class="lc-num">01</div>
+        <h4>The return is a rounding error against the loss</h4>
+        <p>A division pays <b>~$500K</b> to address <b>~$1.64M</b> of quantified, preventable loss — a <b>~3× return in year one</b>. The fee is <b>0.15% of their home-sales revenue</b>. Invisible in the P&amp;L, approvable in one meeting.</p>
+      </div>
+      <div class="leap-card">
+        <div class="lc-num">02</div>
+        <h4>Zero risk to their systems</h4>
+        <p>Read-only. Tessera never writes back, never replaces a system of record. The single biggest enterprise objection — “will this break something?” — is answered by the architecture. Nothing to migrate, nothing to rip out.</p>
+      </div>
+      <div class="leap-card">
+        <div class="lc-num">03</div>
+        <h4>No new workflow to adopt</h4>
+        <p>It drops into the weekly pipeline meeting they <em>already hold</em> — replacing a spreadsheet merged by hand every Monday. Adoption isn't a change-management program. It's a better version of what's already on the calendar.</p>
+      </div>
+      <div class="leap-card">
+        <div class="lc-num">04</div>
+        <h4>Their own numbers make the case</h4>
+        <p>The pitch isn't a feature demo — it's their earnings call read back to them: 20% cancellations, ~10% incentives, buydowns on three of four closings. We quantify the bleed and price to a fraction of it. It becomes a <b>math problem, not a debate</b>.</p>
+      </div>
+    </div>
+
+    <!-- The one-meeting pitch -->
+    <div class="pitchbox rv d2">
+      <div class="pb-quote-mark">“</div>
+      <p class="pb-text">
+        You're carrying a <b>20% cancellation rate</b> and spending <b>~10% of revenue</b> on incentives because
+        nobody sees the cross-system problems until it's too late. For a fee that's <b>0.15% of your revenue</b>,
+        we score every deal's on-time-close probability, tell you <em>why</em> in plain language, and surface it
+        while there's still time to act. If we recover even <b>one point</b> of that loss, we've paid for ourselves
+        several times over.
+      </p>
+      <div class="pb-attr">— the pitch to a builder CFO, in six sentences</div>
+    </div>
+
+    <div class="grid g3 rv d3" style="margin-top:22px;">
+      <div class="card stat"><div class="v">6–9 mo</div><div class="l">Payback on customer acquisition — a concentrated, reachable ICP</div></div>
+      <div class="card stat"><div class="v">&gt;10×</div><div class="l">LTV / CAC — retention is structural once wired into six systems</div></div>
+      <div class="card stat"><div class="v">~40</div><div class="l">Divisions per national logo — one “yes” is a 40-contract runway</div></div>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">The leap</span>
+      When the loss is billions, the fee is 0.15% of revenue, the risk is zero, and it lands in a meeting they already hold — <b>saying no is the harder decision</b>. That asymmetry is why the wedge converts.
+    </div>
+  </div>
+</section>
+
+<!-- ============ §2 ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">2</div>
+      <div class="ht">
+        <div class="eyebrow">The Claim</div>
+        <h2>The loss is predictable — and prediction is what converts it to savings.</h2>
+        <p class="claim">A large loss only justifies a <em>predictability</em> engine if it can be seen coming with enough lead time to act. This is the load-bearing claim of the whole company.</p>
+      </div>
+    </div>
+
+    <p class="lead rv d1">
+      The loss is not random — it is the output of a <strong>dependency structure</strong>. A home's path to close is a
+      directed graph of milestones with fixed physical and legal ordering: construction phases run in one
+      direction, lending has an irreducible minimum duration, a rate lock has an expiry, drywall gates the appraisal.
+      Tessera encodes this as a <strong>45-node, 48-edge graph</strong> — and 31% of those edges cross a system boundary
+      no single vendor can see.
+    </p>
+
+    <div class="grid g3 rv d2" style="margin-bottom:24px;">
+      <div class="card">
+        <h4>Because the structure is known…</h4>
+        <p>Risk is visible <em>before</em> the outcome. “Construction done, lending not started” is detectable ~40 days out — arithmetic, not a surprise at closing.</p>
+      </div>
+      <div class="card">
+        <h4>Prediction is the mechanism.</h4>
+        <p>A loss seen 3 days out is a loss. A loss seen 14+ days out is an intervention. <strong>The value lives entirely in the lead time.</strong></p>
+      </div>
+      <div class="card">
+        <h4>Predict → Explain → Intervene.</h4>
+        <p>Score every home, rank the dependency driving the risk in plain language, and surface the path to resolve before the close slips.</p>
+      </div>
+    </div>
+
+    <div class="grid g3 rv d2" style="margin-bottom:8px;">
+      <div class="card stat"><div class="v">≥14 days</div><div class="l">Target median prediction lead time — the window that makes intervention real</div></div>
+      <div class="card stat"><div class="v">≥70%</div><div class="l">Target at-risk recall — delayed deals caught before they slip</div></div>
+      <div class="card stat"><div class="v">31%</div><div class="l">Of graph edges cross a category boundary — the cross-system risk</div></div>
+    </div>
+
+    <div class="honest rv d3">
+      <b>The honest boundary.</b> Today the score is <b>rule-based</b> — a symbolic scaffold of graph constraints and
+      cohort comparisons, returning provisional results, not a trained ML model. That is not a weakness hidden in the
+      argument — it is <b>the reason for the raise</b>. The symbolic layer already produces defensible findings; the ML
+      hire turns candidate patterns into calibrated probabilities. We name it before anyone finds it in the repo.
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Conclusion</span>
+      The loss is a consequence of a knowable structure, so it is predictable with actionable lead time. Prediction is precisely the operation that turns the §1 loss into recoverable savings.
+    </div>
+  </div>
+</section>
+
+<!-- ============ §3 ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">3</div>
+      <div class="ht">
+        <div class="eyebrow">The Economics</div>
+        <h2>Cheap to deliver. Priced to a number the buyer already believes.</h2>
+        <p class="claim">Proving a product <em>works</em> is not proving it is a <em>business</em>. This closes that gap.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 rv d1">
+      <div class="card">
+        <h4>The value envelope — what one home is worth to prevent</h4>
+        <table class="tbl">
+          <thead><tr><th>Value source</th><th class="num">$ / home / yr</th></tr></thead>
+          <tbody>
+            <tr><td>Avoidable delay exposure <span class="src">12% × 35% × 18d × $500</span></td><td class="num"><b>$378</b></td></tr>
+            <tr><td>Cancellation prevention <span class="src">16% × $15K × prevent 10%</span></td><td class="num"><b>$240</b></td></tr>
+            <tr><td>Change-order margin leakage <span class="src">~20% of homes</span></td><td class="num"><b>$200</b></td></tr>
+            <tr class="total"><td>Total quantified envelope</td><td class="num">$818</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">Conservative by construction — revenue-timing accuracy is excluded entirely.</p>
+      </div>
+      <div class="card">
+        <h4>Per-division P&amp;L — where the margin lives</h4>
+        <table class="tbl">
+          <thead><tr><th>Line</th><th class="num">Per division / yr</th></tr></thead>
+          <tbody>
+            <tr><td>Closings monitored</td><td class="num"><b>~2,000</b></td></tr>
+            <tr><td>Value created (2,000 × $818)</td><td class="num"><b>~$1.64M</b></td></tr>
+            <tr><td>Revenue — ACV (2,000 × $250)</td><td class="num"><b>$500K</b></td></tr>
+            <tr><td>Infrastructure COGS ($671/mo)</td><td class="num"><b>~$8K</b></td></tr>
+            <tr class="total"><td>Gross profit / margin</td><td class="num">$492K · 98%</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">Builder pays $500K to avoid $1.64M — a ~3× return, at 0.15% of home-sales revenue.</p>
+      </div>
+    </div>
+
+    <div class="grid g3 rv d2" style="margin-top:16px;">
+      <div class="card stat"><div class="v">~98%</div><div class="l">Gross margin per division — and it improves with scale</div></div>
+      <div class="card stat"><div class="v">~3×</div><div class="l">Net ROI to the builder in year one</div></div>
+      <div class="card stat"><div class="v">0.15%</div><div class="l">Of the builder's revenue — invisible in their P&amp;L, fast to approve</div></div>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Conclusion</span>
+      Prediction is a high-margin product priced to a return the buyer already believes, because the inputs come from their own earnings calls. The wedge is not just real pain — it is <b>profitable pain to solve</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ §4 ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">4</div>
+      <div class="ht">
+        <div class="eyebrow">The Distribution</div>
+        <h2>Prediction is the only layer a builder will adopt first.</h2>
+        <p class="claim">Even a valuable, profitable product fails if it can't get in the door. Prediction is uniquely adoptable — and neither Layer 2 nor 3 could go first.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 rv d1" style="margin-bottom:26px;">
+      <div class="card">
+        <h4>Read-only overlay</h4>
+        <p>Tessera never writes back to builder systems. It sits <em>above</em> the stack. The biggest enterprise objection — “will this break my system of record?” — is answered by the architecture itself. Nothing to migrate, nothing to risk.</p>
+      </div>
+      <div class="card">
+        <h4>Lands in a meeting they already hold</h4>
+        <p>The status quo is a spreadsheet merged by hand every Monday for the pipeline meeting. Tessera replaces that spreadsheet in a cadence that already exists. Zero adoption friction isn't a slogan — it's a meeting on the calendar.</p>
+      </div>
+    </div>
+
+    <p class="lead rv d2">And Layers 2 and 3 <strong>cannot</strong> be the wedge — by their own logic. The dependency runs in exactly one direction:</p>
+
+    <div class="flow rv d2">
+      <div class="node lit">
+        <div class="k">Layer 1 · Now</div>
+        <h4>Predict</h4>
+        <p>Reads builder systems, attests events. <b>Creates the data.</b></p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node dim">
+        <div class="k">Layer 2 · Built on L1</div>
+        <h4>Remember</h4>
+        <p>A record of <em>what?</em> Consumes what Layer 1 produces.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node dim">
+        <div class="k">Layer 3 · Built on L2</div>
+        <h4>Serve</h4>
+        <p>Uses attested records. No inputs until Layer 2 exists.</p>
+      </div>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Conclusion</span>
+      Prediction is the only layer a builder adopts with no workflow change and no system risk — and the only one that can exist without the others. You cannot start in the middle or the end, because they are built on data only the beginning creates.
+    </div>
+  </div>
+</section>
+
+<!-- ============ §5 ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">5</div>
+      <div class="ht">
+        <div class="eyebrow">The Moat</div>
+        <h2>Defensible — and it manufactures the next moat.</h2>
+        <p class="claim">A wedge anyone can copy is not a wedge. Prediction is defended by a boundary competitors can't cross, and it compounds.</p>
+      </div>
+    </div>
+
+    <p class="lead rv d1">
+      The deepest advantage is a <strong>data-ownership boundary competitors cannot cross</strong>. Three companies own
+      three parts of the deal — and no builder ERP can legally reach across all three:
+    </p>
+
+    <div class="grid g3 rv d2" style="margin-bottom:24px;">
+      <div class="card"><h4>Builder</h4><p>Owns its construction / ERP stack.</p></div>
+      <div class="card"><h4>Lender</h4><p>Changes on <em>every</em> deal — because the buyer picks the lender.</p></div>
+      <div class="card"><h4>Title &amp; Escrow</h4><p>Sits with a third party entirely.</p></div>
+    </div>
+
+    <p class="lead rv d2">
+      Tessera's read-only, non-competitive posture is exactly what lets it sit above all three. Then the compounding begins:
+    </p>
+
+    <div class="grid g2 rv d3">
+      <div class="card">
+        <h4>Every prediction is labeled training data</h4>
+        <p>Each score is eventually paired with the real outcome — on time, slipped, canceled. That pairing is a labeled example. The engine sharpens with every close, trained per-tenant inside each builder's own account, so one builder's data never trains another's. Counsel-safe by architecture.</p>
+      </div>
+      <div class="card" style="border-color:var(--line-2);background:linear-gradient(145deg,rgba(45,125,111,0.07),rgba(45,125,111,0.01));">
+        <h4 class="accent">The data is the <em>right</em> to build Layers 2 &amp; 3</h4>
+        <p>Tessera earns the Home Passport not by asking, but because Layer 1 has already been inside the builder's systems, attesting events and accumulating the verified record that <strong>is</strong> the passport's content. Prediction is the manufacturing process for the asset that makes every later product possible.</p>
+      </div>
+    </div>
+
+    <div class="concl rv d3">
+      <span class="lbl">Conclusion</span>
+      Prediction is defended by a boundary competitors cannot cross, and it compounds into both a sharper model and the strategic right to the larger layers. <b>Volume doesn't just improve accuracy — it expands what the system can prove.</b>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §6 — THE CHAIN ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">6</div>
+      <div class="ht">
+        <div class="eyebrow">The Argument, In One View</div>
+        <h2>Five links. One forced conclusion.</h2>
+        <p class="claim">Each link is a premise the next depends on. If the chain holds, the conclusion is forced — not chosen.</p>
+      </div>
+    </div>
+
+    <div class="chain rv d1">
+      <div class="link"><div class="idx">1</div><div class="body"><h4>The loss is real, large, and structural.</h4><p>Recurring, quantified, cross-system — documented in public filings.</p></div></div>
+      <div class="link"><div class="idx">2</div><div class="body"><h4>The loss is predictable with actionable lead time.</h4><p>It's the output of a knowable dependency structure, visible before the outcome.</p></div></div>
+      <div class="link"><div class="idx">3</div><div class="body"><h4>Prediction converts the loss into savings.</h4><p>At ~98% margin, priced to a ~3× return the buyer already believes.</p></div></div>
+      <div class="link"><div class="idx">4</div><div class="body"><h4>Prediction is the only layer adopted first.</h4><p>Read-only, no new workflow — and the only layer the others depend on.</p></div></div>
+      <div class="link"><div class="idx">5</div><div class="body"><h4>Prediction is defensible and self-reinforcing.</h4><p>Crosses a boundary rivals can't, and manufactures the data and the right to Layers 2 &amp; 3.</p></div></div>
+    </div>
+
+    <div class="verdict rv d2">
+      <span class="lbl">Therefore</span>
+      <p>The AI Predictability Engine is not merely <em>a</em> good place to start — it is the <span class="accent">forced</span> place to start. Layer 1 is the only point where the pain is acute, adoption is frictionless, margin is high, defense is structural, and the data that unlocks everything else is created — all at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §7 — OBJECTIONS ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">7</div>
+      <div class="ht">
+        <div class="eyebrow">Pressure-Tested</div>
+        <h2>The objections, answered.</h2>
+        <p class="claim">A logical argument is only as strong as its treatment of the counter-arguments.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 rv d1">
+      <div>
+        <div class="qa"><div class="q">Why hasn't Lennar just built this internally?</div><div class="a">Because the hard part isn't the software — it's reading across a boundary they don't control. The buyer picks the lender, so the mortgage system changes deal to deal. An internal team can instrument its own stack; it can't instrument the lender's and the title company's on a neutral, read-only basis.</div></div>
+        <div class="qa"><div class="q">What if Hyphen or ICE ships prediction as an ERP feature?</div><div class="a">They can predict inside their own silo — but the losses come from <em>cross-system</em> dependencies. A construction-only predictor can't see the rate lock; a mortgage-only predictor can't see the drywall. The cross-boundary view is the product, and it's the one thing a single-silo vendor structurally can't ship.</div></div>
+      </div>
+      <div>
+        <div class="qa"><div class="q">Isn't the score just rule-based today?</div><div class="a">Yes — and we say so first. The symbolic scaffold already yields defensible constraint- and cohort-based findings. The ML hire turns those into calibrated probabilities. Naming the rule-based present as the reason for the hire is stronger than being caught claiming an ML capability the repo would contradict.</div></div>
+        <div class="qa"><div class="q">Why not blockchain first — isn't that the durable moat?</div><div class="a">A permanent, portable, multi-party record is a Layer 2 concern. Layer 1 doesn't need it. Leading with the record before there's anything verified to record inverts the dependency and asks a conservative buyer to adopt the least urgent, least proven part first.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §8 — FALSIFY ============ -->
+<section class="step">
+  <div class="wrap">
+    <div class="step-head rv">
+      <div class="step-num">8</div>
+      <div class="ht">
+        <div class="eyebrow">Intellectual Honesty</div>
+        <h2>What would falsify this argument.</h2>
+        <p class="claim">The argument is strong precisely because it names what would break it — and points to the experiments that decide.</p>
+      </div>
+    </div>
+
+    <div class="fals rv d1">
+      <div class="item"><h4>If prediction lead time is short.</h4><p>If, in real builder data, most slippage isn't visible until close, prediction can't convert loss to savings. The back-test targets — ≥14-day median lead time, ≥70% recall — exist to test exactly this.</p></div>
+      <div class="item"><h4>If builders won't grant read access.</h4><p>The model assumes read-only access to builder, lender, and title systems. Confirmed for Salesforce and Procore today; the rest is contingent. This is the single largest execution risk.</p></div>
+      <div class="item"><h4>If a single-silo predictor is “good enough.”</h4><p>If builders decide construction-only or mortgage-only prediction captures most of the value, the cross-system premium shrinks. The counter — that losses are dominated by cross-boundary dependencies — is a claim to prove on real outcomes, not assume.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footbrand">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
+    <p>
+      Sources: D.R. Horton &amp; Lennar FY2026 earnings; NAHB cycle-time and economic-impact studies; Association of
+      Professional Builders carry-cost methodology; CNBC and industry cancellation data; internal value model
+      (market-validation-and-industry-evidence.md, MARKET-SIZING.md), findings-engine-one-pager.md, and verified AWS
+      pricing. Figures reflect the value model and codebase as of September 2026; the confidence score is currently
+      rule-based and provisional pending ML calibration. The $250 per-closing price is an internal value-model
+      hypothesis to be validated in paid pilots. Content rephrased for compliance with licensing restrictions.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // scroll-reveal
+  (function () {
+    var els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+
+</body>
+</html>

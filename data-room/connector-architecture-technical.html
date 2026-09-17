@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Passport — Connector Architecture (Technical Deep Dive)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f4ed;
+            --bg-card: #fcfaf6;
+            --text: #20352f;
+            --text-2: #566861;
+            --text-3: #718078;
+            --accent: #397c70;
+            --teal-50: #e6f5f2;
+            --teal-100: #ccebe5;
+            --teal-700: #2d655b;
+            --teal-800: #1f4f47;
+            --border: rgba(43,75,66,0.11);
+            --r: 12px;
+        }
+        * { box-sizing: border-box; }
+        .reveal {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px;
+            color: var(--text);
+        }
+        .reveal .slides { text-align: left; }
+        .reveal .slides section {
+            background: var(--bg);
+            padding: 30px 44px;
+            height: 100%;
+            display: flex !important;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .reveal h1,.reveal h2,.reveal h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text);
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+        .reveal h1 { font-size: 1.7em; margin-bottom: 0.15em; }
+        .reveal h2 { font-size: 1.35em; margin-bottom: 0.2em; }
+        .reveal h3 { font-size: 0.88em; margin-bottom: 0.15em; color: var(--teal-700); }
+        .reveal p { color: var(--text-2); font-size: 0.78em; line-height: 1.55; margin: 0 0 0.4em; }
+        .eyebrow {
+            font-size: 0.62em; font-weight: 600; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+        }
+        .badge {
+            display: inline-block; background: var(--teal-50); color: var(--teal-700);
+            padding: 3px 10px; border-radius: 999px; font-size: 0.58em;
+            font-weight: 600; margin-right: 5px; margin-bottom: 5px;
+        }
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--r); padding: 14px 16px;
+        }
+        .card h3 { font-size: 0.78em; margin-bottom: 4px; }
+        .card p { font-size: 0.66em; margin: 0; color: var(--text-3); line-height: 1.45; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 10px; }
+        .highlight {
+            background: var(--teal-50); border-left: 3px solid var(--accent);
+            border-radius: 0 var(--r) var(--r) 0; padding: 10px 14px; margin-top: 10px;
+        }
+        .highlight p { font-size: 0.68em; color: var(--teal-800); margin: 0; font-weight: 500; }
+        .code-block {
+            background: #1e293b; color: #e2e8f0; border-radius: var(--r);
+            padding: 14px 18px; font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.58em; line-height: 1.6; margin-top: 10px; overflow-x: auto;
+        }
+        .code-block .comment { color: #64748b; }
+        .code-block .key { color: #7dd3fc; }
+        .code-block .value { color: #86efac; }
+        .code-block .string { color: #fde68a; }
+        table.clean {
+            width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.66em;
+        }
+        table.clean th {
+            background: var(--teal-50); color: var(--teal-700); font-weight: 600;
+            padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border);
+        }
+        table.clean td {
+            padding: 7px 12px; border-bottom: 1px solid var(--border); color: var(--text-2);
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: Title -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Add-On</div>
+    <h1>Connector Architecture — Technical Deep Dive</h1>
+    <p>For engineering teams: how the Generic Connector Runtime works under the hood.</p>
+    <div style="margin-top: 16px;">
+        <span class="badge">TypeScript Strict</span>
+        <span class="badge">YAML v2.0 Schema</span>
+        <span class="badge">500+ Tests</span>
+        <span class="badge">Property-Based Testing</span>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2: YAML Definition Anatomy -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Deep Dive</div>
+    <h2>Anatomy of a YAML Connector Definition</h2>
+    <p>Each connector is a single YAML file that the Generic Connector Runtime interprets at startup. No compilation, no custom classes.</p>
+    <div class="code-block">
+<span class="key">version:</span> <span class="string">"2.0"</span>
+<span class="key">source_system_id:</span> <span class="string">"SALESFORCE"</span>
+<span class="key">lifecycle_stage:</span> <span class="string">"sales"</span>
+
+<span class="key">auth:</span>
+  <span class="key">type:</span> <span class="string">"jwt_bearer"</span>
+  <span class="key">token_url:</span> <span class="string">"${SF_LOGIN_URL}/services/oauth2/token"</span>
+  <span class="key">credentials:</span>
+    <span class="key">client_id:</span> <span class="string">"${SF_CLIENT_ID}"</span>
+    <span class="key">private_key_path:</span> <span class="string">"${SF_PRIVATE_KEY_PATH}"</span>
+
+<span class="key">endpoints:</span>
+  - <span class="key">id:</span> <span class="string">"opportunities"</span>
+    <span class="key">url:</span> <span class="string">"${SF_INSTANCE_URL}/services/data/v59.0/query"</span>
+    <span class="key">pagination:</span> { <span class="key">strategy:</span> <span class="string">"cursor"</span>, <span class="key">page_size:</span> <span class="value">200</span> }
+
+<span class="key">transition_rules:</span>
+  - <span class="key">tracked_field:</span> <span class="string">"stage"</span>
+    <span class="key">from:</span> <span class="string">["Prospecting", "Negotiation"]</span>
+    <span class="key">to:</span> <span class="string">["Closed Won", "Under Contract"]</span>
+    <span class="key">emit_signal:</span> <span class="string">"contract_signed"</span>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3: State Tracking & Transition Rules -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Deep Dive</div>
+    <h2>State Tracking &amp; Transition Rules</h2>
+    <p>The runtime remembers what it saw last time. Signals only fire when tracked fields actually change — preventing duplicates.</p>
+    <div class="grid-2">
+        <div class="card">
+            <h3>State Tracking</h3>
+            <p>Each record's key fields are persisted between poll cycles. On the next poll, the runtime compares current vs. stored values. Only changed records proceed to rule evaluation.</p>
+        </div>
+        <div class="card">
+            <h3>Transition Rules</h3>
+            <p>Declarative "from &rarr; to" rules. When a tracked field transitions from one value to another, emit a specific signal. Supports wildcards (*), null (first-seen), and arrays (match any).</p>
+        </div>
+    </div>
+    <div class="code-block" style="margin-top: 10px;">
+<span class="comment"># Example: Emit "foundation_complete" when status goes from</span>
+<span class="comment"># null or in_progress &rarr; completed</span>
+<span class="key">state_tracking:</span>
+  <span class="key">fields:</span>
+    - { <span class="key">path:</span> <span class="string">"phases.Foundation.status"</span>, <span class="key">key:</span> <span class="string">"foundation_status"</span> }
+
+<span class="key">transition_rules:</span>
+  - <span class="key">tracked_field:</span> <span class="string">"foundation_status"</span>
+    <span class="key">from:</span> <span class="value">[null, "not_started", "in_progress"]</span>
+    <span class="key">to:</span> <span class="string">"completed"</span>
+    <span class="key">emit_signal:</span> <span class="string">"foundation_complete"</span>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4: Hooks -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Deep Dive</div>
+    <h2>Hooks: When YAML Isn't Enough</h2>
+    <p>Some APIs return data in unusual shapes. Hooks are optional TypeScript functions that transform data before or after polling.</p>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Post-Poll Hook (Procore example)</h3>
+            <p>Procore returns a flat list of schedule tasks. The hook groups them by construction phase (Foundation, Framing, etc.) and derives per-phase completion status. The runtime can then track "phases.Foundation.status" as if it were a native API field.</p>
+        </div>
+        <div class="card">
+            <h3>State Comparator Hook (Salesforce)</h3>
+            <p>Custom comparison logic for determining if a record has meaningfully changed. Useful when the source system's "LastModifiedDate" fires on irrelevant field changes.</p>
+        </div>
+    </div>
+    <div class="code-block" style="margin-top: 10px;">
+<span class="comment"># In the YAML definition:</span>
+<span class="key">hooks:</span>
+  <span class="key">post_poll:</span>
+    <span class="key">path:</span> <span class="string">"./hooks/schedule-normalizer.ts"</span>
+    <span class="key">export_name:</span> <span class="string">"normalizeScheduleData"</span>
+    </div>
+    <div class="highlight" style="margin-top: 10px;">
+        <p>Most connectors need zero hooks. Only 2 of 6 current connectors use them (Procore and Salesforce). The YAML handles the common case; hooks handle the edge cases.</p>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5: Generic Connector Runtime -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Deep Dive</div>
+    <h2>Generic Connector Runtime</h2>
+    <p>One runtime engine that interprets ALL connector definitions. No per-connector deployment.</p>
+    <div class="grid-2">
+        <div class="card">
+            <h3>Components</h3>
+            <p>AuthStrategyFactory (handles all auth types) &rarr; PaginatedPoller (handles cursor/offset/page) &rarr; StateTracker (change detection) &rarr; TransitionRuleEvaluator (signal emission) &rarr; HookLoader (optional transforms)</p>
+        </div>
+        <div class="card">
+            <h3>Safety Mechanisms</h3>
+            <p>Circuit breaker (opens after consecutive failures), rate limit backoff (respects 429 + Retry-After headers), EgressGuard (only GET/HEAD allowed — physically cannot write), idempotent signal emission</p>
+        </div>
+    </div>
+    <div class="grid-3" style="margin-top: 10px;">
+        <div class="card">
+            <h3>Auth Types</h3>
+            <p>OAuth2 Client Creds, OAuth2 Password, JWT Bearer, API Key, Basic</p>
+        </div>
+        <div class="card">
+            <h3>Pagination</h3>
+            <p>Offset, Cursor, Page-based — auto-detected from YAML config</p>
+        </div>
+        <div class="card">
+            <h3>Dedup Modes</h3>
+            <p>on_change (re-emit on field change) or once_only (emit at most once per record)</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6: Authentication Strategies -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Technical Deep Dive</div>
+    <h2>Authentication Strategies</h2>
+    <p>The runtime handles 5 auth types. Credentials are always env-var references — never stored in YAML files.</p>
+    <table class="clean">
+        <thead>
+            <tr><th>Auth Type</th><th>Used By</th><th>Token Refresh</th><th>How It Works</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>JWT Bearer</td><td>Salesforce</td><td>Auto before expiry</td><td>Signs a JWT with private key, exchanges for access token</td></tr>
+            <tr><td>OAuth2 Client Credentials</td><td>Procore, BuildPro</td><td>Auto before expiry</td><td>Machine-to-machine grant, no user context needed</td></tr>
+            <tr><td>OAuth2 Password</td><td>Encompass</td><td>On 401</td><td>Resource Owner flow (legacy systems)</td></tr>
+            <tr><td>API Key</td><td>Qualia</td><td>N/A (static)</td><td>Key in header or query param</td></tr>
+            <tr><td>Basic Auth</td><td>JDE</td><td>N/A (per-request)</td><td>Base64-encoded credentials per request</td></tr>
+        </tbody>
+    </table>
+    <div class="code-block" style="margin-top: 10px;">
+<span class="comment"># Env vars are resolved at startup — never committed to source</span>
+<span class="key">credentials:</span>
+  <span class="key">client_id:</span> <span class="string">"${PROCORE_CLIENT_ID}"</span>       <span class="comment"># &larr; resolved from environment</span>
+  <span class="key">client_secret:</span> <span class="string">"${PROCORE_CLIENT_SECRET}"</span> <span class="comment"># &larr; never in source control</span>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7: Ecosystem Expansion -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Roadmap</div>
+    <h2>Connector Ecosystem Expansion</h2>
+    <p>The YAML-driven architecture means we can add new systems rapidly. Priority is based on builder market share and API quality.</p>
+    <table class="clean">
+        <thead>
+            <tr><th>Stage</th><th>Current</th><th>Next Priority</th><th>API Quality</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Construction</td><td>BuildPro, Procore</td><td>CoConstruct</td><td>Good (REST + API key)</td></tr>
+            <tr><td>Mortgage</td><td>Encompass</td><td>Blend, Black Knight</td><td>Excellent (webhooks)</td></tr>
+            <tr><td>Title</td><td>Qualia</td><td>SoftPro, RamQuest</td><td>Moderate (partner-gated)</td></tr>
+            <tr><td>Financial</td><td>JDE</td><td>Acumatica, SAP</td><td>Good (REST + OData)</td></tr>
+            <tr><td>Sales</td><td>Salesforce</td><td>Lasso CRM</td><td>Good (purpose-built)</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight" style="margin-top: 12px;">
+        <p>Each new connector is just a YAML file + optional hook. Same runtime, same deployment, same monitoring. Linear effort, not exponential.</p>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8: Live Connector Status -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section>
+    <div class="eyebrow">Current State</div>
+    <h2>Live Connectors</h2>
+    <p>Five connectors built and running. All use the same Generic Connector Runtime — no custom code per integration.</p>
+    <table class="clean">
+        <thead>
+            <tr><th>Connector</th><th>Stage</th><th>Auth Method</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Salesforce CRM</td><td>Sales</td><td>JWT Bearer</td><td><span class="badge">Live</span></td></tr>
+            <tr><td>Procore</td><td>Construction</td><td>OAuth2 Client Credentials</td><td><span class="badge">Live (Sandbox)</span></td></tr>
+            <tr><td>BuildPro (Hyphen)</td><td>Construction</td><td>OAuth2 Client Credentials</td><td><span class="badge">Defined</span></td></tr>
+            <tr><td>Encompass (ICE)</td><td>Mortgage</td><td>OAuth2 Password</td><td><span class="badge">Defined</span></td></tr>
+            <tr><td>Qualia</td><td>Title &amp; Escrow</td><td>API Key</td><td><span class="badge">Defined</span></td></tr>
+            <tr><td>JDE</td><td>Financial</td><td>Basic Auth</td><td><span class="badge">Defined</span></td></tr>
+        </tbody>
+    </table>
+</section>
+
+</div><!-- end .slides -->
+</div><!-- end .reveal -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+    hash: true,
+    transition: 'fade',
+    width: 1100,
+    height: 700,
+    margin: 0.04,
+    navigationMode: 'linear'
+});
+</script>
+</body>
+</html>
