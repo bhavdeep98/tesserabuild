@@ -422,10 +422,10 @@
       correct place to <em>start</em> — and that it is correct on every axis that matters.
     </p>
     <div class="hero-thesis rv d3">
-      <b>Layer&nbsp;1 is the forced entry point</b> — where the pain is most acute, adoption is
-      frictionless, the margin is highest, the defense is structural, and the data that unlocks
-      Layers&nbsp;2 and 3 is manufactured. The wedge is Layer&nbsp;1 because Layer&nbsp;1 is the only point
-      where all five are true at once.
+      <b>Layer&nbsp;1 is the strongest entry point</b> — where the pain is most acute, adoption is
+      lightest, the unit economics are structured to work, defensibility is earnable, and the data that
+      lowers the cost of Layers&nbsp;2 and 3 gets created. The wedge is Layer&nbsp;1 because it’s the point
+      where those advantages line up — a deliberate bet, with a named test behind each claim.
     </div>
     <div class="scroll-hint rv d4"><span class="dot"></span> Follow the chain — five links</div>
   </div>
@@ -439,60 +439,61 @@
       <div class="ht">
         <div class="eyebrow">The Premise</div>
         <h2>The loss is real, large, and structural.</h2>
-        <p class="claim">A wedge is only a wedge if it is driven into a real crack. The crack here is a recurring, quantified loss the largest builders report on their own earnings calls.</p>
+        <p class="claim">A wedge needs a real crack. The crack here is a recurring, quantified loss the largest builders report on their own earnings calls — the charts below size it. What share is recoverable is a separate question we answer in a pilot.</p>
       </div>
     </div>
 
     <!-- ===== EVIDENCE CHARTS — the claim shown, not argued ===== -->
     <div class="charts rv d1">
 
-      <!-- STRUCTURAL: 4-year cancellation trend line -->
+      <!-- STRUCTURAL: 4-year fallout band — its own metric, its own scale -->
       <div class="chartcard">
         <div class="chart-k">Structural, not a blip</div>
-        <div class="chart-t">National cancellations have held <em>elevated for four straight years</em></div>
-        <div class="chart-sub">Contract-cancellation share, U.S. new-home deals. A cyclical dip would have reverted. It hasn't.</div>
-        <svg class="chart-svg" viewBox="0 0 440 200" role="img" aria-label="Line chart: U.S. new-home cancellation rate holding between 13 and 16 percent from 2022 to mid-2026, peaking at 16.3 percent in December 2025.">
+        <div class="chart-t">National contract fallout has stayed in a <em>tight 13–14% band for four years</em></div>
+        <div class="chart-sub">Redfin national MLS contract-fallout share (all resale + new-home deals). A one-quarter shock would have reverted; this hasn't. Note: a different metric from a single builder's order-cancellation rate — shown separately at right.</div>
+        <svg class="chart-svg" viewBox="0 0 440 200" role="img" aria-label="Line chart: U.S. MLS contract-fallout share holding in a narrow 13 to 14 percent band from 2022 to mid-2026, with a seasonal peak near 16 percent in December 2025.">
           <defs>
             <linearGradient id="cxfade" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="rgba(192,86,47,0.22)"/>
               <stop offset="100%" stop-color="rgba(192,86,47,0)"/>
             </linearGradient>
           </defs>
-          <!-- gridlines at 10 / 15 / 20% -->
-          <line class="cx-grid" x1="46" y1="155" x2="428" y2="155"/>
-          <line class="cx-grid" x1="46" y1="117" x2="428" y2="117"/>
-          <line class="cx-grid" x1="46" y1="80"  x2="428" y2="80"/>
-          <text class="cx-lbl" x="40" y="158" text-anchor="end">10%</text>
-          <text class="cx-lbl" x="40" y="120" text-anchor="end">15%</text>
-          <text class="cx-lbl" x="40" y="83"  text-anchor="end">20%</text>
-          <!-- area + line: points 2022→2026 -->
-          <path class="cx-area" d="M60,148 L119,132 L178,140 L237,125 L296,110 L355,117 L414,125 L414,180 L60,180 Z"/>
-          <polyline class="cx-line" points="60,148 119,132 178,140 237,125 296,110 355,117 414,125"/>
-          <circle class="cx-dot" cx="60"  cy="148" r="3.5"/>
-          <circle class="cx-dot" cx="119" cy="132" r="3.5"/>
-          <circle class="cx-dot" cx="178" cy="140" r="3.5"/>
-          <circle class="cx-dot" cx="237" cy="125" r="3.5"/>
-          <circle class="cx-dot peak" cx="296" cy="110" r="4.5"/>
-          <circle class="cx-dot" cx="355" cy="117" r="3.5"/>
-          <circle class="cx-dot" cx="414" cy="125" r="3.5"/>
-          <text class="cx-val" x="296" y="101" text-anchor="middle">16.3%</text>
-          <text class="cx-cap" x="296" y="126" text-anchor="middle">Dec ’25 record</text>
-          <!-- x labels -->
+          <!-- axis 12–17%; y = 160 - (v-12)*16 → 12%=160, 14%=128, 16%=96 -->
+          <line class="cx-grid" x1="46" y1="160" x2="428" y2="160"/>
+          <line class="cx-grid" x1="46" y1="128" x2="428" y2="128"/>
+          <line class="cx-grid" x1="46" y1="96"  x2="428" y2="96"/>
+          <text class="cx-lbl" x="40" y="163" text-anchor="end">12%</text>
+          <text class="cx-lbl" x="40" y="131" text-anchor="end">14%</text>
+          <text class="cx-lbl" x="40" y="99"  text-anchor="end">16%</text>
+          <!-- points ~13.3, 13.8, 13.5, 13.9, 16.3(Dec'25 seasonal), 13.8, 14.0 -->
+          <path class="cx-area" d="M60,139 L119,131 L178,136 L237,129 L296,96 L355,131 L414,128 L414,178 L60,178 Z"/>
+          <polyline class="cx-line" points="60,139 119,131 178,136 237,129 296,96 355,131 414,128"/>
+          <circle class="cx-dot" cx="60"  cy="139" r="3.5"/>
+          <circle class="cx-dot" cx="119" cy="131" r="3.5"/>
+          <circle class="cx-dot" cx="178" cy="136" r="3.5"/>
+          <circle class="cx-dot" cx="237" cy="129" r="3.5"/>
+          <circle class="cx-dot peak" cx="296" cy="96" r="4.5"/>
+          <circle class="cx-dot" cx="355" cy="131" r="3.5"/>
+          <circle class="cx-dot" cx="414" cy="128" r="3.5"/>
+          <text class="cx-val" x="296" y="88" text-anchor="middle">~16%</text>
+          <text class="cx-cap" x="296" y="112" text-anchor="middle">Dec ’25 seasonal high</text>
+          <!-- baseline band highlight ~13-14% -->
+          <text class="cx-cap" x="414" y="120" text-anchor="end" fill="var(--ink-3)">~14% mid-’26</text>
           <line class="cx-axis" x1="46" y1="170" x2="428" y2="170"/>
           <text class="cx-lbl" x="60"  y="188" text-anchor="middle">’22</text>
           <text class="cx-lbl" x="178" y="188" text-anchor="middle">’23</text>
           <text class="cx-lbl" x="296" y="188" text-anchor="middle">’25</text>
           <text class="cx-lbl" x="414" y="188" text-anchor="middle">’26</text>
         </svg>
-        <div class="chart-foot">Redfin contract-cancellation series · <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Aug ’26</a>, <a href="https://www.marketwatch.com/press-release/redfin-reports-homebuyers-are-canceling-deals-at-the-highest-rate-on-record-d1ab4749" target="_blank" rel="noopener">Dec ’25 record ↗</a></div>
+        <div class="chart-foot">Redfin MLS contract-fallout series (seasonally noisy; Dec is a seasonal high) · <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Redfin, Aug ’26 ↗</a></div>
       </div>
 
       <!-- REAL / RISING: DHI cancellation trajectory -->
       <div class="chartcard">
         <div class="chart-k">Real — the biggest builder, on the record</div>
-        <div class="chart-t">1 in 5 D.R. Horton deals now <em>falls through</em></div>
-        <div class="chart-sub">Cancellation rate, America’s largest builder (~83,000 homes/yr). Their own earnings calls.</div>
-        <svg class="chart-svg" viewBox="0 0 360 200" role="img" aria-label="Bar chart: D.R. Horton cancellation rate rising from 17 percent in Q3 2025 to 20 percent in Q3 2026.">
+        <div class="chart-t">1 in 5 D.R. Horton orders now <em>cancels</em></div>
+        <div class="chart-sub">Order-cancellation rate (canceled ÷ gross orders), America’s largest builder (~83,000 homes/yr) — from its own earnings calls. Management attributes much of it to buyer qualification and affordability, not only coordination.</div>
+        <svg class="chart-svg" viewBox="0 0 360 200" role="img" aria-label="Bar chart: D.R. Horton order-cancellation rate at 17 percent in Q3 2025, 18 percent Q1 2026, 16 percent Q2 2026, and 20 percent in Q3 2026.">
           <line class="cx-axis" x1="30" y1="170" x2="350" y2="170"/>
           <!-- Q3'25 17% -->
           <rect class="cx-bar" x="46"  y="107" width="52" height="63" rx="3" opacity="0.55"/>
@@ -517,8 +518,8 @@
       <!-- LARGE: incentive spend vs norm -->
       <div class="chartcard wide">
         <div class="chart-k">Large — measured in points of revenue</div>
-        <div class="chart-t">Top builders now burn <em>~2× the normal</em> incentive spend just to keep deals alive</div>
-        <div class="chart-sub">Incentives as a share of home-sales revenue. The gap above the <span style="color:var(--accent);font-weight:700;">4–6% historical norm</span> is pure overspend — billions across the top tier.</div>
+        <div class="chart-t">Top builders now run incentives at <em>~2× management’s normalized range</em></div>
+        <div class="chart-sub">Incentives as a share of home-sales revenue. The gap above the <span style="color:var(--accent);font-weight:700;">4–6% range management calls normal</span> is real margin pressure — driven mostly by rates and affordability. <b>How much of it better coordination can recover is exactly what a pilot must prove</b>, not something we assume.</div>
         <svg class="chart-svg" viewBox="0 0 800 190" role="img" aria-label="Bar chart: incentive spend as share of revenue — historical norm 4 to 6 percent, D.R. Horton about 10 percent, Lennar 12.9 percent.">
           <line class="cx-axis" x1="150" y1="150" x2="790" y2="150"/>
           <!-- norm band shaded across plot -->
@@ -542,17 +543,18 @@
           <text class="cx-val" x="620" y="26" text-anchor="middle">12.9%</text>
           <text class="cx-lbl" x="620" y="168" text-anchor="middle">LENNAR</text>
         </svg>
-        <div class="chart-foot">DHI ~10% of revenue · Lennar 12.9% · vs 4–6% norm — <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">Lennar ↗</a> · <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI ↗</a> · one national logo ≈ ~$1.5B/yr excess</div>
+        <div class="chart-foot">DHI ~10% of revenue · Lennar 12.9% · vs Lennar’s stated 4–6% normalized range — <a href="https://investors.lennar.com/press-releases/2026/06-11-2026-214520364" target="_blank" rel="noopener">Lennar Q2 FY26 ↗</a> · <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI Q2 ↗</a></div>
       </div>
     </div>
 
     <p class="lead rv d1">
       These are not our numbers — they are
       <a class="cite" href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">public filings and national datasets</a>,
-      checkable in minutes. The charts settle <em>real</em> and <em>large</em>. What follows is the part no dataset shows on its own:
-      <strong>why the loss keeps happening</strong>. The root cause is <strong>structural, not operational</strong> — the home is
-      managed <em>inside</em> individual systems while the outcome happens <em>between</em> them. Every silo can read green,
-      and the close still slips.
+      checkable in minutes. The charts settle that the pain is <em>real</em> and <em>large</em> — they do <b>not</b>, on their own,
+      prove how much of it Tessera can recover. Rates, affordability and demand drive much of this; our claim is narrower:
+      <strong>a recoverable subset of the loss is created between systems, not inside them</strong>. The home is managed
+      <em>inside</em> individual systems while the outcome happens <em>between</em> them — every silo can read green, and the close
+      still slips. Sizing that subset is what a paid pilot exists to do.
     </p>
 
     <div class="silos rv d2">
@@ -571,11 +573,11 @@
     <div class="sourcestrip rv d3">
       <div class="sh">Sources for this section — verify every number</div>
       <ul>
-        <li>Cancellations, DHI 20% (Q3 FY2026) — <a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 earnings call</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-7-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat</a></li>
-        <li>National cancellations ~14% / 40,000 deals — <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Redfin, Aug 2026</a>, <a href="https://www.marketwatch.com/press-release/redfin-reports-homebuyers-are-canceling-deals-at-the-highest-rate-on-record-d1ab4749" target="_blank" rel="noopener">Dec 2025 record</a></li>
-        <li>Cycle time ~10.1 months — <a href="https://www.nahb.org/blog/2025/11/sponsored-sound-capital-cycle-time-crush" target="_blank" rel="noopener">NAHB (Nov 2025)</a></li>
-        <li>Carry cost ~$670/day — <a href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">Association of Professional Builders</a></li>
-        <li>Incentive spend (DHI ~10%, Lennar 12.9%) — <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">GuruFocus / Lennar</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI Q2 FY26</a></li>
+        <li>DHI order-cancellation rate 20% = canceled ÷ gross orders (Q3 FY2026) — <a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 earnings call</a>, <a href="https://files.quartr.com/reports/17cebf3868b9c543a80fb2a29570f232-2026-07-23-20-11-25.pdf" target="_blank" rel="noopener">10-Q (5,607 cancellations/qtr)</a></li>
+        <li>National MLS contract fallout ~13–14% (a <em>different</em> metric; seasonally noisy) — <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Redfin, Aug 2026</a>. Dec ’25 ~16% is a seasonal high, not the same series as DHI’s order metric.</li>
+        <li>Cycle time ~10.1 mo = 2023 permit-to-completion incl. pre-construction; built-for-sale ~8.9 mo — <a href="https://eyeonhousing.org/2024/08/single-family-build-time-continues-to-trend-upward-for-2023/" target="_blank" rel="noopener">NAHB / Census (2023 data)</a></li>
+        <li>Carry cost: our own itemized model ~$200/day cash for a ~$370K production home; APB’s ~$670/day is a $750K custom build — <a href="./evidence-market-validation.html#carry-cost" target="_blank" rel="noopener">Our analysis</a>, <a href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">APB</a></li>
+        <li>Incentive spend (DHI ~10%, Lennar 12.9%, vs Lennar’s 4–6% normalized range) — <a href="https://investors.lennar.com/press-releases/2026/06-11-2026-214520364" target="_blank" rel="noopener">Lennar Q2 FY26</a>, <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI Q2 FY26</a></li>
         <li>“Silos kill margin” — <a href="https://www.thebuildersdaily.com/silos-kill-margin-heres-how-homebuilders-can-fight-back/" target="_blank" rel="noopener">The Builder's Daily</a></li>
         <li>Our full analysis (100+ cited data points) — <a href="./evidence-market-validation.html" target="_blank" rel="noopener">Market Validation &amp; Industry Evidence →</a></li>
       </ul>
@@ -583,7 +585,7 @@
 
     <div class="concl rv d3">
       <span class="lbl">Conclusion</span>
-      There is a large, recurring, structurally-caused loss. It is wide enough and painful enough to drive a wedge into. <b>This is the crack.</b>
+      There is a large, recurring loss with a real cross-system component the tools builders own cannot see. The addressable slice — how much earlier coordination actually recovers — is a number we intend to <b>measure in a pilot, not assert</b>. That slice is the crack. <b>This section sizes the pain; it does not yet claim the cure.</b>
     </div>
   </div>
 </section>
@@ -613,63 +615,64 @@
           <div class="tarrow">→</div>
           <div class="tp hot"><span class="ty">Q3 '26</span><span class="tv">20%</span></div>
         </div>
-        <div class="ph-cap">Cancellation rate — <b>one in five signed deals now falls through</b>, the highest in years. <span class="src">Source: DHI Q3 FY2026 earnings call.</span></div>
+        <div class="ph-cap">Order-cancellation rate — <b>one in five orders now cancels</b>, near the top of its range. <span class="src">Source: DHI Q3 FY2026 earnings call & 10-Q (canceled ÷ gross orders; 5,607 cancellations in the quarter).</span></div>
       </div>
       <div class="ph-right">
-        <div class="phr-stat"><div class="v">~73%</div><div class="l">of DHI closings needed a mortgage-rate buydown to get done</div></div>
+        <div class="phr-stat"><div class="v">~73%</div><div class="l">of DHI closings used some mortgage-rate buydown (Q2 FY26)</div></div>
         <div class="phr-stat"><div class="v">~10%</div><div class="l">of revenue spent on incentives — expected to stay elevated all year</div></div>
-        <div class="phr-stat"><div class="v">−22%</div><div class="l">EPS year-over-year — the pain is hitting the bottom line</div></div>
+        <div class="phr-stat"><div class="v">−13%</div><div class="l">EPS drop Q2 FY26 YoY ($2.24 vs $2.58); Q3 ~−5% — the pain reaches the bottom line</div></div>
       </div>
     </div>
 
     <p class="lead rv d1" style="margin-top:32px;">
-      This is not one struggling company. It's the pattern across the whole top tier — and it has been
-      structurally elevated for <strong>four straight years</strong>, not a one-quarter blip.
+      This is not one struggling company. It's the pattern across the top tier — and cancellations have stayed
+      elevated for <strong>four straight years</strong>, not a one-quarter blip. Management ties much of it to rates and
+      buyer qualification; our point is only that the pain is <em>large and persistent</em>, not that a single cause explains it.
     </p>
 
     <div class="grid g4 rv d2" style="margin-bottom:12px;">
-      <div class="card stat warn"><div class="v">~40,000</div><div class="l">U.S. deals canceled in a single month (Dec 2025) — 16.3%, a record</div></div>
-      <div class="card stat warn"><div class="v">14%</div><div class="l">National cancellation rate mid-2026 — highest in nearly 3 years</div></div>
-      <div class="card stat warn"><div class="v">~20%</div><div class="l">Cancellation share in the worst metros (Atlanta, Jacksonville, San Antonio)</div></div>
-      <div class="card stat warn"><div class="v">4 yrs</div><div class="l">That cancellations have held at ~13–16% — this is the new normal</div></div>
+      <div class="card stat warn"><div class="v">~5,607</div><div class="l">DHI orders canceled in one quarter (Q3 FY26) — from its 10-Q, a defined count on a defined denominator</div></div>
+      <div class="card stat warn"><div class="v">~13–14%</div><div class="l">National MLS contract-fallout share, mid-2026 — a separate Redfin series, seasonally noisy</div></div>
+      <div class="card stat warn"><div class="v">12.9%</div><div class="l">Lennar incentives vs its own 4–6% normalized range — margin pressure, on the record</div></div>
+      <div class="card stat warn"><div class="v">4 yrs</div><div class="l">Cancellations elevated across the cycle — persistent, not a one-quarter blip</div></div>
     </div>
     <p class="rv d2" style="font:500 12px/1.5 var(--mono);color:var(--ink-3);margin-bottom:32px;">
-      Sources: Redfin / PRNewswire (Aug 2026), MarketWatch (Jan 2026). National figures via Redfin's contract-cancellation series.
+      Sources: DHI Q3 FY26 10-Q; Lennar Q2 FY26 release; Redfin (Aug 2026). Builder order-cancellation and national MLS fallout are different metrics on different denominators — not combined.
     </p>
 
     <!-- The scale translation -->
     <div class="scale rv d2">
       <div class="scale-head">
-        <div class="eyebrow">What that means in dollars — for ONE national builder</div>
-        <h3>A single logo is losing <span class="accent">~$1.9 billion a year</span> to problems Tessera is built to see.</h3>
+        <div class="eyebrow">Illustrative scenario — one national builder · not reported loss</div>
+        <h3>A single logo carries a <span class="accent">multi-hundred-million-dollar</span> pain envelope near the problems Tessera is built to see.</h3>
       </div>
       <div class="scale-grid">
         <div class="sc-item">
-          <div class="sc-v">~$281M</div>
-          <div class="sc-l">Cancellation carrying waste <span class="src">~13,400 canceled deals × $700/day × 30 days wasted progress</span></div>
-        </div>
-        <div class="sc-op">+</div>
-        <div class="sc-item">
-          <div class="sc-v">~$1.52B</div>
-          <div class="sc-l">Excess incentive spend <span class="src">10% actual vs 5% normalized, across 83,832 homes</span></div>
+          <div class="sc-v">~$34M</div>
+          <div class="sc-l">Cancellation carrying cost <span class="src">~5,600 canceled orders/qtr × 4 × $200/day cash × ~7.5 days avg progress at risk</span></div>
         </div>
         <div class="sc-op">+</div>
         <div class="sc-item">
           <div class="sc-v">~$127M</div>
-          <div class="sc-l">Delayed-closing carry <span class="src">12% delayed × $700/day × 18 days</span></div>
+          <div class="sc-l">Delayed-closing carry <span class="src">~84K homes × 12% delayed × $200/day × 18 days (all inputs are hypotheses)</span></div>
+        </div>
+        <div class="sc-op">+</div>
+        <div class="sc-item">
+          <div class="sc-v">separate</div>
+          <div class="sc-l">Incentive gap (~10% vs 4–6%) is <b>margin pressure, shown separately</b> — mostly rate/affordability driven, not assumed recoverable by software</div>
         </div>
         <div class="sc-op">=</div>
         <div class="sc-item total">
-          <div class="sc-v">~$1.9B</div>
-          <div class="sc-l">Total annual pain envelope, one builder</div>
+          <div class="sc-v">~$160M+</div>
+          <div class="sc-l">Illustrative carry-cost envelope, one builder — cash costs only, before any incentive effect</div>
         </div>
       </div>
-      <p class="scale-note">Even the narrowly <em>preventable</em> slice — the delays visibility catches — is <b>~$44M/year</b> at one builder. And there are <b>~40 divisions</b> inside that logo, each carrying its own share.</p>
+      <p class="scale-note"><b>These are modeled figures, not reported losses</b>, built on unvalidated inputs (12% delayed, $200/day cash cost, days at risk). We deliberately exclude the incentive normalization from the recoverable total, and count avoidable <em>incremental</em> cash cost — not whole-home revenue. The number a pilot must produce is the <b>share of this that earlier warnings actually recover</b>.</p>
     </div>
 
     <div class="concl rv d3">
       <span class="lbl">Why this matters for the wedge</span>
-      The problem is not niche, not cyclical noise, and not self-inflicted incompetence. It is a <b>billion-dollar, multi-year, industry-wide</b> loss that the biggest, most sophisticated builders cannot fix with the tools they own — because no tool they own can see across the systems where the loss is created.
+      The pain is <b>large, recurring, and multi-year</b> — and part of it lives in cross-system dependencies the tools builders own cannot see. Whether earlier visibility recovers enough of it to justify the price is the question the wedge has to <b>answer with evidence</b>, and the section below sets the price against that test.
     </div>
   </div>
 </section>
@@ -680,32 +683,32 @@
     <div class="step-head rv">
       <div class="step-num proof-num">➔</div>
       <div class="ht">
-        <div class="eyebrow proof-eyebrow">Why They Leap At Us</div>
-        <h2>The math makes it a decision a CFO makes in one meeting.</h2>
-        <p class="claim">Builders don't adopt software because it's clever. They adopt it when the return is obvious, the risk is zero, and it fits how they already work. Tessera is all three.</p>
+        <div class="eyebrow proof-eyebrow">Why the buying decision is easy to say yes to</div>
+        <h2>Priced so the decision is small — and structured to be tested cheaply.</h2>
+        <p class="claim">Builders adopt software when the potential return is large relative to a small fee, the integration risk is low, and it fits how they already work. Tessera is built for all three — and we frame the return as a <em>modeled</em> case a paid pilot verifies, not a settled fact.</p>
       </div>
     </div>
 
     <div class="leapgrid rv d1">
       <div class="leap-card">
         <div class="lc-num">01</div>
-        <h4>The return is a rounding error against the loss</h4>
-        <p>A division pays <b>~$500K</b> to address <b>~$1.64M</b> of quantified, preventable loss — a <b>~3× return in year one</b>. The fee is <b>0.15% of their home-sales revenue</b>. Invisible in the P&amp;L, approvable in one meeting.</p>
+        <h4>The fee is small relative to the modeled value</h4>
+        <p>A division pays <b>~$500K</b> against a <b>modeled</b> ~$1.64M value envelope — a <b>~3.3× gross benefit / fee ratio (~227% net ROI) before the customer’s own rollout costs</b>. That’s <b>~0.07% of home-sales revenue</b> (~$500K on ~$740M). Small enough to pilot; the return is a hypothesis the pilot tests.</p>
       </div>
       <div class="leap-card">
         <div class="lc-num">02</div>
-        <h4>Zero risk to their systems</h4>
-        <p>Read-only. Tessera never writes back, never replaces a system of record. The single biggest enterprise objection — “will this break something?” — is answered by the architecture. Nothing to migrate, nothing to rip out.</p>
+        <h4>Lower integration risk — read-only by design</h4>
+        <p>Tessera never writes back and never replaces a system of record, which answers the biggest objection — “will this break something?” It does <em>not</em> remove all adoption work: access approval, field mapping, identity matching and a security review still happen. Lower risk, not zero.</p>
       </div>
       <div class="leap-card">
         <div class="lc-num">03</div>
-        <h4>No new workflow to adopt</h4>
-        <p>It drops into the weekly pipeline meeting they <em>already hold</em> — replacing a spreadsheet merged by hand every Monday. Adoption isn't a change-management program. It's a better version of what's already on the calendar.</p>
+        <h4>Fits a meeting they already hold</h4>
+        <p>It drops into the weekly pipeline review that already exists — replacing a spreadsheet merged by hand every Monday. Adoption is lighter than a new workflow, though staff still have to trust and act on the alerts for value to land.</p>
       </div>
       <div class="leap-card">
         <div class="lc-num">04</div>
-        <h4>Their own numbers make the case</h4>
-        <p>The pitch isn't a feature demo — it's their earnings call read back to them: 20% cancellations, ~10% incentives, buydowns on three of four closings. We quantify the bleed and price to a fraction of it. It becomes a <b>math problem, not a debate</b>.</p>
+        <h4>Anchored to their own numbers</h4>
+        <p>The pitch uses their earnings call read back to them: ~20% order cancellations, ~10% incentives, buydowns on most closings. We size the bleed and price to a fraction of it — then propose a pilot to measure the recoverable share. A <b>math problem to test</b>, not a claim to accept.</p>
       </div>
     </div>
 
@@ -713,24 +716,24 @@
     <div class="pitchbox rv d2">
       <div class="pb-quote-mark">“</div>
       <p class="pb-text">
-        You're carrying a <b>20% cancellation rate</b> and spending <b>~10% of revenue</b> on incentives because
-        nobody sees the cross-system problems until it's too late. For a fee that's <b>0.15% of your revenue</b>,
-        we score every deal's on-time-close probability, tell you <em>why</em> in plain language, and surface it
-        while there's still time to act. If we recover even <b>one point</b> of that loss, we've paid for ourselves
-        several times over.
+        You're carrying a <b>~20% order-cancellation rate</b> and spending <b>~10% of revenue</b> on incentives.
+        Some of that pain is created between systems, where no tool you own can see. For a fee near
+        <b>0.07% of your home-sales revenue</b>, we score every deal's on-time-close probability, explain
+        <em>why</em> in plain language, and surface it while there's still time to act — and we'll prove the
+        recoverable share in a paid pilot before you scale it.
       </p>
-      <div class="pb-attr">— the pitch to a builder CFO, in six sentences</div>
+      <div class="pb-attr">— the pitch to a builder CFO, in five sentences</div>
     </div>
 
     <div class="grid g3 rv d3" style="margin-top:22px;">
-      <div class="card stat"><div class="v">6–9 mo</div><div class="l">Payback on customer acquisition — a concentrated, reachable ICP</div></div>
-      <div class="card stat"><div class="v">&gt;10×</div><div class="l">LTV / CAC — retention is structural once wired into six systems</div></div>
-      <div class="card stat"><div class="v">~40</div><div class="l">Divisions per national logo — one “yes” is a 40-contract runway</div></div>
+      <div class="card stat"><div class="v">~0.07%</div><div class="l">Modeled fee as a share of a division’s home-sales revenue — small enough to pilot</div></div>
+      <div class="card stat"><div class="v">~40</div><div class="l">Divisions per national logo — an expansion path, not 40 independent contracts (procurement is often shared)</div></div>
+      <div class="card stat"><div class="v">pilot-first</div><div class="l">CAC payback, retention and LTV/CAC are hypotheses to observe from real cohorts, not yet measured</div></div>
     </div>
 
     <div class="concl rv d3">
       <span class="lbl">The leap</span>
-      When the loss is billions, the fee is 0.15% of revenue, the risk is zero, and it lands in a meeting they already hold — <b>saying no is the harder decision</b>. That asymmetry is why the wedge converts.
+      When the pain is large, the fee is ~0.07% of revenue, integration risk is low, and it lands in a meeting they already hold, a <b>paid pilot is an easy yes</b>. Scaling is earned by what that pilot shows — verified value, not asserted inevitability.
     </div>
   </div>
 </section>
@@ -773,7 +776,7 @@
     <div class="grid g3 rv d2" style="margin-bottom:8px;">
       <div class="card stat"><div class="v">≥14 days</div><div class="l">Target median prediction lead time — the window that makes intervention real</div></div>
       <div class="card stat"><div class="v">≥70%</div><div class="l">Target at-risk recall — delayed deals caught before they slip</div></div>
-      <div class="card stat"><div class="v">31%</div><div class="l">Of graph edges cross a category boundary — the cross-system risk</div></div>
+      <div class="card stat"><div class="v">31%</div><div class="l">Of graph edges cross a category boundary — where we expect cross-system risk to concentrate (their share of actual losses is a pilot measurement, not yet established)</div></div>
     </div>
 
     <div class="honest rv d3">
@@ -785,7 +788,7 @@
 
     <div class="concl rv d3">
       <span class="lbl">Conclusion</span>
-      The loss is a consequence of a knowable structure, so it is predictable with actionable lead time. Prediction is precisely the operation that turns the §1 loss into recoverable savings.
+      A knowable dependency structure makes early warnings <em>possible</em> with useful lead time. A warning only becomes savings when someone can act in time — some risks (an unaffordable mortgage, an inspection backlog) are predictable yet unfixable. So prediction <b>enables</b> intervention; which interventions actually change outcomes, and by how much, is measured in a pilot — not assumed here.
     </div>
   </div>
 </section>
@@ -796,51 +799,51 @@
     <div class="step-head rv">
       <div class="step-num">3</div>
       <div class="ht">
-        <div class="eyebrow">The Economics</div>
-        <h2>Cheap to deliver. Priced to a number the buyer already believes.</h2>
-        <p class="claim">Proving a product <em>works</em> is not proving it is a <em>business</em>. This closes that gap.</p>
+        <div class="eyebrow">The Economics — modeled, not yet observed</div>
+        <h2>Inexpensive to run. Priced to a fraction of a modeled value envelope.</h2>
+        <p class="claim">Proving a product <em>works</em> is not proving it is a <em>business</em>. The figures below are an internal value model built on unvalidated inputs — the numbers a paid pilot exists to confirm.</p>
       </div>
     </div>
 
     <div class="grid g2 rv d1">
       <div class="card">
-        <h4>The value envelope — what one home is worth to prevent</h4>
+        <h4>The value envelope — modeled worth of preventing one home’s problems</h4>
         <table class="tbl">
           <thead><tr><th>Value source</th><th class="num">$ / home / yr</th></tr></thead>
           <tbody>
-            <tr><td>Avoidable delay exposure <span class="src">12% × 35% × 18d × $500</span></td><td class="num"><b>$378</b></td></tr>
+            <tr><td>Avoidable delay exposure <span class="src">12% × 35% × 18d × $500/day (input hypotheses)</span></td><td class="num"><b>$378</b></td></tr>
             <tr><td>Cancellation prevention <span class="src">16% × $15K × prevent 10%</span></td><td class="num"><b>$240</b></td></tr>
-            <tr><td>Change-order margin leakage <span class="src">~20% of homes</span></td><td class="num"><b>$200</b></td></tr>
-            <tr class="total"><td>Total quantified envelope</td><td class="num">$818</td></tr>
+            <tr><td>Change-order margin leakage <span class="src">~20% of homes — least supported line</span></td><td class="num"><b>$200</b></td></tr>
+            <tr class="total"><td>Total modeled envelope</td><td class="num">$818</td></tr>
           </tbody>
         </table>
-        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">Conservative by construction — revenue-timing accuracy is excluded entirely.</p>
+        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">Every input is a hypothesis. At a stricter ~$200/day cash cost, the delay line drops to ~$151 and the envelope to ~$591. Benefits must be shown incremental and not double-counted.</p>
       </div>
       <div class="card">
-        <h4>Per-division P&amp;L — where the margin lives</h4>
+        <h4>Per-division P&amp;L — infrastructure-only view</h4>
         <table class="tbl">
           <thead><tr><th>Line</th><th class="num">Per division / yr</th></tr></thead>
           <tbody>
             <tr><td>Closings monitored</td><td class="num"><b>~2,000</b></td></tr>
-            <tr><td>Value created (2,000 × $818)</td><td class="num"><b>~$1.64M</b></td></tr>
+            <tr><td>Modeled value created (2,000 × $818)</td><td class="num"><b>~$1.64M</b></td></tr>
             <tr><td>Revenue — ACV (2,000 × $250)</td><td class="num"><b>$500K</b></td></tr>
             <tr><td>Infrastructure COGS ($671/mo)</td><td class="num"><b>~$8K</b></td></tr>
-            <tr class="total"><td>Gross profit / margin</td><td class="num">$492K · 98%</td></tr>
+            <tr class="total"><td>Contribution after cloud only</td><td class="num">$492K · 98%*</td></tr>
           </tbody>
         </table>
-        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">Builder pays $500K to avoid $1.64M — a ~3× return, at 0.15% of home-sales revenue.</p>
+        <p style="font-size:12.5px;color:var(--ink-3);margin-top:12px;font-family:var(--mono);">*Infrastructure-only. True gross margin is lower — onboarding, connector maintenance, data services and support labor are not yet loaded in. Builder pays $500K against a modeled $1.64M (~3.3× gross benefit / fee) at ~0.07% of home-sales revenue.</p>
       </div>
     </div>
 
     <div class="grid g3 rv d2" style="margin-top:16px;">
-      <div class="card stat"><div class="v">~98%</div><div class="l">Gross margin per division — and it improves with scale</div></div>
-      <div class="card stat"><div class="v">~3×</div><div class="l">Net ROI to the builder in year one</div></div>
-      <div class="card stat"><div class="v">0.15%</div><div class="l">Of the builder's revenue — invisible in their P&amp;L, fast to approve</div></div>
+      <div class="card stat"><div class="v">98%*</div><div class="l">Contribution after cloud cost only — not a loaded gross margin; delivery and support still to be counted</div></div>
+      <div class="card stat"><div class="v">~3.3×</div><div class="l">Modeled gross benefit / fee (~227% net before the customer’s rollout costs) — a hypothesis, not a result</div></div>
+      <div class="card stat"><div class="v">~0.07%</div><div class="l">Of the division’s home-sales revenue ($500K on ~$740M) — small enough to approve for a pilot</div></div>
     </div>
 
     <div class="concl rv d3">
       <span class="lbl">Conclusion</span>
-      Prediction is a high-margin product priced to a return the buyer already believes, because the inputs come from their own earnings calls. The wedge is not just real pain — it is <b>profitable pain to solve</b>.
+      Prediction can be inexpensive to run and is priced to a fraction of a <em>modeled</em> value envelope drawn from the buyer’s own numbers. Whether it clears a <em>loaded</em> margin and a real return is what the pilot must show — the point here is that the unit economics are structured to work if the value is real.
     </div>
   </div>
 </section>
@@ -852,23 +855,23 @@
       <div class="step-num">4</div>
       <div class="ht">
         <div class="eyebrow">The Distribution</div>
-        <h2>Prediction is the only layer a builder will adopt first.</h2>
-        <p class="claim">Even a valuable, profitable product fails if it can't get in the door. Prediction is uniquely adoptable — and neither Layer 2 nor 3 could go first.</p>
+        <h2>Prediction is our preferred first layer to adopt.</h2>
+        <p class="claim">Even a valuable product fails if it can't get in the door. Prediction is unusually adoptable, and it’s our chosen entry point — a strategic bet we’d test against a simpler handoff or warranty entry, not a logical necessity.</p>
       </div>
     </div>
 
     <div class="grid g2 rv d1" style="margin-bottom:26px;">
       <div class="card">
-        <h4>Read-only overlay</h4>
-        <p>Tessera never writes back to builder systems. It sits <em>above</em> the stack. The biggest enterprise objection — “will this break my system of record?” — is answered by the architecture itself. Nothing to migrate, nothing to risk.</p>
+        <h4>Read-only overlay — lower risk, not zero work</h4>
+        <p>Tessera never writes back to builder systems; it sits <em>above</em> the stack, which answers “will this break my system of record?” It still requires access approval, field mapping, identity matching and a security review — real onboarding work, just without the risk of a rip-and-replace.</p>
       </div>
       <div class="card">
-        <h4>Lands in a meeting they already hold</h4>
-        <p>The status quo is a spreadsheet merged by hand every Monday for the pipeline meeting. Tessera replaces that spreadsheet in a cadence that already exists. Zero adoption friction isn't a slogan — it's a meeting on the calendar.</p>
+        <h4>Fits a meeting they already hold</h4>
+        <p>The status quo is a spreadsheet merged by hand every Monday for the pipeline review. Tessera fits that existing cadence rather than adding a new one — lighter adoption, though staff still have to trust and act on the alerts for value to appear.</p>
       </div>
     </div>
 
-    <p class="lead rv d2">And Layers 2 and 3 <strong>cannot</strong> be the wedge — by their own logic. The dependency runs in exactly one direction:</p>
+    <p class="lead rv d2">Layers 2 and 3 could be built from other sources, but in <strong>our</strong> architecture they build on what Layer 1 produces — which is why we start there:</p>
 
     <div class="flow rv d2">
       <div class="node lit">
@@ -892,7 +895,7 @@
 
     <div class="concl rv d3">
       <span class="lbl">Conclusion</span>
-      Prediction is the only layer a builder adopts with no workflow change and no system risk — and the only one that can exist without the others. You cannot start in the middle or the end, because they are built on data only the beginning creates.
+      Prediction is the layer a builder can adopt with the least workflow change and the lowest system risk, and in our design it creates the data the later layers reuse. Builder-first is our preferred entry because it may pair a paying customer with records created during construction — a bet we validate, not a theorem we assert.
     </div>
   </div>
 </section>
@@ -903,41 +906,43 @@
     <div class="step-head rv">
       <div class="step-num">5</div>
       <div class="ht">
-        <div class="eyebrow">The Moat</div>
-        <h2>Defensible — and it manufactures the next moat.</h2>
-        <p class="claim">A wedge anyone can copy is not a wedge. Prediction is defended by a boundary competitors can't cross, and it compounds.</p>
+        <div class="eyebrow">The Moat — to be earned, not assumed</div>
+        <h2>Defensibility comes from integration and permissioned history — not a legal exclusive.</h2>
+        <p class="claim">A wedge anyone can copy is not a wedge. Our proposed advantage is spanning vendors under permitted access and compounding on the resulting history — a position we have to earn through coverage and speed, not a right no one else can obtain.</p>
       </div>
     </div>
 
     <p class="lead rv d1">
-      The deepest advantage is a <strong>data-ownership boundary competitors cannot cross</strong>. Three companies own
-      three parts of the deal — and no builder ERP can legally reach across all three:
+      The deal is split across parties, and coordinating a read across all of them is genuinely hard. That difficulty is
+      the opportunity — but it is not a <em>legal</em> exclusive. Authorization is required for us too, and a builder’s own
+      captive mortgage and title units can reach across much of it:
     </p>
 
     <div class="grid g3 rv d2" style="margin-bottom:24px;">
-      <div class="card"><h4>Builder</h4><p>Owns its construction / ERP stack.</p></div>
-      <div class="card"><h4>Lender</h4><p>Changes on <em>every</em> deal — because the buyer picks the lender.</p></div>
-      <div class="card"><h4>Title &amp; Escrow</h4><p>Sits with a third party entirely.</p></div>
+      <div class="card"><h4>Builder</h4><p>Owns its construction / ERP stack — and often a captive lender and title unit (DHI’s mortgage arm handled ~82% of Q3 closings).</p></div>
+      <div class="card"><h4>Lender</h4><p>Varies deal to deal when the buyer chooses an outside lender, but is frequently the builder’s own affiliate.</p></div>
+      <div class="card"><h4>Title &amp; Escrow</h4><p>Often a third party — one more permissioned integration to earn, not a barrier only we can pass.</p></div>
     </div>
 
     <p class="lead rv d2">
-      Tessera's read-only, non-competitive posture is exactly what lets it sit above all three. Then the compounding begins:
+      Our read-only, non-competitive posture makes us easier to authorize across all three. The advantage we’re building
+      is <strong>coverage and speed of integration plus the permissioned history that accrues</strong> — provable in deployments, not by decree:
     </p>
 
     <div class="grid g2 rv d3">
       <div class="card">
-        <h4>Every prediction is labeled training data</h4>
-        <p>Each score is eventually paired with the real outcome — on time, slipped, canceled. That pairing is a labeled example. The engine sharpens with every close, trained per-tenant inside each builder's own account, so one builder's data never trains another's. Counsel-safe by architecture.</p>
+        <h4>Outcomes may compound into a data advantage</h4>
+        <p>Each score can eventually be paired with the real outcome — on time, slipped, canceled — creating labeled examples, trained per-tenant so one builder’s data never trains another’s. The caveats are real: labels are incomplete, intervention changes the outcome, and separate tenant models don’t pool into a cross-builder edge. We’ll show learning curves and retention rather than assert a moat.</p>
       </div>
       <div class="card" style="border-color:var(--line-2);background:linear-gradient(145deg,rgba(45,125,111,0.07),rgba(45,125,111,0.01));">
-        <h4 class="accent">The data is the <em>right</em> to build Layers 2 &amp; 3</h4>
-        <p>Tessera earns the Home Passport not by asking, but because Layer 1 has already been inside the builder's systems, attesting events and accumulating the verified record that <strong>is</strong> the passport's content. Prediction is the manufacturing process for the asset that makes every later product possible.</p>
+        <h4 class="accent">The relationship can <em>lower the cost</em> of Layers 2 &amp; 3</h4>
+        <p>Being inside the builder’s systems during construction can reduce the cost of assembling the Home Passport later. But reading a record is not the same as independently attesting it, and closing-status data is not the passport’s content (HVAC serials, manuals, warranties). What Layer 1 earns is a head start and permissioned provenance — which records carry forward, and with what rights, is something we prove field by field.</p>
       </div>
     </div>
 
     <div class="concl rv d3">
       <span class="lbl">Conclusion</span>
-      Prediction is defended by a boundary competitors cannot cross, and it compounds into both a sharper model and the strategic right to the larger layers. <b>Volume doesn't just improve accuracy — it expands what the system can prove.</b>
+      Defensibility here is <em>earnable</em>, not automatic: coverage and speed of permissioned integration, plus the history that accrues, can compound into a sharper model and a lower-cost path to the larger layers. <b>The moat is a hypothesis we intend to prove with deployments and retention</b> — not a legal exclusive we claim today.
     </div>
   </div>
 </section>
@@ -949,22 +954,22 @@
       <div class="step-num">6</div>
       <div class="ht">
         <div class="eyebrow">The Argument, In One View</div>
-        <h2>Five links. One forced conclusion.</h2>
-        <p class="claim">Each link is a premise the next depends on. If the chain holds, the conclusion is forced — not chosen.</p>
+        <h2>Five links — and the one test that decides each.</h2>
+        <p class="claim">Each link is a claim the next depends on. Where a link is still a hypothesis, we name the evidence that would confirm or break it.</p>
       </div>
     </div>
 
     <div class="chain rv d1">
-      <div class="link"><div class="idx">1</div><div class="body"><h4>The loss is real, large, and structural.</h4><p>Recurring, quantified, cross-system — documented in public filings.</p></div></div>
-      <div class="link"><div class="idx">2</div><div class="body"><h4>The loss is predictable with actionable lead time.</h4><p>It's the output of a knowable dependency structure, visible before the outcome.</p></div></div>
-      <div class="link"><div class="idx">3</div><div class="body"><h4>Prediction converts the loss into savings.</h4><p>At ~98% margin, priced to a ~3× return the buyer already believes.</p></div></div>
-      <div class="link"><div class="idx">4</div><div class="body"><h4>Prediction is the only layer adopted first.</h4><p>Read-only, no new workflow — and the only layer the others depend on.</p></div></div>
-      <div class="link"><div class="idx">5</div><div class="body"><h4>Prediction is defensible and self-reinforcing.</h4><p>Crosses a boundary rivals can't, and manufactures the data and the right to Layers 2 &amp; 3.</p></div></div>
+      <div class="link"><div class="idx">1</div><div class="body"><h4>The loss is large, recurring, and partly cross-system.</h4><p>Quantified in public filings. <em>Test:</em> the addressable, cross-system share is measured in customer data.</p></div></div>
+      <div class="link"><div class="idx">2</div><div class="body"><h4>The loss is predictable with useful lead time.</h4><p>Output of a knowable dependency structure. <em>Test:</em> ≥14-day median lead time and ≥70% recall on real outcomes.</p></div></div>
+      <div class="link"><div class="idx">3</div><div class="body"><h4>Early warning can convert into net savings.</h4><p>Priced to a fraction of a modeled envelope. <em>Test:</em> a controlled pilot shows action changes outcomes, net of costs.</p></div></div>
+      <div class="link"><div class="idx">4</div><div class="body"><h4>Prediction is the lightest layer to adopt first.</h4><p>Read-only, fits an existing meeting. <em>Test:</em> deployment time and real usage beat a simpler entry point.</p></div></div>
+      <div class="link"><div class="idx">5</div><div class="body"><h4>Integration + permissioned history can compound.</h4><p>Coverage, speed, and reuse rights. <em>Test:</em> learning curves and retention, not a claimed legal exclusive.</p></div></div>
     </div>
 
     <div class="verdict rv d2">
       <span class="lbl">Therefore</span>
-      <p>The AI Predictability Engine is not merely <em>a</em> good place to start — it is the <span class="accent">forced</span> place to start. Layer 1 is the only point where the pain is acute, adoption is frictionless, margin is high, defense is structural, and the data that unlocks everything else is created — all at once.</p>
+      <p>The AI Predictability Engine is the <span class="accent">strongest place to start</span> — where the pain is most acute, adoption is lightest, the unit economics are structured to work, defensibility is earnable, and the data that lowers the cost of Layers 2 &amp; 3 gets created. It’s a deliberate strategic bet, and every load-bearing claim has a named test the next raise is meant to pass.</p>
     </div>
   </div>
 </section>
@@ -983,8 +988,8 @@
 
     <div class="grid g2 rv d1">
       <div>
-        <div class="qa"><div class="q">Why hasn't Lennar just built this internally?</div><div class="a">Because the hard part isn't the software — it's reading across a boundary they don't control. The buyer picks the lender, so the mortgage system changes deal to deal. An internal team can instrument its own stack; it can't instrument the lender's and the title company's on a neutral, read-only basis.</div></div>
-        <div class="qa"><div class="q">What if Hyphen or ICE ships prediction as an ERP feature?</div><div class="a">They can predict inside their own silo — but the losses come from <em>cross-system</em> dependencies. A construction-only predictor can't see the rate lock; a mortgage-only predictor can't see the drywall. The cross-boundary view is the product, and it's the one thing a single-silo vendor structurally can't ship.</div></div>
+        <div class="qa"><div class="q">Why hasn't Lennar just built this internally?</div><div class="a">They might — it’s a real risk, not something we rule out. The hard part is coordinating a read across builder, lender and title, and doing it as neutral infrastructure a buyer’s outside lender and title company will authorize. A builder with a captive lender can instrument much of its own flow; our bet is that a non-competitive, cross-vendor overlay is faster to deploy and easier to authorize than each builder rebuilding it — a claim we prove on deployment time and coverage.</div></div>
+        <div class="qa"><div class="q">What if Hyphen or ICE ships prediction as an ERP feature?</div><div class="a">They already market intelligence across their products, so this is genuine competition, not a gap. Our proposed edge is <em>cross-system</em> lead time: a construction-only predictor doesn’t see the rate lock; a mortgage-only one doesn’t see the drywall. Whether the cross-boundary view meaningfully beats their native tools is a benchmark we owe, not an assumption we get to keep.</div></div>
       </div>
       <div>
         <div class="qa"><div class="q">Isn't the score just rule-based today?</div><div class="a">Yes — and we say so first. The symbolic scaffold already yields defensible constraint- and cohort-based findings. The ML hire turns those into calibrated probabilities. Naming the rule-based present as the reason for the hire is stronger than being caught claiming an ML capability the repo would contradict.</div></div>
@@ -1010,6 +1015,8 @@
       <div class="item"><h4>If prediction lead time is short.</h4><p>If, in real builder data, most slippage isn't visible until close, prediction can't convert loss to savings. The back-test targets — ≥14-day median lead time, ≥70% recall — exist to test exactly this.</p></div>
       <div class="item"><h4>If builders won't grant read access.</h4><p>The model assumes read-only access to builder, lender, and title systems. Confirmed for Salesforce and Procore today; the rest is contingent. This is the single largest execution risk.</p></div>
       <div class="item"><h4>If a single-silo predictor is “good enough.”</h4><p>If builders decide construction-only or mortgage-only prediction captures most of the value, the cross-system premium shrinks. The counter — that losses are dominated by cross-boundary dependencies — is a claim to prove on real outcomes, not assume.</p></div>
+      <div class="item"><h4>If warnings can’t be acted on in time.</h4><p>A correct alert only creates value if an owner has a feasible action and enough runway. If most flagged risks are predictable-but-unfixable (unaffordable mortgage, inspection backlog), the recoverable share collapses. The pilot logs actions and net cost — not just alert accuracy.</p></div>
+      <div class="item"><h4>If loaded gross margin is thin.</h4><p>The 98% figure is infrastructure-only. Once onboarding, connector maintenance, data services and support labor are loaded in, margin could be materially lower. We report gross margin only after those costs are counted.</p></div>
     </div>
   </div>
 </section>
@@ -1018,12 +1025,16 @@
   <div class="wrap">
     <div class="footbrand">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
     <p>
-      Sources: D.R. Horton &amp; Lennar FY2026 earnings; NAHB cycle-time and economic-impact studies; Association of
-      Professional Builders carry-cost methodology; CNBC and industry cancellation data; internal value model
-      (market-validation-and-industry-evidence.md, MARKET-SIZING.md), findings-engine-one-pager.md, and verified AWS
-      pricing. Figures reflect the value model and codebase as of September 2026; the confidence score is currently
-      rule-based and provisional pending ML calibration. The $250 per-closing price is an internal value-model
-      hypothesis to be validated in paid pilots. Content rephrased for compliance with licensing restrictions.
+      Sources: D.R. Horton Q3 FY2026 earnings release &amp; 10-Q; Lennar Q2 FY2026 release; NAHB / Census cycle-time
+      analysis (2023 data); Association of Professional Builders carry-cost methodology; Redfin national contract-fallout
+      series; internal value model (market-validation-and-industry-evidence.md, MARKET-SIZING.md), findings-engine-one-pager.md,
+      and verified AWS pricing. Two distinct metrics appear here and are not combined: a single builder’s <em>order-cancellation
+      rate</em> (canceled ÷ gross orders) and Redfin’s national <em>MLS contract-fallout</em> share. Dollar envelopes, the $250
+      per-closing price, ~$200/day carry cost, delay/preventability rates, and the ~0.07% fee are <b>modeled hypotheses to be
+      validated in paid pilots</b>, not reported results or observed returns; the 98% figure is contribution after cloud cost only,
+      not a loaded gross margin. The confidence score is currently rule-based and provisional pending ML calibration. Industry
+      losses reflect multiple causes (rates, affordability, demand) — Tessera targets only the recoverable, cross-system subset.
+      Figures reflect the value model and codebase as of September 2026. Content rephrased for compliance with licensing restrictions.
     </p>
   </div>
 </footer>
