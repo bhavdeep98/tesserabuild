@@ -27,7 +27,8 @@
 
   .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
   .topbar .row { max-width: 980px; margin: 0 auto; padding: 13px 28px; display: flex; justify-content: space-between; align-items: center; }
-  .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; }
+  .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; display: inline-flex; align-items: center; gap: 9px; }
+  .topbar .bk .tsr-logomark { width: 19px; height: 19px; flex-shrink: 0; }
   .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
   .topbar .home:hover { background: var(--teal-50); }
   .topbar .row { gap: 12px; }
@@ -91,7 +92,7 @@
 
 <div class="topbar">
   <div class="row">
-    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="bk" href="./index.html"><svg class="tsr-logomark" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><g stroke="currentColor" stroke-width="1.6" opacity="0.5"><rect x="1.8" y="1.8" width="8.4" height="8.4" rx="1.4"/><rect x="13.8" y="1.8" width="8.4" height="8.4" rx="1.4"/><rect x="1.8" y="13.8" width="8.4" height="8.4" rx="1.4"/></g><rect x="13.8" y="13.8" width="8.4" height="8.4" rx="1.4" fill="#2d7d6f"/></svg>TESSERA</a>
     <a class="home" href="./index.html">← Data room</a>
     <span class="spacer"></span>
     <div class="jumpnav" id="jumpnav">
@@ -102,12 +103,12 @@
         <a href="./why-predictability-is-the-wedge.html"><span class="mi">◆</span> Why the engine is the wedge</a>
         <a href="./the-future.html"><span class="mi">✧</span> The Future — Layers 2 &amp; 3</a>
         <div class="grp">Product</div>
-        <a href="./home-passport-overview.html"><span class="mi">🏠</span> Home Passport overview</a>
+        <a href="./predictability-engine-overview.html"><span class="mi">🧠</span> Predictability Engine overview</a>
         <a href="./findings-engine.html"><span class="mi">🧭</span> The Findings Engine</a>
         <a href="./interactive-model.html"><span class="mi">🎛️</span> Interactive Model</a>
         <a href="./connector-architecture-technical.html"><span class="mi">🔌</span> Connector Architecture</a>
         <div class="grp">Business &amp; strategy</div>
-        <a href="./business-strategy-onepager.html"><span class="mi">📊</span> Business Strategy</a>
+
         <a href="./execution-strategy.html"><span class="mi">🧮</span> Execution Strategy</a>
         <a href="./strategy-frameworks.html"><span class="mi">♟️</span> Strategic Analysis</a>
         <a href="./evidence-market-validation.html" class="here"><span class="mi">📎</span> Market Validation &amp; Evidence</a>

@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Light theme — warm paper + forest teal (matches business-strategy-onepager) */
+    /* Light theme — warm paper + forest teal (shared data-room palette) */
     --void:      #f7f4ed;   /* page background */
     --surface:   #fdfbf6;   /* subtle raised */
     --surface-2: #fcfaf6;   /* cards */
@@ -69,7 +69,8 @@
   /* ============ TOPBAR / NAV ============ */
   .topbar { position: sticky; top: 0; z-index: 40; background: rgba(247,244,237,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
   .topbar .row { max-width: var(--maxw); margin: 0 auto; padding: 13px 28px; display: flex; align-items: center; gap: 12px; }
-  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--ink); text-decoration: none; }
+  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 9px; }
+  .topbar .bk .tsr-logomark { width: 20px; height: 20px; flex-shrink: 0; }
   .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
   .topbar .home:hover { background: rgba(45,125,111,0.08); }
   .topbar .spacer { flex: 1; }
@@ -386,7 +387,7 @@
 
 <div class="topbar">
   <div class="row">
-    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="bk" href="./index.html"><svg class="tsr-logomark" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><g stroke="currentColor" stroke-width="1.6" opacity="0.5"><rect x="1.8" y="1.8" width="8.4" height="8.4" rx="1.4"/><rect x="13.8" y="1.8" width="8.4" height="8.4" rx="1.4"/><rect x="1.8" y="13.8" width="8.4" height="8.4" rx="1.4"/></g><rect x="13.8" y="13.8" width="8.4" height="8.4" rx="1.4" fill="#2d7d6f"/></svg>TESSERA</a>
     <a class="home" href="./index.html">← Data room</a>
     <span class="spacer"></span>
     <div class="jumpnav" id="jumpnav">
@@ -397,12 +398,12 @@
         <a href="./why-predictability-is-the-wedge.html" class="here"><span class="mi">◆</span> Why the engine is the wedge</a>
         <a href="./the-future.html"><span class="mi">✧</span> The Future — Layers 2 &amp; 3</a>
         <div class="grp">Product</div>
-        <a href="./home-passport-overview.html"><span class="mi">🏠</span> Home Passport overview</a>
+        <a href="./predictability-engine-overview.html"><span class="mi">🧠</span> Predictability Engine overview</a>
         <a href="./findings-engine.html"><span class="mi">🧭</span> The Findings Engine</a>
         <a href="./interactive-model.html"><span class="mi">🎛️</span> Interactive Model</a>
         <a href="./connector-architecture-technical.html"><span class="mi">🔌</span> Connector Architecture</a>
         <div class="grp">Business &amp; strategy</div>
-        <a href="./business-strategy-onepager.html"><span class="mi">📊</span> Business Strategy</a>
+
         <a href="./execution-strategy.html"><span class="mi">🧮</span> Execution Strategy</a>
         <a href="./strategy-frameworks.html"><span class="mi">♟️</span> Strategic Analysis</a>
         <a href="./evidence-market-validation.html"><span class="mi">📎</span> Market Validation &amp; Evidence</a>
@@ -1024,18 +1025,6 @@
 <footer>
   <div class="wrap">
     <div class="footbrand">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
-    <p>
-      Sources: D.R. Horton Q3 FY2026 earnings release &amp; 10-Q; Lennar Q2 FY2026 release; NAHB / Census cycle-time
-      analysis (2023 data); Association of Professional Builders carry-cost methodology; Redfin national contract-fallout
-      series; internal value model (market-validation-and-industry-evidence.md, MARKET-SIZING.md), findings-engine-one-pager.md,
-      and verified AWS pricing. Two distinct metrics appear here and are not combined: a single builder’s <em>order-cancellation
-      rate</em> (canceled ÷ gross orders) and Redfin’s national <em>MLS contract-fallout</em> share. Dollar envelopes, the $250
-      per-closing price, ~$200/day carry cost, delay/preventability rates, and the ~0.07% fee are <b>modeled hypotheses to be
-      validated in paid pilots</b>, not reported results or observed returns; the 98% figure is contribution after cloud cost only,
-      not a loaded gross margin. The confidence score is currently rule-based and provisional pending ML calibration. Industry
-      losses reflect multiple causes (rates, affordability, demand) — Tessera targets only the recoverable, cross-system subset.
-      Figures reflect the value model and codebase as of September 2026. Content rephrased for compliance with licensing restrictions.
-    </p>
   </div>
 </footer>
 
