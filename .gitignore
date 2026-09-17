@@ -13,3 +13,11 @@ Thumbs.db
 
 .netlify/
 .gstack/
+
+# Internal working artifacts — never publish (business case, transcripts, VC prep, audit reviews)
+Business Case_Base_Tessera.pdf
+.github/Business Case_Base_Tessera.pdf
+Sep 14 at 8-31 PM.txt
+Tessera VC Prep - 2026_09_15 16_30 EDT - Notes by Gemini.md
+tessera-predictability-investor-review.html
+*.pdf
