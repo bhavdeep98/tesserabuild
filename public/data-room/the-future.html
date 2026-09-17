@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — The Future: Passport, Marketplace &amp; Maintenance AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f7f4ed; --surface:#fdfbf6; --card:#fcfaf6; --panel:#f1ede3;
+    --text:#20352f; --text-2:#4a5c56; --text-3:#6c7b75;
+    --accent:#2d7d6f; --teal-50:#e6f5f2; --teal-100:#ccebe5; --teal-700:#2d655b; --teal-800:#1f4f47;
+    --gold:#9a7b1f; --gold-bg:#f7efd8; --warn:#c0562f;
+    --line:rgba(32,53,47,0.12); --line-2:rgba(45,125,111,0.30);
+    --display:'Plus Jakarta Sans',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace; --r:14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--body); font-weight: 450; line-height: 1.62; -webkit-font-smoothing: antialiased; }
+  body::before { content:""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(58% 42% at 86% -6%, rgba(45,125,111,0.08), transparent 60%), radial-gradient(50% 40% at 2% 8%, rgba(154,123,31,0.05), transparent 55%); }
+  h1,h2,h3,h4 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.13; color: var(--text); }
+  .accent { color: var(--accent); }
+  b, strong { font-weight: 700; color: var(--text); }
+  em { font-style: italic; }
+  .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 28px; }
+  .eyebrow { font: 700 12px/1.4 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; }
+  .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
+
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: 980px; margin: 0 auto; padding: 13px 28px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; }
+  .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
+  .topbar .home:hover { background: var(--teal-50); }
+
+  /* hero */
+  .hero { padding: 74px 0 26px; }
+  .hero h1 { font-size: clamp(32px, 5.2vw, 56px); letter-spacing: -0.035em; max-width: 17ch; margin: 20px 0 18px; }
+  .hero .lede { font-size: clamp(17px, 2vw, 20px); color: var(--text-2); max-width: 70ch; }
+  .hero .thesis { margin-top: 24px; border-left: 3px solid var(--accent); padding: 5px 0 5px 20px; max-width: 72ch; font-size: 16px; color: var(--text); }
+
+  /* the arc: L1 -> L2 -> L3 */
+  .arc { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 34px 0 6px; }
+  .arc .node { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; position: relative; }
+  .arc .node .ly { font: 700 10px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); }
+  .arc .node h3 { font-size: 17px; margin: 9px 0 5px; }
+  .arc .node p { font-size: 13px; color: var(--text-2); }
+  .arc .node .tam { margin-top: 12px; font: 700 12px/1 var(--mono); color: var(--accent); }
+  .arc .node.done { opacity: 0.72; }
+  .arc .node.done .ly { color: var(--accent); }
+  .arc .node.future { border-color: var(--line-2); background: linear-gradient(150deg, rgba(45,125,111,0.08), rgba(45,125,111,0.015)); }
+  .arc .node .tag { position: absolute; top: 15px; right: 16px; font: 700 9px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-3); }
+  .arc .node.done .tag { color: var(--accent); border-color: var(--line-2); }
+
+  /* section */
+  section.layer { padding: 56px 0; border-top: 1px solid var(--line); }
+  .lh { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+  .lh .badge { flex: 0 0 auto; width: 56px; height: 56px; border-radius: 15px; display: grid; place-items: center; font: 800 24px/1 var(--display); }
+  .lh .badge.l2 { color: var(--accent); background: linear-gradient(145deg, rgba(45,125,111,0.14), rgba(45,125,111,0.02)); border: 1px solid var(--line-2); }
+  .lh .badge.l3 { color: var(--gold); background: linear-gradient(145deg, rgba(154,123,31,0.16), rgba(154,123,31,0.03)); border: 1px solid rgba(154,123,31,0.3); }
+  .lh .k { font: 600 11px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+  .lh h2 { font-size: clamp(24px, 3vw, 34px); }
+  .lh .sub { font-size: 15px; color: var(--text-2); margin-top: 8px; max-width: 68ch; }
+
+  .short { background: var(--card); border: 1px solid var(--line-2); border-left: 4px solid var(--accent); border-radius: var(--r); padding: 20px 24px; margin-bottom: 22px; }
+  .short.gold { border-left-color: var(--gold); }
+  .short .lbl { font: 700 11px/1 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 9px; }
+  .short.gold .lbl { color: var(--gold); }
+  .short p { font-size: 17px; color: var(--text); line-height: 1.55; }
+
+  .copy { color: var(--text-2); margin-bottom: 14px; max-width: 76ch; font-size: 15.5px; }
+  .copy strong { color: var(--text); }
+
+  /* use-case cards */
+  .cases { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .case { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; transition: border-color .25s, transform .25s; }
+  .case:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .case .ct { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .case .ci { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--teal-50); font-size: 15px; }
+  .case h4 { font-size: 15.5px; }
+  .case p { font-size: 13.5px; color: var(--text-2); }
+  .case .ev { margin-top: 10px; font: 500 11.5px/1.5 var(--mono); color: var(--text-3); border-top: 1px dashed var(--line); padding-top: 9px; }
+  .case .ev b { color: var(--accent); }
+
+  /* market bar */
+  .marketbar { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 18px 0; }
+  .mb { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .mb .v { font: 800 26px/1 var(--display); letter-spacing: -0.03em; color: var(--accent); }
+  .mb .l { font-size: 12px; color: var(--text-2); margin-top: 7px; line-height: 1.4; }
+  .mb.gold .v { color: var(--gold); }
+
+  .call { margin: 20px 0; padding: 18px 22px; border-radius: 12px; background: var(--teal-50); border: 1px solid var(--teal-100); font-size: 15px; color: var(--teal-800); }
+  .call.gold { background: var(--gold-bg); border-color: rgba(154,123,31,0.28); color: #6d5514; }
+  .call b { color: inherit; }
+
+  /* endless possibilities strip */
+  .endless { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 18px 0; }
+  .poss { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; }
+  .poss h4 { font-size: 14px; margin-bottom: 5px; }
+  .poss p { font-size: 12.5px; color: var(--text-2); }
+
+  .honest { margin: 18px 0; padding: 16px 20px; border-radius: 12px; border: 1px dashed var(--line-2); background: rgba(45,125,111,0.035); font-size: 14px; color: var(--text-2); }
+  .honest b { color: var(--accent); }
+
+  a.inline { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); font-weight: 600; }
+  a.inline:hover { border-bottom-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chips a { font: 600 11px/1.3 var(--mono); color: var(--accent); text-decoration: none; padding: 5px 11px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); }
+  .chips a:hover { background: var(--teal-50); }
+
+  /* moat closer */
+  .moat { margin-top: 8px; padding: 30px 32px; border-radius: 18px; background: linear-gradient(145deg, rgba(45,125,111,0.13), rgba(45,125,111,0.03)); border: 1px solid var(--accent); }
+  .moat .lbl { font: 700 12px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+  .moat p { font-size: clamp(18px, 2.2vw, 24px); font-family: var(--display); font-weight: 700; color: var(--text); line-height: 1.42; margin-top: 14px; letter-spacing: -0.01em; }
+
+  footer { border-top: 1px solid var(--line); padding: 40px 0 70px; margin-top: 40px; }
+  footer .fb { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text-2); margin-bottom: 12px; }
+  footer p { font: 500 12px/1.7 var(--mono); color: var(--text-3); max-width: 92ch; }
+  footer a { color: var(--accent); }
+
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 760px) {
+    .arc, .cases, .marketbar, .endless { grid-template-columns: 1fr; }
+    .marketbar { grid-template-columns: 1fr 1fr; }
+    .lh .badge { width: 46px; height: 46px; font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="row">
+    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="home" href="./index.html">← Data room</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">The Future — Layers 2 &amp; 3</div>
+    <h1 class="rv">The wedge pays the bills. The record builds the company.</h1>
+    <p class="lede rv">Layer 1 is where we start and how we earn revenue today. But the reason this is a company and not a feature is what the data unlocks next: a persistent <b>Home Passport</b>, a services <b>Marketplace</b>, and lifetime <b>Maintenance AI</b>. Each is a real business with real buyers — and each is only possible because Layer 1 created the verified record first.</p>
+    <div class="thesis rv"><b>The compounding thesis:</b> the more of the home's lifecycle Tessera understands, the more valuable the intelligence becomes — and the harder it is to displace. The wedge is the entry; the lifecycle is the moat.</div>
+
+    <div class="arc rv">
+      <div class="node done">
+        <span class="tag">Revenue today</span>
+        <div class="ly">Layer 01 · The wedge</div>
+        <h3>AI Predictability Engine</h3>
+        <p>Predict the close. The builder pays for this now — and it captures the data.</p>
+        <div class="tam">TAM $170M → $441M</div>
+      </div>
+      <div class="node future">
+        <span class="tag">Next</span>
+        <div class="ly">Layer 02 · The record</div>
+        <h3>Home Passport</h3>
+        <p>A verified, portable identity for the home — the “Carfax” that outlives the builder.</p>
+        <div class="tam">Ecosystem ~$743M</div>
+      </div>
+      <div class="node future">
+        <span class="tag">Then</span>
+        <div class="ly">Layer 03 · The service</div>
+        <h3>Marketplace &amp; Maintenance AI</h3>
+        <p>Monetize the homeowner relationship every builder is chasing and none has cracked.</p>
+        <div class="tam">Mature ceiling $1B+</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- LAYER 2 -->
+<section class="layer" id="passport">
+  <div class="wrap">
+    <div class="lh rv">
+      <div class="badge l2">2</div>
+      <div>
+        <div class="k">Layer 02 · Built on Layer 1</div>
+        <h2>Home Passport — a Carfax for the home</h2>
+        <div class="sub">A persistent digital identity for the home, created from verified builder data and handed to the owner at closing — attached to the property, not the person, and carried across every future sale.</div>
+      </div>
+    </div>
+
+    <div class="short rv">
+      <span class="lbl">The business case</span>
+      <p>Every builder hands the homeowner a folder of loose-leaf receipts and walks away. The passport replaces that with a permanent, verifiable record — what's in the home, who installed it, which permits were pulled, when the warranty ends. It's a data asset that <b>no one has built for production homes</b>, and it becomes the system of record the whole lifecycle runs on.</p>
+    </div>
+
+    <div class="copy rv"><strong>Why the builder wants it (not just us):</strong> it's a byproduct of Layer 1, so there's no extra work — while we collect data to predict the close, we're simultaneously assembling the record. And it hands the builder something they've been unable to build internally: a clean handoff that reduces warranty friction and a verified record that de-risks resale, insurance and refinance downstream.</div>
+
+    <div class="cases rv">
+      <div class="case">
+        <div class="ct"><span class="ci">🏷️</span><h4>The resale “home-fax”</h4></div>
+        <p>A verified history a buyer, agent or platform can trust — priced access for Zillow, Redfin and others who today show unverified data.</p>
+        <div class="ev"><b>Buyer:</b> listing platforms, agents, buyers · authorized data access</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">🛡️</span><h4>Insurance &amp; warranty</h4></div>
+        <p>When a tree falls, the homeowner knows exactly what roof they have. Insurers pay for verified attributes; warranty claims route with proof attached.</p>
+        <div class="ev"><b>Buyer:</b> insurers, warranty providers · per-verified-attribute</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">₿</span><h4>Crypto &amp; community syndication</h4></div>
+        <p>Because records sit on-chain, builders get an easier path to accept crypto or <b>syndicate communities</b> to investors by percentage points — a lever no ERP offers.</p>
+        <div class="ev"><b>Buyer:</b> builders · optional, builder-elected</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">📑</span><h4>Title &amp; ownership chain</h4></div>
+        <p>Each chain has standalone value — the title/ownership lineage removes disputes; the construction lineage proves provenance.</p>
+        <div class="ev"><b>Buyer:</b> title/escrow · 679K transactions × ~$75 ≈ $51M</div>
+      </div>
+    </div>
+
+    <div class="marketbar rv">
+      <div class="mb"><div class="v">$441M</div><div class="l">Platform TAM once the full findings suite ships to builders</div></div>
+      <div class="mb"><div class="v">$51M</div><div class="l">Title / escrow layer — verified transaction records</div></div>
+      <div class="mb"><div class="v">$51M</div><div class="l">Mortgage lenders — new-construction pipeline data</div></div>
+      <div class="mb"><div class="v">$75M</div><div class="l">Land &amp; lot pipeline — extend the record backwards to acquisition</div></div>
+    </div>
+
+    <div class="call rv">
+      <b>Why blockchain, briefly:</b> we never store personal data on-chain — only a hash (fingerprint) per record on a neutral public chain. That makes the record tamper-evident and portable, so it can be trusted by parties who don't trust each other and <b>outlive the builder's own systems</b>. Layer 1 doesn't need it; Layer 2 is exactly where it earns its place. <a class="inline" href="./answers.html#q4">Full answer →</a>
+    </div>
+
+    <div class="chips rv">
+      <a href="./home-passport-overview.html" target="_blank" rel="noopener">Home Passport overview →</a>
+      <a href="./answers.html#q1" target="_blank" rel="noopener">How the layers connect →</a>
+    </div>
+  </div>
+</section>
+
+<!-- LAYER 3 -->
+<section class="layer" id="maintenance">
+  <div class="wrap">
+    <div class="lh rv">
+      <div class="badge l3">3</div>
+      <div>
+        <div class="k">Layer 03 · Built on Layer 2</div>
+        <h2>Marketplace &amp; Maintenance AI — the endless part</h2>
+        <div class="sub">Once the home has a verified record, Tessera can serve the homeowner for the life of the property — predictive maintenance, routed services, and a marketplace that monetizes a relationship every big builder is trying to own.</div>
+      </div>
+    </div>
+
+    <div class="short gold rv">
+      <span class="lbl">The business case</span>
+      <p>Post-close monetization is the prize the whole industry is chasing. Large builders have repeatedly launched homeowner marketplaces that stall — because <b>nobody has the unified, verified data to make one work</b>. The passport is that data. Maintenance AI turns it into recurring homeowner engagement, and the marketplace turns engagement into revenue.</p>
+    </div>
+
+    <div class="copy rv"><strong>Why it's sticky:</strong> a first-time buyer doesn't know their AC filter is due, or that they should check the shingles in year two. Tessera predicts it from the home's attested records and cites the source — the kind of “operating system for the house” a homeowner actually keeps using. That daily-life utility is what keeps the homeowner attached to us long after the builder has said “your warranty's up, don't call us.”</div>
+
+    <div class="cases rv">
+      <div class="case">
+        <div class="ct"><span class="ci">🔧</span><h4>Predictive maintenance</h4></div>
+        <p>“Your filter is due in 120 days.” “Check your shingles in year two.” Each reminder cites the record it came from — delivered by email/push, no app to check.</p>
+        <div class="ev"><b>Model:</b> per-homeowner subscription · recurring engagement</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">🔗</span><h4>Direct-to-trade service routing</h4></div>
+        <p>A service need routes homeowner → trade directly, instead of homeowner → builder as a warranty ticket. Less friction for the builder, faster fix for the owner.</p>
+        <div class="ev"><b>Model:</b> lead / take-rate to preferred trades</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">🤝</span><h4>Services marketplace &amp; JVs</h4></div>
+        <p>The clean data fast-tracks the joint ventures builders already chase — home insurance, energy, and services partnerships — with the record as the connective tissue.</p>
+        <div class="ev"><b>Model:</b> marketplace rev-share · insurers, energy, services</div>
+      </div>
+      <div class="case">
+        <div class="ct"><span class="ci">🏘️</span><h4>Existing-home expansion</h4></div>
+        <p>Beyond new builds: pull verified data from Zillow/Redfin and public records to build passports for existing homes — a far larger universe over time.</p>
+        <div class="ev"><b>Market:</b> the entire installed base, not just new construction</div>
+      </div>
+    </div>
+
+    <div class="endless rv">
+      <div class="poss"><h4>Refinance readiness</h4><p>Verified home attributes feed lending decisions when rates move.</p></div>
+      <div class="poss"><h4>Capital-markets reporting</h4><p>Investor-grade records for BTR and syndicated communities.</p></div>
+      <div class="poss"><h4>Cross-builder benchmarking</h4><p>Anonymized lifecycle data as its own product (~$50M).</p></div>
+      <div class="poss"><h4>Smart-home onboarding</h4><p>Setup guidance for the devices the passport already knows about.</p></div>
+      <div class="poss"><h4>HOA &amp; municipal</h4><p>Verified property records for associations and local government.</p></div>
+      <div class="poss"><h4>International</h4><p>The same framework in markets already building blockchain land systems.</p></div>
+    </div>
+
+    <div class="call gold rv">
+      <b>The possibilities really are open-ended</b> — but we anchor them to a number: the ecosystem across lenders, title, build-to-rent, land and benchmarking totals <b>~$743M</b>, and at a mature platform price the builder layer alone crosses <b>$1B</b>. We don't claim that price today; it's the ceiling the model supports once the record exists.
+    </div>
+
+    <div class="chips rv">
+      <a href="./business-strategy-onepager.html" target="_blank" rel="noopener">Unit economics &amp; expansion →</a>
+      <a href="./strategy-frameworks.html" target="_blank" rel="noopener">Ansoff growth map →</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET STACK -->
+<section class="layer" id="stack">
+  <div class="wrap">
+    <div class="lh rv">
+      <div class="badge l2">∑</div>
+      <div>
+        <div class="k">One engine · three horizons</div>
+        <h2>The market compounds as new buyers come online</h2>
+        <div class="sub">The same intelligence engine, repriced and re-pointed at new buyers. Each horizon is a distinct, addressable market — and each is unlocked by the data the prior one created.</div>
+      </div>
+    </div>
+
+    <div class="marketbar rv" style="grid-template-columns: repeat(3,1fr);">
+      <div class="mb"><div class="v">$170M</div><div class="l"><b>Stage 1 · Wedge</b> — Closing Confidence at $250/closing. Buyer: the closing coordinator.</div></div>
+      <div class="mb"><div class="v">$441M</div><div class="l"><b>Stage 2 · Platform</b> — full findings suite at $650/closing. Buyers: +CFO, finance, procurement.</div></div>
+      <div class="mb gold"><div class="v">~$1B</div><div class="l"><b>Stage 3 · Ecosystem</b> — adjacent buyers + lifecycle. Lenders, title, BTR, land, marketplace.</div></div>
+    </div>
+
+    <div class="honest rv">
+      <b>Said honestly:</b> Layers 2 and 3 are the upside, not the ask. The $1.5–2M raise funds Layer 1 to real builder data and a calibrated model. The post-close rev-share split (builder vs platform) is still being modeled against the builders' existing JVs. We're showing the destination and the fact that we've architected Layer 1 so the road to it is already paved — not claiming the destination is booked.
+    </div>
+
+    <div class="moat rv">
+      <span class="lbl">Why this compounds into a moat</span>
+      <p>Every prediction and its outcome becomes labeled data. Every closing enriches the record. The more of the home's lifecycle Tessera understands, the sharper the intelligence and the deeper the switching cost — until displacing us means rebuilding the entire lifecycle from scratch. <span class="accent">The wedge gets us in; the lifecycle is what makes us permanent.</span></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">TESSERA · THE INTELLIGENCE LAYER FOR THE HOME</div>
+    <p>
+      Market figures from the bottom-up sizing model (Stage 1 wedge $170M · Stage 2 platform $441M · Stage 3 ecosystem ~$743M · mature ceiling $1B+), anchored to 679,083 U.S. new-home sales (Census, 2025) and 535,000 top-200 builder closings (ResiClub, 2024). Business cases for Layers 2 &amp; 3 reflect Tessera's current strategy documents; per-closing prices and the post-close revenue-share model are internal hypotheses to be validated. The blockchain stores hashes only, never personal data. Content rephrased for compliance with licensing restrictions.
+      <a href="./index.html">← Back to the data room</a> · <a href="./why-predictability-is-the-wedge.html">The wedge argument →</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+</body>
+</html>
