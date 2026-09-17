@@ -325,5 +325,58 @@ Reveal.initialize({
     navigationMode: 'linear'
 });
 </script>
+<!-- TSR-DATAROOM-NAV (injected floating navigation) -->
+<style>
+  #tsr-nav { position: fixed; top: 14px; right: 14px; z-index: 99999; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+  #tsr-nav .tsr-row { display: flex; gap: 8px; align-items: center; }
+  #tsr-nav a.tsr-home, #tsr-nav button.tsr-btn { font-size: 12px; font-weight: 600; color: #1f4f47; background: rgba(252,250,246,0.95); border: 1px solid rgba(45,125,111,0.4); border-radius: 999px; padding: 8px 13px; text-decoration: none; cursor: pointer; box-shadow: 0 4px 14px rgba(32,53,47,0.12); backdrop-filter: blur(6px); display: inline-flex; align-items: center; gap: 6px; }
+  #tsr-nav a.tsr-home:hover, #tsr-nav button.tsr-btn:hover { background: #e6f5f2; }
+  #tsr-nav .tsr-btn .tsr-chev { font-size: 8px; }
+  #tsr-nav.tsr-open .tsr-btn .tsr-chev { transform: rotate(180deg); }
+  #tsr-nav .tsr-menu { position: absolute; right: 0; top: calc(100% + 8px); width: 290px; max-height: 74vh; overflow-y: auto; background: #fdfbf6; border: 1px solid rgba(45,125,111,0.4); border-radius: 12px; box-shadow: 0 18px 44px rgba(32,53,47,0.2); padding: 8px; display: none; }
+  #tsr-nav.tsr-open .tsr-menu { display: block; }
+  #tsr-nav .tsr-menu .tsr-grp { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6c7b75; padding: 10px 12px 6px; }
+  #tsr-nav .tsr-menu a { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: #20352f; font-size: 13px; font-weight: 500; }
+  #tsr-nav .tsr-menu a:hover { background: #e6f5f2; color: #2d7d6f; }
+  #tsr-nav .tsr-menu a.tsr-here { background: #e6f5f2; color: #2d7d6f; font-weight: 700; }
+  #tsr-nav .tsr-menu a .tsr-mi { width: 20px; text-align: center; flex: 0 0 auto; }
+  @media print { #tsr-nav { display: none; } }
+</style>
+<div id="tsr-nav">
+  <div class="tsr-row">
+    <a class="tsr-home" href="./index.html">← Data room</a>
+    <button class="tsr-btn" id="tsr-btn" aria-haspopup="true" aria-expanded="false">Jump to <span class="tsr-chev">▼</span></button>
+  </div>
+  <div class="tsr-menu" role="menu">
+    <div class="tsr-grp">Start here</div>
+    <a href="./answers.html"><span class="tsr-mi">✦</span> Answers to key questions</a>
+    <a href="./why-predictability-is-the-wedge.html"><span class="tsr-mi">◆</span> Why the engine is the wedge</a>
+    <a href="./the-future.html"><span class="tsr-mi">✧</span> The Future — Layers 2 &amp; 3</a>
+    <div class="tsr-grp">Product</div>
+    <a href="./home-passport-overview.html" data-slug="home-passport-overview"><span class="tsr-mi">🏠</span> Home Passport overview</a>
+    <a href="./findings-engine.html" data-slug="findings-engine"><span class="tsr-mi">🧭</span> The Findings Engine</a>
+    <a href="./interactive-model.html" data-slug="interactive-model"><span class="tsr-mi">🎛️</span> Interactive Model</a>
+    <a href="./connector-architecture-technical.html" data-slug="connector-architecture-technical"><span class="tsr-mi">🔌</span> Connector Architecture</a>
+    <div class="tsr-grp">Business &amp; strategy</div>
+    <a href="./business-strategy-onepager.html" data-slug="business-strategy-onepager"><span class="tsr-mi">📊</span> Business Strategy</a>
+    <a href="./execution-strategy.html" data-slug="execution-strategy"><span class="tsr-mi">🧮</span> Execution Strategy</a>
+    <a href="./strategy-frameworks.html" data-slug="strategy-frameworks"><span class="tsr-mi">♟️</span> Strategic Analysis</a>
+    <a href="./evidence-market-validation.html"><span class="tsr-mi">📎</span> Market Validation &amp; Evidence</a>
+  </div>
+</div>
+<script>
+  (function () {
+    var nav = document.getElementById('tsr-nav'), btn = document.getElementById('tsr-btn');
+    if (!nav || !btn) return;
+    var slug = (location.pathname.split('/').pop() || '').replace('.html','');
+    var here = nav.querySelector('a[data-slug="' + slug + '"]');
+    if (here) here.classList.add('tsr-here');
+    btn.addEventListener('click', function (e) { e.stopPropagation(); var o = nav.classList.toggle('tsr-open'); btn.setAttribute('aria-expanded', o ? 'true':'false'); });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) nav.classList.remove('tsr-open'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') nav.classList.remove('tsr-open'); });
+  })();
+</script>
+<!-- /TSR-DATAROOM-NAV -->
+
 </body>
 </html>

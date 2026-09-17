@@ -45,10 +45,21 @@
   .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
 
   /* topbar */
-  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-  .topbar .row { max-width: 1060px; margin: 0 auto; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; }
-  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--text); text-decoration: none; }
-  .topbar .tag { font: 600 11px/1 var(--mono); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; }
+  .topbar { position: sticky; top: 0; z-index: 20; background: rgba(247,244,237,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: 1060px; margin: 0 auto; padding: 13px 28px; display: flex; align-items: center; gap: 20px; }
+  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--text); text-decoration: none; flex: 0 0 auto; }
+  .topbar .navlinks { display: flex; gap: 4px; margin: 0 auto 0 8px; }
+  .topbar .navlinks a { font: 600 12.5px/1 var(--body); color: var(--text-2); text-decoration: none; padding: 8px 13px; border-radius: 999px; transition: background .2s, color .2s; }
+  .topbar .navlinks a:hover { background: var(--teal-50); color: var(--accent); }
+  .topbar .navlinks a.active { color: var(--accent); background: var(--teal-50); }
+  .topbar .tag { font: 600 10.5px/1 var(--mono); letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase; flex: 0 0 auto; }
+  .scrollbar { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0%; background: var(--accent); transition: width .1s linear; }
+  /* anchor offset for sticky bar */
+  .sec-title[id], [id="top"], [id="team"] { scroll-margin-top: 72px; }
+  @media (max-width: 720px) {
+    .topbar .navlinks { display: none; }
+    .topbar .row { justify-content: space-between; }
+  }
 
   /* hero */
   .hero { padding: 76px 0 40px; }
@@ -132,12 +143,19 @@
 
 <div class="topbar">
   <div class="row">
-    <span class="bk">TESSERA</span>
-    <span class="tag">Private · Investor Data Room</span>
+    <a class="bk" href="#top">TESSERA</a>
+    <nav class="navlinks">
+      <a href="#start">Start here</a>
+      <a href="#product">Product</a>
+      <a href="#business">Business</a>
+      <a href="#team">Team</a>
+    </nav>
+    <span class="tag">Private Data Room</span>
   </div>
+  <div class="scrollbar" id="scrollbar"></div>
 </div>
 
-<header class="hero">
+<header class="hero" id="top">
   <div class="wrap">
     <div class="eyebrow rv">The Intelligence Layer for the Home</div>
     <h1 class="rv">The whole story — with the receipts.</h1>
@@ -170,7 +188,7 @@
 <!-- START HERE -->
 <section class="sec">
   <div class="wrap">
-    <div class="sec-title rv"><span class="n">1</span><h2>Start here</h2></div>
+    <div class="sec-title rv" id="start"><span class="n">1</span><h2>Start here</h2></div>
     <div class="sec-sub rv">The documents built specifically for this conversation.</div>
     <div class="starthere">
       <a class="doc feature rv" href="./answers.html" style="grid-column:auto;">
@@ -195,7 +213,7 @@
 <!-- THE PRODUCT -->
 <section class="sec">
   <div class="wrap">
-    <div class="sec-title rv"><span class="n">2</span><h2>The product &amp; the three layers</h2></div>
+    <div class="sec-title rv" id="product"><span class="n">2</span><h2>The product &amp; the three layers</h2></div>
     <div class="sec-sub rv">What we're building and how the pieces fit together.</div>
     <div class="docs">
       <a class="doc rv" href="./home-passport-overview.html">
@@ -225,7 +243,7 @@
 <!-- THE BUSINESS -->
 <section class="sec">
   <div class="wrap">
-    <div class="sec-title rv"><span class="n">3</span><h2>The business &amp; the strategy</h2></div>
+    <div class="sec-title rv" id="business"><span class="n">3</span><h2>The business &amp; the strategy</h2></div>
     <div class="sec-sub rv">Unit economics, the path to scale, and the strategic case.</div>
     <div class="docs">
       <a class="doc rv" href="./business-strategy-onepager.html">
@@ -331,6 +349,28 @@
     if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
     var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
     els.forEach(function (e) { io.observe(e); });
+  })();
+
+  // scroll progress bar + active nav link
+  (function () {
+    var bar = document.getElementById('scrollbar');
+    var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+    var ids = ['start','product','business','team'];
+    function onScroll() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      if (bar) bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+      var current = '';
+      for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        if (el && el.getBoundingClientRect().top <= 120) current = ids[i];
+      }
+      links.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   })();
 </script>
 </body>

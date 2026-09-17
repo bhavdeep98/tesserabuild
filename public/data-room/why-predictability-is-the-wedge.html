@@ -66,11 +66,32 @@
   }
   .eyebrow::before { content:""; width: 22px; height: 1px; background: var(--accent); opacity: 0.7; }
 
+  /* ============ TOPBAR / NAV ============ */
+  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(247,244,237,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .topbar .row { max-width: var(--maxw); margin: 0 auto; padding: 13px 28px; display: flex; align-items: center; gap: 12px; }
+  .topbar .bk { font: 800 14px/1 var(--display); letter-spacing: 0.26em; color: var(--ink); text-decoration: none; }
+  .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
+  .topbar .home:hover { background: rgba(45,125,111,0.08); }
+  .topbar .spacer { flex: 1; }
+  .jumpnav { position: relative; }
+  .jumpnav .jbtn { font: 600 12px/1 var(--mono); color: var(--accent); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 13px; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+  .jumpnav .jbtn:hover { background: rgba(45,125,111,0.08); }
+  .jumpnav .jbtn .chev { transition: transform .2s; font-size: 9px; }
+  .jumpnav.open .jbtn .chev { transform: rotate(180deg); }
+  .jumpnav .menu { position: absolute; right: 0; top: calc(100% + 8px); width: 300px; max-height: 72vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line-2); border-radius: 12px; box-shadow: 0 18px 44px rgba(32,53,47,0.16); padding: 8px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .18s ease, transform .18s ease, visibility .18s; z-index: 50; }
+  .jumpnav.open .menu { opacity: 1; visibility: visible; transform: none; }
+  .jumpnav .menu .grp { font: 700 10px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 10px 12px 6px; }
+  .jumpnav .menu a { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--ink); font-size: 13.5px; font-weight: 500; }
+  .jumpnav .menu a:hover { background: rgba(45,125,111,0.08); color: var(--accent); }
+  .jumpnav .menu a.here { background: rgba(45,125,111,0.1); color: var(--accent); font-weight: 700; }
+  .jumpnav .menu a .mi { width: 22px; text-align: center; flex: 0 0 auto; }
+  @media (max-width: 560px) { .jumpnav .menu { width: 260px; } }
+
   /* ============ HERO ============ */
   .hero {
-    position: relative; min-height: 92vh;
+    position: relative; min-height: 80vh;
     display: flex; flex-direction: column; justify-content: center;
-    padding: 120px 0 80px;
+    padding: 70px 0 70px;
   }
   .brand {
     position: absolute; top: 40px; left: 28px;
@@ -177,6 +198,43 @@
   .seam .big em { font-style: normal; color: var(--warn); }
   .seam .sep { width: 1px; align-self: stretch; background: rgba(192,86,47,0.3); }
   .seam .txt { font-size: 14px; color: var(--ink-2); }
+
+  /* ============ EVIDENCE CHARTS (§1) ============ */
+  .charts { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .chartcard {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 14px; padding: 20px 22px 18px;
+    display: flex; flex-direction: column;
+  }
+  .chartcard.wide { grid-column: 1 / -1; }
+  .chart-k { font: 700 10.5px/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+  .chart-t { font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; color: var(--ink); margin: 7px 0 2px; line-height: 1.18; }
+  .chart-t em { font-style: normal; color: var(--warn); }
+  .chart-t .up { color: var(--accent); }
+  .chart-sub { font-size: 12.5px; color: var(--ink-2); line-height: 1.4; margin-bottom: 14px; }
+  .chart-svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-foot { margin-top: auto; padding-top: 12px; font: 500 10.5px/1.4 var(--mono); color: var(--ink-3); }
+  .chart-foot a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+  .chart-foot a:hover { border-bottom-color: var(--accent); }
+  /* svg primitives */
+  .cx-grid { stroke: var(--line); stroke-width: 1; }
+  .cx-axis { stroke: rgba(32,53,47,0.28); stroke-width: 1; }
+  .cx-lbl  { font: 600 10px/1 var(--mono); fill: var(--ink-3); letter-spacing: 0.02em; }
+  .cx-val  { font: 800 12px/1 var(--display); fill: var(--warn); letter-spacing: -0.02em; }
+  .cx-val.ok { fill: var(--accent); }
+  .cx-band { fill: rgba(192,86,47,0.08); }
+  .cx-normband { fill: rgba(45,125,111,0.10); }
+  .cx-line { fill: none; stroke: var(--warn); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  .cx-area { fill: url(#cxfade); }
+  .cx-dot  { fill: var(--surface-2); stroke: var(--warn); stroke-width: 2.5; }
+  .cx-dot.peak { fill: var(--warn); }
+  .cx-bar  { fill: var(--warn); }
+  .cx-bar.norm { fill: var(--accent-dim); }
+  .cx-normline { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .cx-normtxt  { font: 700 9.5px/1 var(--mono); fill: var(--accent); letter-spacing: 0.04em; }
+  .cx-cap { font: 600 9.5px/1 var(--mono); fill: var(--ink-3); letter-spacing: 0.04em; }
+
+  @media (max-width: 860px) { .charts { grid-template-columns: 1fr; } }
 
   /* ============ PIPELINE / DEPENDENCY FLOW (§2 / §4) ============ */
   .flow { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; }
@@ -326,7 +384,32 @@
 </head>
 <body>
 
-<div class="brand">TESSERA</div>
+<div class="topbar">
+  <div class="row">
+    <a class="bk" href="./index.html">TESSERA</a>
+    <a class="home" href="./index.html">← Data room</a>
+    <span class="spacer"></span>
+    <div class="jumpnav" id="jumpnav">
+      <button class="jbtn" id="jbtn" aria-haspopup="true" aria-expanded="false">Jump to <span class="chev">▼</span></button>
+      <div class="menu" role="menu">
+        <div class="grp">Start here</div>
+        <a href="./answers.html"><span class="mi">✦</span> Answers to key questions</a>
+        <a href="./why-predictability-is-the-wedge.html" class="here"><span class="mi">◆</span> Why the engine is the wedge</a>
+        <a href="./the-future.html"><span class="mi">✧</span> The Future — Layers 2 &amp; 3</a>
+        <div class="grp">Product</div>
+        <a href="./home-passport-overview.html"><span class="mi">🏠</span> Home Passport overview</a>
+        <a href="./findings-engine.html"><span class="mi">🧭</span> The Findings Engine</a>
+        <a href="./interactive-model.html"><span class="mi">🎛️</span> Interactive Model</a>
+        <a href="./connector-architecture-technical.html"><span class="mi">🔌</span> Connector Architecture</a>
+        <div class="grp">Business &amp; strategy</div>
+        <a href="./business-strategy-onepager.html"><span class="mi">📊</span> Business Strategy</a>
+        <a href="./execution-strategy.html"><span class="mi">🧮</span> Execution Strategy</a>
+        <a href="./strategy-frameworks.html"><span class="mi">♟️</span> Strategic Analysis</a>
+        <a href="./evidence-market-validation.html"><span class="mi">📎</span> Market Validation &amp; Evidence</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ HERO ============ -->
 <header class="hero">
@@ -360,47 +443,116 @@
       </div>
     </div>
 
-    <div class="grid g4 rv d1" style="margin-bottom:20px;">
-      <div class="card stat warn">
-        <div class="v">20%</div>
-        <div class="l">D.R. Horton cancellation rate, Q3 FY2026 — one in five signed deals, up from 17% a year ago</div>
-        <div class="cite-row">
-          <a class="cite" href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">DHI Q3 FY26 call ↗</a>
-          <a class="cite" href="https://www.marketbeat.com/earnings/reports/2026-7-21-dr-horton-inc-stock/" target="_blank" rel="noopener">MarketBeat ↗</a>
-        </div>
+    <!-- ===== EVIDENCE CHARTS — the claim shown, not argued ===== -->
+    <div class="charts rv d1">
+
+      <!-- STRUCTURAL: 4-year cancellation trend line -->
+      <div class="chartcard">
+        <div class="chart-k">Structural, not a blip</div>
+        <div class="chart-t">National cancellations have held <em>elevated for four straight years</em></div>
+        <div class="chart-sub">Contract-cancellation share, U.S. new-home deals. A cyclical dip would have reverted. It hasn't.</div>
+        <svg class="chart-svg" viewBox="0 0 440 200" role="img" aria-label="Line chart: U.S. new-home cancellation rate holding between 13 and 16 percent from 2022 to mid-2026, peaking at 16.3 percent in December 2025.">
+          <defs>
+            <linearGradient id="cxfade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(192,86,47,0.22)"/>
+              <stop offset="100%" stop-color="rgba(192,86,47,0)"/>
+            </linearGradient>
+          </defs>
+          <!-- gridlines at 10 / 15 / 20% -->
+          <line class="cx-grid" x1="46" y1="155" x2="428" y2="155"/>
+          <line class="cx-grid" x1="46" y1="117" x2="428" y2="117"/>
+          <line class="cx-grid" x1="46" y1="80"  x2="428" y2="80"/>
+          <text class="cx-lbl" x="40" y="158" text-anchor="end">10%</text>
+          <text class="cx-lbl" x="40" y="120" text-anchor="end">15%</text>
+          <text class="cx-lbl" x="40" y="83"  text-anchor="end">20%</text>
+          <!-- area + line: points 2022→2026 -->
+          <path class="cx-area" d="M60,148 L119,132 L178,140 L237,125 L296,110 L355,117 L414,125 L414,180 L60,180 Z"/>
+          <polyline class="cx-line" points="60,148 119,132 178,140 237,125 296,110 355,117 414,125"/>
+          <circle class="cx-dot" cx="60"  cy="148" r="3.5"/>
+          <circle class="cx-dot" cx="119" cy="132" r="3.5"/>
+          <circle class="cx-dot" cx="178" cy="140" r="3.5"/>
+          <circle class="cx-dot" cx="237" cy="125" r="3.5"/>
+          <circle class="cx-dot peak" cx="296" cy="110" r="4.5"/>
+          <circle class="cx-dot" cx="355" cy="117" r="3.5"/>
+          <circle class="cx-dot" cx="414" cy="125" r="3.5"/>
+          <text class="cx-val" x="296" y="101" text-anchor="middle">16.3%</text>
+          <text class="cx-cap" x="296" y="126" text-anchor="middle">Dec ’25 record</text>
+          <!-- x labels -->
+          <line class="cx-axis" x1="46" y1="170" x2="428" y2="170"/>
+          <text class="cx-lbl" x="60"  y="188" text-anchor="middle">’22</text>
+          <text class="cx-lbl" x="178" y="188" text-anchor="middle">’23</text>
+          <text class="cx-lbl" x="296" y="188" text-anchor="middle">’25</text>
+          <text class="cx-lbl" x="414" y="188" text-anchor="middle">’26</text>
+        </svg>
+        <div class="chart-foot">Redfin contract-cancellation series · <a href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">Aug ’26</a>, <a href="https://www.marketwatch.com/press-release/redfin-reports-homebuyers-are-canceling-deals-at-the-highest-rate-on-record-d1ab4749" target="_blank" rel="noopener">Dec ’25 record ↗</a></div>
       </div>
-      <div class="card stat warn">
-        <div class="v">~10.1 mo</div>
-        <div class="l">Average single-family build time — nearly 3 months longer than a decade ago</div>
-        <div class="cite-row">
-          <a class="cite" href="https://www.nahb.org/blog/2025/11/sponsored-sound-capital-cycle-time-crush" target="_blank" rel="noopener">NAHB ↗</a>
-        </div>
+
+      <!-- REAL / RISING: DHI cancellation trajectory -->
+      <div class="chartcard">
+        <div class="chart-k">Real — the biggest builder, on the record</div>
+        <div class="chart-t">1 in 5 D.R. Horton deals now <em>falls through</em></div>
+        <div class="chart-sub">Cancellation rate, America’s largest builder (~83,000 homes/yr). Their own earnings calls.</div>
+        <svg class="chart-svg" viewBox="0 0 360 200" role="img" aria-label="Bar chart: D.R. Horton cancellation rate rising from 17 percent in Q3 2025 to 20 percent in Q3 2026.">
+          <line class="cx-axis" x1="30" y1="170" x2="350" y2="170"/>
+          <!-- Q3'25 17% -->
+          <rect class="cx-bar" x="46"  y="107" width="52" height="63" rx="3" opacity="0.55"/>
+          <text class="cx-val" x="72"  y="99"  text-anchor="middle">17%</text>
+          <text class="cx-lbl" x="72"  y="188" text-anchor="middle">Q3 ’25</text>
+          <!-- Q1'26 18% -->
+          <rect class="cx-bar" x="126" y="98"  width="52" height="72" rx="3" opacity="0.62"/>
+          <text class="cx-val" x="152" y="90"  text-anchor="middle">18%</text>
+          <text class="cx-lbl" x="152" y="188" text-anchor="middle">Q1 ’26</text>
+          <!-- Q2'26 16% -->
+          <rect class="cx-bar" x="206" y="116" width="52" height="54" rx="3" opacity="0.62"/>
+          <text class="cx-val" x="232" y="108" text-anchor="middle">16%</text>
+          <text class="cx-lbl" x="232" y="188" text-anchor="middle">Q2 ’26</text>
+          <!-- Q3'26 20% peak -->
+          <rect class="cx-bar" x="286" y="80"  width="52" height="90" rx="3"/>
+          <text class="cx-val" x="312" y="72"  text-anchor="middle">20%</text>
+          <text class="cx-lbl" x="312" y="188" text-anchor="middle">Q3 ’26</text>
+        </svg>
+        <div class="chart-foot">DHI FY2026 earnings calls · <a href="https://www.fool.com/earnings/call-transcripts/2026/07/22/dr-horton-dhi-q3-2026-earnings-call-transcript/" target="_blank" rel="noopener">Q3 FY26 ↗</a></div>
       </div>
-      <div class="card stat warn">
-        <div class="v">$500/day</div>
-        <div class="l">Carry cost per delayed home — conservative; below the ~$670 published figure</div>
-        <div class="cite-row">
-          <a class="cite" href="https://blog.associationofprofessionalbuilders.com/true-cost-of-project-delay" target="_blank" rel="noopener">APB ↗</a>
-          <a class="cite" href="./evidence-market-validation.html#carry-cost" target="_blank" rel="noopener">Our analysis ↗</a>
-        </div>
-      </div>
-      <div class="card stat warn">
-        <div class="v">~10–13%</div>
-        <div class="l">Incentive spend at top builders (DHI ~10%, Lennar 12.9%) vs a 4–6% norm — billions in overspend</div>
-        <div class="cite-row">
-          <a class="cite" href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">Lennar ↗</a>
-          <a class="cite" href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI ↗</a>
-        </div>
+
+      <!-- LARGE: incentive spend vs norm -->
+      <div class="chartcard wide">
+        <div class="chart-k">Large — measured in points of revenue</div>
+        <div class="chart-t">Top builders now burn <em>~2× the normal</em> incentive spend just to keep deals alive</div>
+        <div class="chart-sub">Incentives as a share of home-sales revenue. The gap above the <span style="color:var(--accent);font-weight:700;">4–6% historical norm</span> is pure overspend — billions across the top tier.</div>
+        <svg class="chart-svg" viewBox="0 0 800 190" role="img" aria-label="Bar chart: incentive spend as share of revenue — historical norm 4 to 6 percent, D.R. Horton about 10 percent, Lennar 12.9 percent.">
+          <line class="cx-axis" x1="150" y1="150" x2="790" y2="150"/>
+          <!-- norm band shaded across plot -->
+          <rect class="cx-normband" x="150" y="96" width="640" height="18"/>
+          <line class="cx-normline" x1="150" y1="105" x2="790" y2="105"/>
+          <text class="cx-normtxt" x="784" y="93" text-anchor="end">4–6% NORMAL</text>
+          <!-- gridline 10% -->
+          <line class="cx-grid" x1="150" y1="60" x2="790" y2="60"/>
+          <text class="cx-lbl" x="144" y="63" text-anchor="end">10%</text>
+          <text class="cx-lbl" x="144" y="153" text-anchor="end">0%</text>
+          <!-- Norm 5% -->
+          <rect class="cx-bar norm" x="200" y="105" width="120" height="45" rx="3"/>
+          <text class="cx-val ok" x="260" y="97" text-anchor="middle">~5%</text>
+          <text class="cx-lbl" x="260" y="168" text-anchor="middle">HISTORICAL NORM</text>
+          <!-- DHI ~10% -->
+          <rect class="cx-bar" x="380" y="60" width="120" height="90" rx="3"/>
+          <text class="cx-val" x="440" y="52" text-anchor="middle">~10%</text>
+          <text class="cx-lbl" x="440" y="168" text-anchor="middle">D.R. HORTON</text>
+          <!-- Lennar 12.9% -->
+          <rect class="cx-bar" x="560" y="34" width="120" height="116" rx="3"/>
+          <text class="cx-val" x="620" y="26" text-anchor="middle">12.9%</text>
+          <text class="cx-lbl" x="620" y="168" text-anchor="middle">LENNAR</text>
+        </svg>
+        <div class="chart-foot">DHI ~10% of revenue · Lennar 12.9% · vs 4–6% norm — <a href="https://www.gurufocus.com/news/8913832/lennar-cuts-fullyear-outlook-as-margins-and-new-orders-slip" target="_blank" rel="noopener">Lennar ↗</a> · <a href="https://www.marketbeat.com/earnings/reports/2026-4-21-dr-horton-inc-stock/" target="_blank" rel="noopener">DHI ↗</a> · one national logo ≈ ~$1.5B/yr excess</div>
       </div>
     </div>
 
     <p class="lead rv d1">
-      The losses are documented in
+      These are not our numbers — they are
       <a class="cite" href="https://www.prnewswire.com/news-releases/with-buyers-firmly-in-the-drivers-seat-home-purchase-cancellations-hit-highest-level-in-nearly-3-years-302856984.html" target="_blank" rel="noopener">public filings and national datasets</a>,
-      not invented by us — nationally, <strong>~14% of deals fell through in mid-2026</strong>, the highest in nearly three years, and
-      <strong>~40,000 in a single month</strong> at the December 2025 peak.
-      The root cause is <strong>structural, not operational</strong>: the home is managed <em>inside</em> individual systems while the
-      outcome happens <em>between</em> them. Every silo can read green — and the close still slips.
+      checkable in minutes. The charts settle <em>real</em> and <em>large</em>. What follows is the part no dataset shows on its own:
+      <strong>why the loss keeps happening</strong>. The root cause is <strong>structural, not operational</strong> — the home is
+      managed <em>inside</em> individual systems while the outcome happens <em>between</em> them. Every silo can read green,
+      and the close still slips.
     </p>
 
     <div class="silos rv d2">
@@ -887,6 +1039,15 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (e) { io.observe(e); });
+  })();
+
+  // jump-to dropdown
+  (function () {
+    var nav = document.getElementById('jumpnav'), btn = document.getElementById('jbtn');
+    if (!nav || !btn) return;
+    btn.addEventListener('click', function (e) { e.stopPropagation(); var open = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) { nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); } });
   })();
 </script>
 

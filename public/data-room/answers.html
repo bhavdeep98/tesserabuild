@@ -53,6 +53,22 @@
   .topbar .bk { font: 800 13px/1 var(--display); letter-spacing: 0.24em; color: var(--text); text-decoration: none; }
   .topbar .home { font: 600 12px/1 var(--mono); color: var(--accent); text-decoration: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 14px; }
   .topbar .home:hover { background: var(--teal-50); }
+  .topbar .row { gap: 12px; }
+  .topbar .spacer { flex: 1; }
+  /* jump-to dropdown */
+  .jumpnav { position: relative; }
+  .jumpnav .jbtn { font: 600 12px/1 var(--mono); color: var(--accent); background: none; border: 1px solid var(--line-2); border-radius: 999px; padding: 7px 13px; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+  .jumpnav .jbtn:hover { background: var(--teal-50); }
+  .jumpnav .jbtn .chev { transition: transform .2s; font-size: 9px; }
+  .jumpnav.open .jbtn .chev { transform: rotate(180deg); }
+  .jumpnav .menu { position: absolute; right: 0; top: calc(100% + 8px); width: 300px; max-height: 72vh; overflow-y: auto; background: var(--surface); border: 1px solid var(--line-2); border-radius: 12px; box-shadow: 0 18px 44px rgba(32,53,47,0.16); padding: 8px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .18s ease, transform .18s ease, visibility .18s; z-index: 40; }
+  .jumpnav.open .menu { opacity: 1; visibility: visible; transform: none; }
+  .jumpnav .menu .grp { font: 700 10px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); padding: 10px 12px 6px; }
+  .jumpnav .menu a { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13.5px; font-weight: 500; }
+  .jumpnav .menu a:hover { background: var(--teal-50); color: var(--accent); }
+  .jumpnav .menu a.here { background: var(--teal-50); color: var(--accent); font-weight: 700; }
+  .jumpnav .menu a .mi { width: 22px; text-align: center; flex: 0 0 auto; }
+  @media (max-width: 560px) { .jumpnav .menu { width: 260px; } }
 
   /* hero */
   .hero { padding: 74px 0 30px; }
@@ -163,6 +179,26 @@
   <div class="row">
     <a class="bk" href="./index.html">TESSERA</a>
     <a class="home" href="./index.html">← Data room</a>
+    <span class="spacer"></span>
+    <div class="jumpnav" id="jumpnav">
+      <button class="jbtn" id="jbtn" aria-haspopup="true" aria-expanded="false">Jump to <span class="chev">▼</span></button>
+      <div class="menu" role="menu">
+        <div class="grp">Start here</div>
+        <a href="./answers.html" class="here"><span class="mi">✦</span> Answers to key questions</a>
+        <a href="./why-predictability-is-the-wedge.html"><span class="mi">◆</span> Why the engine is the wedge</a>
+        <a href="./the-future.html"><span class="mi">✧</span> The Future — Layers 2 &amp; 3</a>
+        <div class="grp">Product</div>
+        <a href="./home-passport-overview.html"><span class="mi">🏠</span> Home Passport overview</a>
+        <a href="./findings-engine.html"><span class="mi">🧭</span> The Findings Engine</a>
+        <a href="./interactive-model.html"><span class="mi">🎛️</span> Interactive Model</a>
+        <a href="./connector-architecture-technical.html"><span class="mi">🔌</span> Connector Architecture</a>
+        <div class="grp">Business &amp; strategy</div>
+        <a href="./business-strategy-onepager.html"><span class="mi">📊</span> Business Strategy</a>
+        <a href="./execution-strategy.html"><span class="mi">🧮</span> Execution Strategy</a>
+        <a href="./strategy-frameworks.html"><span class="mi">♟️</span> Strategic Analysis</a>
+        <a href="./evidence-market-validation.html"><span class="mi">📎</span> Market Validation &amp; Evidence</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -409,6 +445,19 @@
     if (!('IntersectionObserver' in window)) { els.forEach(function(e){e.classList.add('in');}); return; }
     var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     els.forEach(function (e) { io.observe(e); });
+  })();
+
+  // jump-to dropdown
+  (function () {
+    var nav = document.getElementById('jumpnav'), btn = document.getElementById('jbtn');
+    if (!nav || !btn) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) { if (!nav.contains(e.target)) { nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); } });
   })();
 </script>
 </body>
