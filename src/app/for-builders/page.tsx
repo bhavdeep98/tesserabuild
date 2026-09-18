@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 
+import { Chain, ChainFootnote } from '@/components/sections/Chain';
+import { Evidence } from '@/components/sections/Evidence';
 import { PageHero } from '@/components/sections/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/Button';
 import {
   adoption,
+  chain,
   close,
   economics,
   hero,
+  leak,
   meta,
   upside,
   winNow,
@@ -38,6 +42,18 @@ export default function ForBuildersPage() {
   return (
     <>
       <PageHero eyebrow={hero.eyebrow} headline={hero.headline} lede={hero.lede} />
+
+      {/* The stakes, sourced, before any claim of ours. Moved here from the
+          homepage when that page became a product introduction — this is where
+          a builder weighing the cost of delay will actually look for it. */}
+      <Section id="leak" eyebrow={leak.eyebrow} title={leak.title} lede={leak.lede}>
+        <Evidence />
+      </Section>
+
+      <Section id="chain" eyebrow={chain.eyebrow} title={chain.title} lede={chain.lede}>
+        <Chain />
+        <ChainFootnote />
+      </Section>
 
       <Section id="win-now" eyebrow={winNow.eyebrow} title={winNow.title} lede={winNow.lede}>
         <BlockList items={winNow.items} />
