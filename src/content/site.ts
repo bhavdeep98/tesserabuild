@@ -18,20 +18,26 @@
 export const brand = {
   name: 'Tessera',
   legalName: 'Tessera Build Inc',
-  descriptor: 'The intelligence layer for homebuilders',
+  descriptor: 'A digital identity for every home',
   email: 'sales@tesserabuild.ai',
 } as const;
 
+/**
+ * Primary navigation.
+ *
+ * The investor data room is deliberately absent — from here, from the footer,
+ * and from every CTA. This site is read by builders; the data room is shared
+ * with investors by link, not discovered by a customer browsing the nav.
+ */
 export const nav = [
-  { label: 'The problem', href: '#gap' },
-  { label: 'What we believe', href: '#tenets' },
-  { label: 'How it works', href: '#how' },
-  { label: 'Team', href: '#team' },
+  { label: 'Home Passport', href: '/#product' },
+  { label: 'For builders', href: '/for-builders/' },
+  { label: 'Why Tessera', href: '/why-we-win/' },
 ] as const;
 
 export const cta = {
-  primary: { label: 'Request a findings report', href: '#contact' },
-  secondary: { label: 'How it works', href: '#how' },
+  primary: { label: 'Let’s talk', href: '/#contact' },
+  secondary: { label: 'Home Passport', href: '/#product' },
 } as const;
 
 export const hero = {

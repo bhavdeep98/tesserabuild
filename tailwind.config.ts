@@ -4,11 +4,11 @@ import type { Config } from 'tailwindcss';
  * Tessera brand system.
  *
  * Every colour is a CSS variable holding a space-separated RGB triplet, so
- * Tailwind's `/<alpha-value>` opacity modifiers keep working while the whole
- * palette swaps on `[data-theme]`. Token values live in src/app/globals.css.
+ * Tailwind's `/<alpha-value>` opacity modifiers keep working. Token values
+ * live in src/app/globals.css. There is one theme — warm paper — so the
+ * variables are set once on :root and never swapped.
  */
 const config: Config = {
-  darkMode: ['class', '[data-theme="dark"]'],
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
@@ -33,6 +33,11 @@ const config: Config = {
         line: 'rgb(var(--c-line) / <alpha-value>)',
         'line-strong': 'rgb(var(--c-line-strong) / <alpha-value>)',
 
+        // Signal colours. Lime marks the capability in use, rust marks risk.
+        lime: 'rgb(var(--c-lime) / <alpha-value>)',
+        gold: 'rgb(var(--c-gold) / <alpha-value>)',
+        rust: 'rgb(var(--c-rust) / <alpha-value>)',
+
         // Status — used sparingly, mirrors the product's risk bands
         healthy: 'rgb(var(--c-healthy) / <alpha-value>)',
         caution: 'rgb(var(--c-caution) / <alpha-value>)',
@@ -40,18 +45,21 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-display)', 'var(--font-inter)', 'sans-serif'],
+        // The Passport is a document, so the headlines are set in a serif.
+        // A system stack rather than a webfont: zero bytes, and Georgia is
+        // the face the data room and the approved homepage draft both use.
+        display: ['Georgia', "'Times New Roman'", 'serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontSize: {
-        // Fluid display sizes — no media queries needed for the big type
-        // Capped at 4.5rem: the hero headline is authored as explicit lines, and
-        // above this the longest line stops fitting the measure on a laptop.
-        'display-xl': ['clamp(2rem, 5.2vw, 4.5rem)', { lineHeight: '1.02', letterSpacing: '-0.032em', fontWeight: '800' }],
-        'display-lg': ['clamp(2.25rem, 5vw, 4rem)', { lineHeight: '1.04', letterSpacing: '-0.03em', fontWeight: '800' }],
-        'display-md': ['clamp(1.75rem, 3.4vw, 2.75rem)', { lineHeight: '1.1', letterSpacing: '-0.025em', fontWeight: '700' }],
-        'display-sm': ['clamp(1.375rem, 2.2vw, 1.75rem)', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
-        eyebrow: ['0.6875rem', { lineHeight: '1.2', letterSpacing: '0.16em', fontWeight: '700' }],
+        // Fluid display sizes — no media queries needed for the big type.
+        // Weight 400 throughout: Georgia at 85px carries its own authority,
+        // and bolding it turns a document voice into an advertising one.
+        'display-xl': ['clamp(3.4rem, 6.2vw, 5.3rem)', { lineHeight: '1.04', letterSpacing: '-0.055em', fontWeight: '400' }],
+        'display-lg': ['clamp(2.6rem, 5vw, 4rem)', { lineHeight: '1.04', letterSpacing: '-0.05em', fontWeight: '400' }],
+        'display-md': ['clamp(2.45rem, 4.5vw, 3.8rem)', { lineHeight: '1.04', letterSpacing: '-0.055em', fontWeight: '400' }],
+        'display-sm': ['clamp(1.3rem, 2.2vw, 1.44rem)', { lineHeight: '1.25', letterSpacing: '-0.02em', fontWeight: '400' }],
+        eyebrow: ['0.625rem', { lineHeight: '1.2', letterSpacing: '0.14em', fontWeight: '600' }],
         lede: ['clamp(1.0625rem, 1.5vw, 1.3125rem)', { lineHeight: '1.55', letterSpacing: '-0.005em' }],
       },
       maxWidth: {

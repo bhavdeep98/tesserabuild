@@ -18,11 +18,14 @@ const swatches = [
   { token: 'accent-deep', role: 'Gradient tail', className: 'bg-accent-deep' },
 ];
 
+// Measured against --c-bg (paper) and --c-surface-2 (sage), the two grounds
+// text is set on. Re-measure here whenever a token in globals.css moves.
 const typeContrast = [
-  { token: 'ink', role: 'Headings, body', dark: '17.4:1', light: '15.8:1', className: 'text-ink' },
-  { token: 'ink-2', role: 'Lede, secondary', dark: '8.3:1', light: '7.5:1', className: 'text-ink-2' },
-  { token: 'ink-3', role: 'Meta, captions', dark: '5.6:1', light: '4.8:1', className: 'text-ink-3' },
-  { token: 'accent', role: 'Eyebrows, links', dark: '10.7:1', light: '7.0:1', className: 'text-accent' },
+  { token: 'ink', role: 'Headings, body', onBg: '10.4:1', onSurface2: '9.7:1', className: 'text-ink' },
+  { token: 'ink-2', role: 'Lede, secondary', onBg: '5.5:1', onSurface2: '5.1:1', className: 'text-ink-2' },
+  { token: 'ink-3', role: 'Meta, captions', onBg: '4.9:1', onSurface2: '4.5:1', className: 'text-ink-3' },
+  { token: 'accent', role: 'Eyebrows, links', onBg: '8.3:1', onSurface2: '7.8:1', className: 'text-accent' },
+  { token: 'accent-bright', role: 'Display emphasis only', onBg: '3.7:1', onSurface2: '3.4:1', className: 'text-accent-bright' },
 ];
 
 const typeScale = [
@@ -57,9 +60,9 @@ export default function StylePage() {
       <p className="eyebrow-rule">Internal reference</p>
       <h1 className="mt-6 font-display text-display-lg text-ink">Design system</h1>
       <p className="mt-5 max-w-prose text-lede text-ink-2">
-        Toggle the theme in the header. Every pairing below is checked against WCAG 2.1
-        AA. Dark is the primary expression; light is warm paper with a deep forest
-        green, not a tint of the dark palette.
+        One theme: warm paper with a deep forest green, shared with the data room.
+        Every pairing below is checked against WCAG 2.1 AA for normal text, except
+        accent-bright, which is reserved for display sizes and decoration.
       </p>
 
       <Block title="Logo" note="Vector, not raster. Three outlined tiles and one filled: the piece that makes the mosaic readable.">
@@ -94,8 +97,8 @@ export default function StylePage() {
               <tr className="border-b border-line/[.12]">
                 <th scope="col" className="py-3 pr-6 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">Token</th>
                 <th scope="col" className="py-3 pr-6 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">Role</th>
-                <th scope="col" className="py-3 pr-6 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">Dark</th>
-                <th scope="col" className="py-3 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">Light</th>
+                <th scope="col" className="py-3 pr-6 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">On paper</th>
+                <th scope="col" className="py-3 font-mono text-[12px] font-medium uppercase tracking-wider text-ink-3">On sage</th>
               </tr>
             </thead>
             <tbody>
@@ -103,8 +106,8 @@ export default function StylePage() {
                 <tr key={t.token} className="border-b border-line/[.07]">
                   <td className={`py-3.5 pr-6 font-mono text-[13px] ${t.className}`}>{t.token}</td>
                   <td className="py-3.5 pr-6 text-ink-2">{t.role}</td>
-                  <td className="tabular py-3.5 pr-6 text-ink-2">{t.dark}</td>
-                  <td className="tabular py-3.5 text-ink-2">{t.light}</td>
+                  <td className="tabular py-3.5 pr-6 text-ink-2">{t.onBg}</td>
+                  <td className="tabular py-3.5 text-ink-2">{t.onSurface2}</td>
                 </tr>
               ))}
             </tbody>

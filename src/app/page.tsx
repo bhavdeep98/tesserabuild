@@ -1,30 +1,34 @@
-import { MosaicHouseBackground } from '@/components/brand/MosaicHouseBackground';
-import { Contact } from '@/components/sections/Contact';
-import { Gap } from '@/components/sections/Gap';
-import { Hero } from '@/components/sections/Hero';
-import { HowItWorks } from '@/components/sections/HowItWorks';
-import { Team } from '@/components/sections/Team';
-import { Tenets } from '@/components/sections/Tenets';
+import { BuilderPath } from '@/components/home/BuilderPath';
+import { CapabilityWalkthrough } from '@/components/home/CapabilityWalkthrough';
+import { PassportHero } from '@/components/home/PassportHero';
+import { PracticalAnswers } from '@/components/home/PracticalAnswers';
+import { StartHere } from '@/components/home/StartHere';
+import { Thread } from '@/components/home/Thread';
+import { WhyTessera } from '@/components/home/WhyTessera';
 
 /**
- * Homepage — the argument, in order.
+ * Homepage — the product, in order.
  *
- * Problem, then conviction, then mechanism, then the people, then the ask.
- * Tenets sit before How It Works on purpose: the reader should know what we
- * are optimising for before they are shown how.
+ * Say what it is, show it working across the whole life of a home, explain why
+ * those five chapters are one thing, then where a builder starts. Then the
+ * case for us, the practical questions, and the ask.
+ *
+ * The reader is a customer, not an investor. "Why Tessera" is therefore
+ * answered here in a builder's terms — who built it, what it touches, what is
+ * already connected — rather than pointed at the data room. The raise, the
+ * market sizing and the odds of winning stay in the data room, which this site
+ * no longer links to.
  */
 export default function HomePage() {
   return (
     <>
-      <MosaicHouseBackground />
-      <div className="relative z-10">
-        <Hero />
-        <Gap />
-        <Tenets />
-        <HowItWorks />
-        <Team />
-        <Contact />
-      </div>
+      <PassportHero />
+      <CapabilityWalkthrough />
+      <Thread />
+      <BuilderPath />
+      <WhyTessera />
+      <PracticalAnswers />
+      <StartHere />
     </>
   );
 }

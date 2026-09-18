@@ -10,7 +10,7 @@ type LogomarkProps = {
  * fourth arrives filled and lit: the piece that makes the mosaic readable.
  *
  * Authored as vector rather than shipped as the 588 KB glow-on-black PNG so it
- * stays crisp at every size and inverts cleanly between themes.
+ * stays crisp at every size.
  */
 export function Logomark({ className }: LogomarkProps) {
   return (
@@ -26,14 +26,7 @@ export function Logomark({ className }: LogomarkProps) {
         <rect x="13.8" y="1.8" width="8.4" height="8.4" rx="1.4" />
         <rect x="1.8" y="13.8" width="8.4" height="8.4" rx="1.4" />
       </g>
-      <rect
-        x="13.8"
-        y="13.8"
-        width="8.4"
-        height="8.4"
-        rx="1.4"
-        className="fill-accent"
-      />
+      <rect x="13.8" y="13.8" width="8.4" height="8.4" rx="1.4" className="fill-accent" />
     </svg>
   );
 }
@@ -46,17 +39,15 @@ type LogoProps = {
 
 export function Logo({ withLegalName = false, className }: LogoProps) {
   return (
-    <span className={`inline-flex items-center gap-3 ${className ?? ''}`}>
-      <Logomark className="h-[1.35em] w-[1.35em] shrink-0 text-ink" />
+    <span className={`inline-flex items-center gap-2.5 ${className ?? ''}`}>
+      <Logomark className="h-[1.1em] w-[1.1em] shrink-0 text-ink" />
       <span className="flex flex-col leading-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/brand/tessera-wordmark.png"
-          alt="Tessera"
-          className="h-14 w-auto dark:invert"
-        />
+        {/* Set in type rather than shipped as the 706 KB wordmark PNG. That
+            asset was drawn with the teal of the old dark brand and read as a
+            foreign colour on paper; letterforms also stay crisp at any size. */}
+        <span className="text-[18px] font-semibold tracking-[0.18em] text-ink">TESSERA</span>
         {withLegalName ? (
-          <span className="mt-1.5 text-[0.62em] font-medium uppercase leading-none tracking-[0.18em] text-ink-3">
+          <span className="mt-2 text-[10px] font-medium uppercase leading-none tracking-[0.18em] text-ink-3">
             Build Inc
           </span>
         ) : null}
