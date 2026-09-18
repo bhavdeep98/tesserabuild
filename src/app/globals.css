@@ -166,9 +166,23 @@
     mix-blend-mode: multiply;
   }
 
-  /* A milestone bar. --start/--end position the span within the row, so a
-     schedule is described by two numbers rather than by nested elements. */
-  .milestone-track {
+  /* ── The closing-signal animation ────────────────────────────
+     The predictability chapter, played rather than drawn.
+
+     Two bars complete, one stalls and turns to risk, then the
+     finding explains it — roughly three seconds, once, when the
+     visual scrolls into view. It plays itself because a reader
+     should not have to discover a control to understand the
+     product; it plays once rather than looping because a
+     perpetual animation beside body copy is a distraction.
+
+     Base styles are the FINISHED state. The keyframes start from
+     nothing and `both` fill-mode holds the end, so switching the
+     animations off — reduced motion, or the visual never entering
+     the viewport — leaves the correct static picture behind.
+     ───────────────────────────────────────────────────────── */
+
+  .signal-track {
     position: relative;
     height: 7px;
     border-radius: 999px;
@@ -176,22 +190,78 @@
     overflow: hidden;
   }
 
-  .milestone-track::after {
+  /* The progress itself. */
+  .signal-track::after {
     content: '';
     position: absolute;
     inset-block: 0;
-    left: var(--start, 0%);
-    right: calc(100% - var(--end, 100%));
+    left: 0;
+    width: var(--fill, 100%);
     border-radius: 999px;
     background: rgb(var(--c-accent-bright));
   }
 
-  .milestone-track[data-state='risk']::after {
+  /* The risk overlay, sitting on the same span. Kept as a separate
+     layer so the bar can fill healthy and *then* turn — that turn is
+     the moment the whole animation exists to show. */
+  .signal-track[data-state='risk']::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset-block: 0;
+    left: 0;
+    width: var(--fill, 100%);
+    border-radius: 999px;
     background: repeating-linear-gradient(
       -45deg,
       rgb(var(--c-rust)) 0 6px,
       rgb(var(--c-rust) / 0.55) 6px 12px
     );
+  }
+
+  .signal-reveal {
+    opacity: 1;
+  }
+
+  [data-play='true'] .signal-track::after {
+    animation: signal-fill 1s var(--delay, 0s) cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  [data-play='true'] .signal-track[data-state='risk']::before {
+    animation: signal-turn 0.45s var(--turn, 1.9s) ease-out both;
+  }
+
+  [data-play='true'] .signal-reveal {
+    animation: signal-reveal 0.5s var(--delay, 0s) cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes signal-fill {
+    from {
+      width: 0;
+    }
+    to {
+      width: var(--fill, 100%);
+    }
+  }
+
+  @keyframes signal-turn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes signal-reveal {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
@@ -236,6 +306,10 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    /* Zeroed alongside duration: a staggered animation whose delay survives
+       leaves the element in its `from` state — blank — for the length of the
+       delay before snapping. */
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
