@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Data Flow, Encryption &amp; PII Audit — Tessera HomePassport</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1420;color:#e9eff8;font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:880px;margin:auto;padding:48px 26px 90px}
+  a{color:#6aa8ff}
+  h1,h2,h3,h4{color:#fff;line-height:1.2;letter-spacing:-.01em;font-weight:700}
+  h1{font-size:32px;margin:0 0 20px;border-bottom:1px solid #2c3d55;padding-bottom:14px}
+  h2{font-size:24px;margin:38px 0 10px}
+  h3{font-size:18px;margin:26px 0 8px}
+  h4{font-size:15px;margin:20px 0 6px;color:#c3d0e2}
+  p{margin:0 0 14px;color:#c3d0e2}
+  strong{color:#fff}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#c3d0e2}
+  li{margin:5px 0}
+  blockquote{margin:0 0 18px;padding:12px 18px;border-left:3px solid #ffca5f;background:rgba(255,202,95,.08);border-radius:0 8px 8px 0;color:#e9eff8}
+  blockquote p{margin:0;color:#e9eff8}
+  code{font:13px ui-monospace,monospace;background:rgba(106,168,255,.12);color:#9cc0ff;padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+  hr{border:0;border-top:1px solid #2c3d55;margin:30px 0}
+  .tw{overflow-x:auto;border:1px solid #2c3d55;border-radius:10px;margin:0 0 20px}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid #2c3d55;vertical-align:top;color:#c3d0e2}
+  th{font:11px ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:#8fc0ff;background:#111c2c}
+  tr:last-child td{border-bottom:none}
+  .back{display:inline-block;font:12px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#6aa8ff;margin-bottom:24px;text-decoration:none}
+  .foot{margin-top:40px;padding-top:20px;border-top:1px solid #2c3d55;font-size:12px;color:#7f90aa}
+</style></head><body><main>
+<a class="back" href="./home-passport-architecture.html">← Back to the architecture summary</a>
+<h1>Tessera / HomePassport — Data Flow, Encryption &amp; PII Audit</h1>
+<blockquote>Purpose: state clearly what data comes from where, where it is encrypted, what goes on the ledger, and where we might break a PII rule. Plain English. Based only on the AWS &amp; identity architecture diagram.  Assumption per your instruction: the ledger exists.</blockquote>
+<hr>
+<h2>1. What goes on the ledger (short answer)</h2>
+<p><strong>Only a hash. Never the data.</strong></p>
+<ul>
+<li>The ledger receives <strong>batched commitments</strong> — a single Merkle root per batch,</li>
+</ul>
+<p>  built from salted SHA-256 hashes of record events.</p>
+<ul>
+<li><strong>No raw records, no PII, no documents, no addresses, no names</strong> ever go on the</li>
+</ul>
+<p>  ledger. The diagram is explicit: "external ledger receives batched commitments   only."</p>
+<ul>
+<li>A hash proves the record's bytes were not changed. It does <strong>not</strong> prove the</li>
+</ul>
+<p>  record is true, complete, or the latest version.</p>
+<ul>
+<li>The <strong>salt/nonce</strong> used to build each hash is secret and is <strong>not</strong> on the</li>
+</ul>
+<p>  ledger. It travels only inside the <strong>owner's authorized export</strong>, so the owner   can verify offline. Without the salt, nobody can brute-force a known field   (e.g. an address) back out of the hash.</p>
+<p><strong>On-ledger record = { batch timestamp, Merkle root }. That is all.</strong></p>
+<hr>
+<h2>2. What data comes from where (the three inbound sources)</h2>
+<p>Everything enters through <strong>AWS WAF + API Gateway</strong>. There are exactly three sources of inbound data.</p>
+<div class="tw"><table><thead><tr><th>From</th><th>What they send</th><th>How it arrives</th><th>Lands in</th></tr></thead><tbody>
+<tr><td><strong>Builder / closing partner</strong></td><td>Approved home facts (equipment, documents, milestones, closing dates) + ownership evidence</td><td>Authenticated partner API client</td><td>Home history (Aurora) + evidence (S3) + ownership binding (Aurora)</td></tr>
+<tr><td><strong>Owner / co-owner</strong></td><td>Sign-in identity, consent decisions, order approvals, uploaded documents</td><td>Cognito sign-in + authenticated app calls</td><td>Personal vault (Aurora) + documents (S3) + grants/approvals (Aurora)</td></tr>
+<tr><td><strong>Service provider</strong></td><td>Work results, job status</td><td>Signed provider callback</td><td>Job/record events (Aurora), attributed to the provider</td></tr>
+</tbody></table></div>
+<p>Data that stays <strong>outside</strong> HomePassport (never ingested raw): builder source systems, builder analytics, builder cost/margin databases, Kestrel, builder training. Only "approved home projections" enter.</p>
+<p>Data that goes <strong>outbound</strong>: a scoped, allowlisted payload to a provider for one approved job — built from the grant, sent via the SQS → Lambda provider worker through controlled egress/NAT.</p>
+<hr>
+<h2>3. Where data is encrypted</h2>
+<h3>At rest</h3>
+<div class="tw"><table><thead><tr><th>Store</th><th>What it holds</th><th>Encryption</th></tr></thead><tbody>
+<tr><td>Aurora PostgreSQL (via RDS Proxy)</td><td>Ownership/authority, grants, home metadata, personal schema, audit, outbox</td><td>Encrypted (AWS KMS); private DB subnets, no public access</td></tr>
+<tr><td>Amazon S3 — documents</td><td>Home documents</td><td>SSE-KMS; Block Public Access</td></tr>
+<tr><td>Amazon S3 — personal evidence</td><td>Identity/closing evidence</td><td>SSE-KMS; Block Public Access; separate access from home docs</td></tr>
+<tr><td>Amazon S3 — upload quarantine</td><td>Unvalidated uploads</td><td>SSE-KMS; released only after validation</td></tr>
+<tr><td>Security account — audit archive (S3)</td><td>CloudTrail + application audit exports</td><td>Encrypted S3; Object Lock on selected audit objects; separate admin</td></tr>
+</tbody></table></div>
+<h3>In transit</h3>
+<div class="tw"><table><thead><tr><th>Hop</th><th>Encryption</th></tr></thead><tbody>
+<tr><td>User / partner / provider → edge (CloudFront, API Gateway)</td><td>TLS (ACM certificates)</td></tr>
+<tr><td>Edge → Lambda application layer</td><td>Within AWS, private path</td></tr>
+<tr><td>Lambda → Aurora (through RDS Proxy)</td><td>Private VPC connectivity, private DB subnets</td></tr>
+<tr><td>Lambda → S3 / SQS</td><td>VPC endpoints (S3 gateway endpoint + selected service endpoints)</td></tr>
+<tr><td>Provider worker → external provider</td><td>Controlled egress/NAT; TLS to provider endpoint</td></tr>
+</tbody></table></div>
+<p><strong>One-line summary:</strong> KMS encrypts everything at rest; TLS protects the edge; all internal hops stay on private VPC connectivity and never traverse the public internet except the deliberate, allowlisted provider egress.</p>
+<hr>
+<h2>4. The data schema — one line each, plain English</h2>
+<blockquote>Grouped by the three walled stores plus operational objects. Each line: what it is → key fields → PII? → which store.</blockquote>
+<p><strong>Ownership &amp; identity</strong></p>
+<ul>
+<li><strong>Home</strong> → one stable opaque home ID + parcel links + lifecycle state + ownership version → not PII → home store.</li>
+<li><strong>Ownership binding</strong> → who is owner/co-owner of a home, with role, evidence reference, valid-from/to, ownership epoch → <strong>PII (links a person to a property)</strong> → authority store.</li>
+<li><strong>Principal</strong> → internal ID mapped from the Cognito token (issuer + subject) → <strong>PII (identity)</strong> → personal vault.</li>
+</ul>
+<p><strong>Records (home history)</strong></p>
+<ul>
+<li><strong>Assertion / record event</strong> → one fact about the home (e.g. HVAC installed) with source, observed/received time, verification status (reported/verified/disputed/corrected), evidence reference, supersedes-link → <strong>mixed: fact is home data, but may embed PII (serials, names)</strong> → home history.</li>
+<li><strong>Home document / evidence file</strong> → the actual PDF/photo behind a fact → <strong>often PII</strong> → S3 (KMS).</li>
+</ul>
+<p><strong>Personal</strong></p>
+<ul>
+<li><strong>Personal vault entry</strong> → owner contact, payment, service-account details → <strong>PII (sensitive)</strong> → personal schema; never auto-transfers at resale.</li>
+</ul>
+<p><strong>Consent &amp; services</strong></p>
+<ul>
+<li><strong>Grant</strong> → permission for one provider to receive named fields for one purpose, time-bound, revocable, tied to an agreement version → <strong>PII (names fields + recipient)</strong> → authority store.</li>
+<li><strong>Order approval / job</strong> → accepted plan/price/terms digest, provider ID, quoted price, idempotency key, job state → <strong>PII (links owner to a purchase)</strong> → jobs store.</li>
+</ul>
+<p><strong>Evidence &amp; accountability</strong></p>
+<ul>
+<li><strong>Audit event</strong> → who did what, when, which fields, policy version, epoch, correlation ID — <strong>field names, not raw values</strong> → <strong>low PII by design (must exclude raw personal values)</strong> → Aurora + exported to security account.</li>
+<li><strong>Outbox event</strong> → durable "to be dispatched" record that feeds SQS → minimal PII (digests/IDs) → Aurora.</li>
+<li><strong>Ledger commitment</strong> → batch timestamp + Merkle root → <strong>no PII</strong> → external ledger.</li>
+<li><strong>Owner export package</strong> → the owner's records + salts + inclusion receipts for offline verification → <strong>PII (full record copy)</strong> → delivered to owner only.</li>
+</ul>
+<hr>
+<h2>5. PII audit — where the rules bite</h2>
+<h3>What the design does right (keep these)</h3>
+<ul>
+<li><strong>Ledger holds no PII</strong> — only salted, batched hashes. This is the single most</li>
+</ul>
+<p>  important PII decision and it is correct.</p>
+<ul>
+<li><strong>Three walled stores</strong> — builder / home / personal are separated so a provider</li>
+</ul>
+<p>  or builder never sees personal data they shouldn't.</p>
+<ul>
+<li><strong>Encryption everywhere</strong> — KMS at rest, TLS in transit, private subnets.</li>
+<li><strong>Payload built from the grant</strong> — a provider only ever receives allowlisted</li>
+</ul>
+<p>  fields; there is no "filter after the fact" leak.</p>
+<ul>
+<li><strong>Audit excludes raw personal values</strong> — logs record field <em>names</em>, not values.</li>
+<li><strong>Consent is explicit and revocable</strong> — grants name purpose, fields, recipient,</li>
+</ul>
+<p>  expiry (aligns with purpose-limitation and consent requirements).</p>
+<h3>Where we could break a rule — open items to close before launch</h3>
+<ol>
+<li><strong>Right to erasure vs. "append-only" history.</strong></li>
+</ol>
+<p>   Records are append-only and corrections are linked, not deleted. GDPR/CCPA    give a data subject deletion rights. <strong>Decide now:</strong> personal payloads must be    separately deletable (the doc says "manage personal payload deletion    separately") even though the home fact stays. Define a retention + deletion    schedule <strong>per data class</strong>. <em>Risk: high if undefined.</em></p>
+<ol>
+<li><strong>Hash of PII can itself be personal data.</strong></li>
+</ol>
+<p>   Under GDPR, a salted hash of a person's data can still be "pseudonymized    personal data," not anonymous — especially if the salt is recoverable.    <strong>Decide:</strong> confirm the salt is never exported to any party who also holds the    ledger, and document the hash's legal classification. <em>Risk: medium.</em></p>
+<ol>
+<li><strong>Data delivered to providers cannot be recalled.</strong></li>
+</ol>
+<p>   Once a provider receives the scoped payload, revocation can't pull it back.    <strong>Decide:</strong> provider agreements (DPAs) must carry retention + deletion    obligations, and this must be contractual, not technical. <em>Risk: high without    DPAs.</em></p>
+<ol>
+<li><strong>Evidence files are the densest PII (IDs, closing docs).</strong></li>
+</ol>
+<p>   These sit in S3. <strong>Decide:</strong> stricter access, shorter retention, and explicit    classification for evidence vs. ordinary home documents. Confirm signed URLs    (if used) expire fast — access can persist until expiry. <em>Risk: medium.</em></p>
+<ol>
+<li><strong>Data residency / cross-region copies.</strong></li>
+</ol>
+<p>   The design is single-region (us-east-1). If any owner is in a jurisdiction with    residency rules, cross-region backups must be scoped. <strong>Decide:</strong> residency    policy before any cross-region copy. <em>Risk: depends on customer geography.</em></p>
+<ol>
+<li><strong>Ownership binding = a person tied to a physical address.</strong></li>
+</ol>
+<p>   This is sensitive linkage. <strong>Decide:</strong> confirm "not found" (not "forbidden")    responses for unbound lookups so the API can't be used to confirm who owns a    given address. (The design already calls for consistent not-found responses —    verify it's enforced.) <em>Risk: medium.</em></p>
+<ol>
+<li><strong>Provider machine identity ≠ which technician acted.</strong></li>
+</ol>
+<p>   For accountability/audit completeness, a shared provider credential can't prove    the individual. <strong>Decide:</strong> whether per-technician attribution is required for    any regulated field. <em>Risk: low–medium.</em></p>
+<ol>
+<li><strong>Privileged admin remains in the threat model.</strong></li>
+</ol>
+<p>   The doc admits compromise of top AWS org privileges is a residual risk.    <strong>Decide:</strong> dual-control, separated audit-archive admins, and alerting are in    place; accept and document the residual risk. <em>Risk: residual, must be    documented.</em></p>
+<hr>
+<h2>6. One-paragraph summary for the auditor</h2>
+<p>Data enters HomePassport from three sources only — builders/closing partners (approved facts + ownership evidence), owners (identity, consent, uploads), and providers (job results) — all through WAF + API Gateway. It is stored in Aurora (KMS) and S3 (SSE-KMS), split into builder / home / personal stores, and moves over TLS at the edge and private VPC paths internally. The ledger only ever receives salted, batched hashes — no PII, no documents. The main compliance work before launch is not encryption (that is handled) but <strong>lifecycle</strong>: defining per-class retention and deletion (right to erasure against append-only history), classifying the salted hash legally, and binding providers to retention/deletion obligations by contract since delivered data can't be recalled. ```</p>
+<p class="foot">Tessera HomePassport · Proposed design for review — not a statement of implemented capability, and not a legal opinion. No live data.</p>
+</main></body></html>

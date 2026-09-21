@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Use Cases &amp; Acceptance Criteria — Tessera HomePassport</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1420;color:#e9eff8;font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:880px;margin:auto;padding:48px 26px 90px}
+  a{color:#6aa8ff}
+  h1,h2,h3,h4{color:#fff;line-height:1.2;letter-spacing:-.01em;font-weight:700}
+  h1{font-size:32px;margin:0 0 20px;border-bottom:1px solid #2c3d55;padding-bottom:14px}
+  h2{font-size:24px;margin:38px 0 10px}
+  h3{font-size:18px;margin:26px 0 8px}
+  h4{font-size:15px;margin:20px 0 6px;color:#c3d0e2}
+  p{margin:0 0 14px;color:#c3d0e2}
+  strong{color:#fff}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#c3d0e2}
+  li{margin:5px 0}
+  blockquote{margin:0 0 18px;padding:12px 18px;border-left:3px solid #ffca5f;background:rgba(255,202,95,.08);border-radius:0 8px 8px 0;color:#e9eff8}
+  blockquote p{margin:0;color:#e9eff8}
+  code{font:13px ui-monospace,monospace;background:rgba(106,168,255,.12);color:#9cc0ff;padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+  hr{border:0;border-top:1px solid #2c3d55;margin:30px 0}
+  .tw{overflow-x:auto;border:1px solid #2c3d55;border-radius:10px;margin:0 0 20px}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid #2c3d55;vertical-align:top;color:#c3d0e2}
+  th{font:11px ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:#8fc0ff;background:#111c2c}
+  tr:last-child td{border-bottom:none}
+  .back{display:inline-block;font:12px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#6aa8ff;margin-bottom:24px;text-decoration:none}
+  .foot{margin-top:40px;padding-top:20px;border-top:1px solid #2c3d55;font-size:12px;color:#7f90aa}
+</style></head><body><main>
+<a class="back" href="./home-passport-architecture.html">← Back to the architecture summary</a>
+<h1>Tessera — Comprehensive Use Cases and Acceptance Criteria</h1>
+<p><strong>Revision:</strong> 2 · 21 September 2026   <strong>Status:</strong> Proposed product behavior for review; not a statement of implemented capability.   <strong>Primary scope:</strong> HomePassport, its identity layer, authorized services and operational trust. Builder publishing is included as an interface; Kestrel prediction, model training and builder risk workflows remain outside this catalog.</p>
+<h2>Executive summary</h2>
+<p>Tessera gives a home a stable identity and a source-attributed history. People receive access because their relationship to the home is verified. Providers receive limited information and separately approved jobs. When ownership changes, relevant history continues while authority and personal access change.</p>
+<p>This revision expands the original journeys into a catalog that product, engineering, security and partners can review together. Every case states its actor, trigger, prerequisites, expected flow, important exceptions and acceptance evidence. Detailed cases are proposed requirements, not findings that the software already satisfies them.</p>
+<h3>Corrections made during review</h3>
+<div class="tw"><table><thead><tr><th>Original simplification</th><th>Revised requirement</th></tr></thead><tbody>
+<tr><td>A stable job ID means a retry cannot create another order.</td><td>External duplicate prevention requires provider cooperation or reconciliation. A Tessera ID alone is insufficient.</td></tr>
+<tr><td>Revoking a provider ends its access.</td><td>Revoke the specified grant, evaluate other effective grants and handle scope-level suspensions explicitly. Delivered copies and accepted work remain separate.</td></tr>
+<tr><td>Closing evidence is the source of truth.</td><td>Approved evidence is authenticated, validated and assessed; conflicting or compromised evidence needs review.</td></tr>
+<tr><td>Home history and warranties always transfer.</td><td>Only eligible classified content transfers. The presence of a warranty document does not establish transferability or current coverage.</td></tr>
+<tr><td>An owner invites a subordinate co-owner.</td><td>Each owner has an independently verified relationship. Joint decision rules are proposed product policy, not legal conclusions.</td></tr>
+<tr><td>All privileged actions are captured in the owner audit.</td><td>Application and infrastructure audit cover different events; independent storage reduces bypass risk but has known gaps and retention rules.</td></tr>
+<tr><td>Builder access simply ends at closing.</td><td>Construction authority ends; a separately authorized warranty/service scope may continue. The personal vault does not reopen.</td></tr>
+<tr><td>Ownership always comes from a normal closing.</td><td>Ordinary closing is the initial route. Recovery, corrections, estates and other exceptional authority require separately approved evidence policies.</td></tr>
+</tbody></table></div>
+<h3>Alignment with the PII decisions</h3>
+<p>Several cases below were revised to match <em>Tessera / HomePassport — PII Decisions &amp; Critical Path</em>. Traceable changes: HM-06 now describes erasure by crypto-shredding (Decision 1); SV-01/PR-02/PR-03 describe lend-vs-transfer with the address as the only routine transfer (Decision 3); HM-02/ID-03 add evidence tiering, quarantine-as-release-condition and the AML retention gate (Decision 4, and the open AML question); SV-01 adds the grant-time EU-addendum check and the decisions table adds an international-transfer row (Decision 5); PR-01 adds the provider technician as a data subject (Decision 7). Acceptance tests AT-21–AT-24 cover the new behaviors.</p>
+<h2>Navigation</h2>
+<ul>
+<li><a href="#scope-people-and-priorities">Scope, people and priorities</a></li>
+<li><a href="#shared-rules-and-vocabulary">Shared rules and vocabulary</a></li>
+<li><a href="#1-identity-and-relationships">1. Identity and relationships</a></li>
+<li><a href="#2-home-records-and-privacy">2. Home records and privacy</a></li>
+<li><a href="#3-co-ownership">3. Co-ownership</a></li>
+<li><a href="#4-services-and-consent">4. Services and consent</a></li>
+<li><a href="#5-resale-and-transfer">5. Resale and transfer</a></li>
+<li><a href="#6-closing-evidence-partners">6. Closing evidence partners</a></li>
+<li><a href="#7-builder-contribution">7. Builder contribution</a></li>
+<li><a href="#8-service-providers">8. Service providers</a></li>
+<li><a href="#9-operations-and-security">9. Operations and security</a></li>
+<li><a href="#10-exports-and-independent-proof">10. Exports and independent proof</a></li>
+<li><a href="#state-transitions">State transitions</a></li>
+<li><a href="#decisions-required-before-implementation">Decisions required before implementation</a></li>
+<li><a href="#release-acceptance-scenarios">Release acceptance scenarios</a></li>
+</ul>
+<h2>Scope, people and priorities</h2>
+<div class="tw"><table><thead><tr><th>Actor</th><th>Relationship</th><th>Default limit</th></tr></thead><tbody>
+<tr><td>Current owner / co-owner</td><td>Independently verified relationship to one or more homes</td><td>No other person’s private vault or builder business records by default</td></tr>
+<tr><td>Prospective buyer</td><td>Recipient of an explicit limited disclosure</td><td>No ownership authority, order rights or grant delegation</td></tr>
+<tr><td>Former owner</td><td>Historical personal access under retention policy</td><td>No authority over the current home or new owner</td></tr>
+<tr><td>Tenant / manager / household delegate</td><td>Explicit role-specific appointment, if supported</td><td>Never infer ownership from invitation or occupancy</td></tr>
+<tr><td>Closing partner / attestor</td><td>Approved organization providing evidence</td><td>Cannot bypass evidence policy or grant itself home access</td></tr>
+<tr><td>Builder staff / connector</td><td>Authorized source and project scope</td><td>Approved publication only; no other builder’s data</td></tr>
+<tr><td>Provider / technician / subcontractor</td><td>Explicit organization, person and job scope</td><td>No self-expansion or silent delegation</td></tr>
+<tr><td>Reviewer / support / security operator</td><td>Purpose-bound operational role</td><td>No standing unrestricted content access or owner impersonation</td></tr>
+<tr><td>Independent verifier</td><td>Holder of an authorized export/proof package</td><td>Verification confers no new access or ownership</td></tr>
+</tbody></table></div>
+<p><strong>Priority labels describe a recommended sequence, not delivery commitments:</strong></p>
+<ul>
+<li><strong>P0 — pilot gate:</strong> needed for the first supported handoff and one-time service activation, including failures and recovery.</li>
+<li><strong>P1 — lifecycle release:</strong> needed before launching resale, external sharing and the associated retention/offboarding workflows. Disable unsupported features until their gates pass.</li>
+<li><strong>P2 — expansion / optional:</strong> delegates, recurring services, complex ownership and independent witnessing. These require explicit policy and partner decisions.</li>
+</ul>
+<p>A P2 label does not mean an exception can be ignored. A pilot encountering an unsupported ownership situation must hold or decline that workflow and route it to review; it must not improvise broader access.</p>
+<h2>Shared rules and vocabulary</h2>
+<h3>Information classes</h3>
+<div class="tw"><table><thead><tr><th>Class</th><th>Examples</th><th>Publication / transfer rule</th></tr></thead><tbody>
+<tr><td>Builder workspace</td><td>Cost, margin, pipeline, internal notes</td><td>Separate builder scope; only an approved home projection is published</td></tr>
+<tr><td>Home history</td><td>Equipment, work assertions, eligible warranty and installation evidence</td><td>Relevant classified content can follow the home; personal attachments require redaction or exclusion</td></tr>
+<tr><td>Personal vault</td><td>Identity evidence, contact, payment and provider account information</td><td>Access and retention follow the person and purpose; no automatic resale inheritance</td></tr>
+<tr><td>Operational metadata</td><td>Job IDs, policy versions, delivery status and field names</td><td>Minimize personal content; raw delivery payloads belong in restricted temporary storage if required</td></tr>
+</tbody></table></div>
+<p>“One record” means one coherent view associated with a home, not one unrestricted file or exactly three physical databases. Logical classes must be backed by enforceable storage, service and access policies.</p>
+<h3>Invariants that every use case inherits</h3>
+<ol>
+<li><strong>A locator is not a credential.</strong> Knowing the home ID, address or plaque does not authorize private access.</li>
+<li><strong>Authentication is not entitlement.</strong> A valid login must still be checked against the specific home, role, action and current authority.</li>
+<li><strong>Default deny.</strong> New fields, routes, documents and operations are not implicitly included in existing grants.</li>
+<li><strong>Purpose and recipient matter.</strong> An internet installation grant does not become marketing, lending or unrelated maintenance permission.</li>
+<li><strong>Sharing and purchasing are separate approvals.</strong> Capture them distinctly even if the interface presents them in one clear flow; this need not mean two mandatory screens.</li>
+<li><strong>Current authority controls new releases.</strong> Transfers, suspensions, expiries and revocations must be checked by APIs, exports, downloads and workers, not only at login.</li>
+<li><strong>Serialize authority changes.</strong> The ownership epoch is a version of authority, not a timestamp guess. All prior-epoch grants and delegates lose authority after a committed transfer.</li>
+<li><strong>Revocation has a boundary.</strong> It cannot erase delivered copies, invalidate a legitimate offline export or undo accepted external work.</li>
+<li><strong>Source and verification remain distinct.</strong> A provider report, owner note or imported document is not independently verified merely because it was recorded.</li>
+<li><strong>Audit is mandatory but accurately described.</strong> Commit disclosure intent before new release and record known outcome separately. Minimize denied-request logs so they do not leak protected content. Independent audit export has a monitored lag.</li>
+<li><strong>A support workflow cannot mint ownership silently.</strong> Account recovery, property disputes and ownership transfer have different evidence requirements.</li>
+<li><strong>A record is not a legal adjudication.</strong> Ownership evidence policies, retention and exceptional authority routes need accountable review. Proposed behavior here is not a statement of statutory rights.</li>
+</ol>
+<h3>Shared evidence and user experience</h3>
+<p>For relevant decisions, retain: actor and organization; home and resource identifiers; action; policy version; binding/ownership epoch; grant or approval reference; source/evidence reference; event and receipt times; correlation ID; decision; and known outcome. Do not log tokens or raw personal field values by default. Every material state-changing action needs a user-visible status, next step when blocked, and a review route where appropriate.</p>
+<p>Notifications use authenticated in-app detail and minimal external content. A notification or email link is never itself ownership evidence. Security investigations may require restricted detail; do not promise every internal incident note is visible to every owner.</p>
+<hr>
+<h2>1. Identity and relationships</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>ID-01</td><td>Find a home without exposing its owner</td><td>P0</td></tr>
+<tr><td>ID-02</td><td>Create an account and sign in</td><td>P0</td></tr>
+<tr><td>ID-03</td><td>Claim a newly purchased home</td><td>P0</td></tr>
+<tr><td>ID-04</td><td>Resolve a name mismatch or incomplete claim</td><td>P0</td></tr>
+<tr><td>ID-05</td><td>Recover a lost phone or compromised account</td><td>P0</td></tr>
+<tr><td>ID-06</td><td>Use one account across several homes</td><td>P0</td></tr>
+<tr><td>ID-07</td><td>Authorize a tenant, manager or household delegate</td><td>P2</td></tr>
+</tbody></table></div>
+<h3>ID-01 — Find a home without exposing its owner</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Visitor or prospective owner   <strong>Journey / trigger:</strong> Maya scans the plaque to start claiming her home.   <strong>Preconditions:</strong> A stable Home ID exists; the plaque is an untrusted locator.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Resolve the locator to a neutral claim entry point.</li>
+<li>Ask Maya to sign in or start the approved claim flow; show no protected record.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A copied plaque, photographed QR, guessed ID or first scan grants no rights.</li>
+<li>Rate-limit enumeration; respond consistently for unknown and unauthorized protected records.</li>
+<li>Resolving an address (or plaque/QR) to a Home ID must sit behind an authenticated, rate-limited, audited path. An open address→Home ID resolver is itself an ownership-lookup service, regardless of what the record endpoint returns.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A stranger cannot retrieve names, documents, home history or grants by changing a URL.</li>
+<li>An unauthenticated caller cannot resolve an address or locator to a Home ID.</li>
+<li>A legitimate owner can proceed to verification without public disclosure of their identity.</li>
+</ul>
+<h3>ID-02 — Create an account and sign in</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Homeowner   <strong>Journey / trigger:</strong> Maya establishes an account she can use safely.   <strong>Preconditions:</strong> The identity provider and recovery policy are configured.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Authenticate the person and map the verified issuer and subject to an internal principal.</li>
+<li>Offer the chosen MFA flow; require stronger authentication for sensitive actions.</li>
+<li>Show only homes with independently established relationships.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Verified email or phone possession is not proof of property ownership.</li>
+<li>Do not merge accounts automatically because email addresses match; a changed email must not change the internal owner identity.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A newly registered user sees no private homes by default.</li>
+<li>An invalid, expired or wrong-audience token is rejected without leaking record content.</li>
+</ul>
+<h3>ID-03 — Claim a newly purchased home</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Buyer and closing partner   <strong>Journey / trigger:</strong> Maya receives the eligible record for the home she bought.   <strong>Preconditions:</strong> Approved home record, authenticated evidence source and buyer identity evidence exist.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Receive the closing attestation and validate source, home reference, parties and effective event.</li>
+<li>Compare buyer identity evidence using the approved matching policy.</li>
+<li>Create the verified ownership binding and activate access with an audit event.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Missing evidence or a meaningful identity mismatch leaves the claim pending; explain what is needed.</li>
+<li>An invitation from an existing user does not prove ownership.</li>
+<li>Competing credible claims enter dispute review; a malicious unsupported claim must not automatically lock out an established owner.</li>
+<li>Identity evidence used to verify the buyer is handled per its tier: unless AML/KYC rules require retention, record an attestation (who checked, when, method, document type, hash, expiry) and discard the document; where retention is mandated, hold it in a sealed archive under a separate key. Pending counsel's obliged-entity determination, default to the retain-and-seal path.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Plaque possession alone cannot activate the binding.</li>
+<li>The successful buyer receives eligible home history and no builder cost, margin or unrelated personal records.</li>
+<li>Identity documents are either attested-and-discarded or sealed under mandatory retention — never left readable in an ordinary bucket.</li>
+</ul>
+<h3>ID-04 — Resolve a name mismatch or incomplete claim</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Buyer and reviewer   <strong>Journey / trigger:</strong> Maya corrects a typo without restarting an opaque process.   <strong>Preconditions:</strong> A pending claim has a reason and case identifier.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Show the missing or conflicting evidence in language the claimant can understand.</li>
+<li>Collect corrected evidence through a restricted upload channel.</li>
+<li>Revalidate and record the reviewer or automated policy version that decided the case.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Do not expose another claimant’s evidence.</li>
+<li>Do not silently relax matching because the claimant is persistent or knows the address.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Pending, additional-evidence-required, approved and rejected outcomes have an auditable reason.</li>
+<li>The claimant can see next steps and an escalation route; sensitive evidence is accessible only to authorized reviewers.</li>
+</ul>
+<h3>ID-05 — Recover a lost phone or compromised account</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner and identity support   <strong>Journey / trigger:</strong> Maya regains her existing access after losing her phone.   <strong>Preconditions:</strong> An approved recovery process exists, separate from home transfer.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Verify recovery evidence with the required assurance and review.</li>
+<li>Revoke compromised sessions and credentials; re-link only the verified principal where appropriate.</li>
+<li>Notify through appropriate trusted channels and review suspicious grants or jobs.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A password reset does not create or transfer ownership.</li>
+<li>A compromised contact channel cannot be the sole evidence used to approve recovery.</li>
+<li>Urgent jobs already accepted by providers need separate review; recovery does not undo them.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A support operator cannot assign themselves ownership through recovery.</li>
+<li>Recovery leaves a traceable identity-linking record and does not resurrect previously revoked grants.</li>
+</ul>
+<h3>ID-06 — Use one account across several homes</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner   <strong>Journey / trigger:</strong> Maya switches between her residence and a second property.   <strong>Preconditions:</strong> Each property has a separate verified binding.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Display authorized homes and require an explicit active-home context.</li>
+<li>Evaluate each operation against its actual resource Home ID.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Changing a browser tab or resource identifier must not carry one home’s authority to another.</li>
+<li>A pending claim for one property cannot affect access to an unrelated property.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A grant and job identify exactly one home unless a future bulk feature explicitly authorizes every item.</li>
+<li>The UI clearly identifies the home before sharing data, ordering or transferring.</li>
+</ul>
+<h3>ID-07 — Authorize a tenant, manager or household delegate</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Owner and non-owner delegate   <strong>Journey / trigger:</strong> Maya lets a tenant arrange maintenance without treating the tenant as an owner.   <strong>Preconditions:</strong> An approved delegate policy and verified inviter authority exist.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Create a role-specific, time-limited relationship with explicit capabilities.</li>
+<li>Limit access to the relevant systems or tasks and personal information supplied for that role.</li>
+<li>Expire or revoke the relationship when the tenancy or appointment ends.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A tenant or invited family member cannot become a co-owner by invitation.</li>
+<li>Resale invalidates previous-epoch delegates unless a new owner explicitly reauthorizes them.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A delegate cannot transfer the home, inspect the owner’s private documents or expand their own authority.</li>
+<li>If delegation is unsupported in the pilot, the UI and support process say so rather than granting owner access.</li>
+</ul>
+<hr>
+<h2>2. Home records and privacy</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>HM-01</td><td>Read the home’s history and warranties</td><td>P0</td></tr>
+<tr><td>HM-02</td><td>Upload a receipt, photograph or maintenance note</td><td>P0</td></tr>
+<tr><td>HM-03</td><td>Dispute or correct an inaccurate record</td><td>P0</td></tr>
+<tr><td>HM-04</td><td>Share a limited record with a buyer, insurer or lender</td><td>P1</td></tr>
+<tr><td>HM-05</td><td>Review access history and active permissions</td><td>P0</td></tr>
+<tr><td>HM-06</td><td>Request account closure or personal-data deletion</td><td>P1</td></tr>
+</tbody></table></div>
+<h3>HM-01 — Read the home’s history and warranties</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner   <strong>Journey / trigger:</strong> Maya finds the installed HVAC unit and relevant maintenance documents.   <strong>Preconditions:</strong> Live home relationship and classified record content.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Build the eligible home view from authorized assertions and attachments.</li>
+<li>Show source, observation date, verification status and relevant correction links.</li>
+<li>Distinguish warranty documentation from a confirmed current or transferable warranty entitlement.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Missing records are shown as missing, not as evidence no work occurred.</li>
+<li>A superseded assertion remains available when appropriate but is not silently presented as the current accepted fact.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The same access rules apply to search, previews, thumbnails and downloads.</li>
+<li>The owner sees no unrelated vault or builder workspace content.</li>
+</ul>
+<h3>HM-02 — Upload a receipt, photograph or maintenance note</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner or scoped contributor   <strong>Journey / trigger:</strong> Maya records a water-heater replacement.   <strong>Preconditions:</strong> The contributor may annotate this home or equipment subtree.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Upload to quarantine, check file type and size, and scan before general access.</li>
+<li>Require a document-type label as the release condition from quarantine: the label selects the tier (identity evidence, transfer evidence, home document), and the tier selects the durable bucket, the encryption key and the retention schedule. Ambiguity defaults to the most restrictive tier.</li>
+<li>Publish an owner-reported assertion with evidence and provenance; run PII detection on quarantine as a backstop.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Unsafe, unprocessable or unlabelled files remain quarantined with a clear status; nothing reaches a durable bucket unlabelled.</li>
+<li>The failure mode to prevent is an identity document mislabelled as a home document — it would sit in the property bucket indefinitely and transfer to the next owner at resale. Periodically re-scan the home-documents bucket as a canary.</li>
+<li>A receipt containing a phone number or card information is not automatically transferred to a future buyer.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>No quarantined object is exposed through a guessed storage URL.</li>
+<li>A file cannot leave quarantine without a type label that sets its bucket, key and retention.</li>
+<li>User-provided content is not labeled independently verified merely because the upload succeeded.</li>
+</ul>
+<h3>HM-03 — Dispute or correct an inaccurate record</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner, source or authorized reviewer   <strong>Journey / trigger:</strong> Maya finds a serial number that does not match the installed unit.   <strong>Preconditions:</strong> The disputed assertion is identifiable and the actor can view it.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Accept a scoped dispute or correction with evidence.</li>
+<li>Preserve the original statement and link the new assessment or correction.</li>
+<li>Update the displayed accepted view under the stated conflict policy; notify affected authorized parties when appropriate.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>One source cannot erase another’s assertion.</li>
+<li>A disagreement may remain unresolved; do not manufacture a single verified answer.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The record distinguishes reported, verified, disputed and corrected states.</li>
+<li>The UI explains who made each assessment, what it covers and when it was made.</li>
+</ul>
+<h3>HM-04 — Share a limited record with a buyer, insurer or lender</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Owner and external recipient   <strong>Journey / trigger:</strong> Maya lets a prospective buyer review equipment and work history before sale.   <strong>Preconditions:</strong> A supported recipient identity and sharing purpose are established.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Select the recipient, allowed fields or documents and time window.</li>
+<li>Require recipient authentication and enforce the grant at retrieval.</li>
+<li>Allow expiry or revocation without giving the recipient ownership.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A forwarded invitation does not authenticate the intended recipient.</li>
+<li>A downloaded export cannot be recalled; a generated download link may retain access until its documented expiry.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Recipients cannot browse other records or infer personal vault contents through metadata.</li>
+<li>The owner sees what was shared and the difference between live access and a retained copy.</li>
+</ul>
+<h3>HM-05 — Review access history and active permissions</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner   <strong>Journey / trigger:</strong> Maya wants to know which providers can still see her information.   <strong>Preconditions:</strong> Application audit and grant inventory are available.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Show active and expired grants with recipient, purpose, scope and time.</li>
+<li>Show disclosure intent and known delivery outcome without implying every intent delivered data.</li>
+<li>Let Maya inspect and revoke grants she controls, with an explanation of remaining authorized paths.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A failed response may have delivered some bytes.</li>
+<li>Do not expose a co-owner’s private vault or restricted internal security investigation details in the owner audit view.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A user can distinguish attempted, denied, dispatched and confirmed outcomes.</li>
+<li>Audit unavailability is shown explicitly rather than rendered as an empty history.</li>
+</ul>
+<h3>HM-06 — Request account closure or personal-data deletion</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Current or former owner   <strong>Journey / trigger:</strong> Maya wants her retained personal data reviewed for removal.   <strong>Preconditions:</strong> A reviewed retention policy exists for each data class.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Authenticate the requester and identify affected personal records.</li>
+<li>Erase personal data by destroying the per-principal data key (crypto-shredding), which makes the ciphertext unrecoverable in active storage, backups and object versions at once. De-link the associated property facts so they remain as non-personal record integrity.</li>
+<li>Retain only the classes with a named legal basis (AML/KYC, legal-claims defence, consent proof) in a sealed archive, and explain each retention reason.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Deleting an account does not erase home ownership facts, resolve a transfer or delete every source assertion. Property facts are de-linked, not destroyed.</li>
+<li>Erasure is by key destruction, so it reaches backups and versions without surgical deletion — but classes under an Art. 17(3) exception (legal obligation, legal claims) are retained on their schedule and only then shredded.</li>
+<li>Offline exports already delivered to the owner or third parties cannot be recalled.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>After erasure, no personal value survives in active storage, backups or object versions, because the key that decrypts it is gone.</li>
+<li>Personal-data actions do not expose information to a new owner or revive access.</li>
+<li>The request has a traceable outcome; each retained class names its legal basis, and app deletion does not change ownership.</li>
+</ul>
+<hr>
+<h2>3. Co-ownership</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>CO-01</td><td>Add an independently verified co-owner</td><td>P0</td></tr>
+<tr><td>CO-02</td><td>Handle overlapping grants and an objection</td><td>P0</td></tr>
+<tr><td>CO-03</td><td>Handle a disputed voluntary transfer</td><td>P1</td></tr>
+</tbody></table></div>
+<h3>CO-01 — Add an independently verified co-owner</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Existing owner and additional owner   <strong>Journey / trigger:</strong> Maya and Alex both have appropriate authority over the home.   <strong>Preconditions:</strong> Evidence supports each owner relationship.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Invite Alex to authenticate and supply or match ownership evidence.</li>
+<li>Create Alex’s independent binding; keep each personal vault separate.</li>
+<li>Show the applicable shared-home decision policy.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Marriage, partnership or an invitation alone is not proof of co-ownership.</li>
+<li>Neither owner can unilaterally delete another verified owner’s binding.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Co-owners are not ranked as a permanent primary and subordinate owner.</li>
+<li>Each can exercise the approved everyday capabilities without inheriting the other’s private documents.</li>
+</ul>
+<h3>CO-02 — Handle overlapping grants and an objection</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Co-owners   <strong>Journey / trigger:</strong> Maya revokes a provider while Alex has granted that provider access.   <strong>Preconditions:</strong> The system can enumerate applicable grants and identify their issuers.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Evaluate the specific grant used by each request; do not combine field sets silently.</li>
+<li>Explain that revoking Maya’s grant does not by itself revoke Alex’s independent grant.</li>
+<li>Under the proposed policy, an authorized co-owner objection suspends new provider sharing and dispatch for the disputed scope pending review.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>The provider must not bypass a scope-level suspension by switching to a different grant.</li>
+<li>Cancellation of accepted work and provider retention remain separate.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The UI never says all provider access ended while another effective path remains.</li>
+<li>The policy covers precedence between grants, suspension and ownership transfer, with a recorded decision.</li>
+</ul>
+<h3>CO-03 — Handle a disputed voluntary transfer</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Co-owners and dispute reviewer   <strong>Journey / trigger:</strong> One owner proposes a sale while another objects.   <strong>Preconditions:</strong> Verified co-owner bindings and a reviewed transfer policy.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Collect the approvals required by the proposed voluntary-transfer policy.</li>
+<li>Pause an incomplete or disputed transfer and explain the missing approval or review route.</li>
+<li>Accept exceptional evidence only through the authorized exception process.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>The platform’s proposed all-owner rule is not a legal determination about who may sell.</li>
+<li>Do not change ownership based only on an email or support ticket from one party.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A unilateral request cannot complete an ordinary co-owned transfer.</li>
+<li>Existing legitimate read access is narrowed only as required by the dispute policy, not blindly removed for every claimant.</li>
+</ul>
+<hr>
+<h2>4. Services and consent</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>SV-01</td><td>Choose a provider and approve data sharing</td><td>P0</td></tr>
+<tr><td>SV-02</td><td>Approve an order with known terms</td><td>P0</td></tr>
+<tr><td>SV-03</td><td>Dispatch safely and resolve an unknown result</td><td>P0</td></tr>
+<tr><td>SV-04</td><td>Change, reschedule or cancel a job</td><td>P0</td></tr>
+<tr><td>SV-05</td><td>Revoke or expire a sharing grant</td><td>P0</td></tr>
+<tr><td>SV-06</td><td>Manage recurring service and renewal</td><td>P2</td></tr>
+</tbody></table></div>
+<h3>SV-01 — Choose a provider and approve data sharing</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner   <strong>Journey / trigger:</strong> Maya selects an internet provider for this home.   <strong>Preconditions:</strong> The provider is onboarded and the applicable agreement route is valid.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Show the provider identity, purpose, field list and duration, and whether each field is lent (shown in a time-boxed Tessera view) or transferred (lands in the provider's systems).</li>
+<li>Capture a scoped sharing grant under Maya’s live binding. Default every field to lent; transfer only fields the provider's own systems require (typically the address for a physical-visit job).</li>
+<li>Release only the allowed projection after recording disclosure intent; sensitive transient fields (gate/access codes) are never transferred.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Missing agreement or unsupported provider means the workflow cannot dispatch data.</li>
+<li>For an EU or UK owner, the grant service refuses to issue a grant to a provider whose accepted agreement version lacks the EU addendum (SCCs Module 1). Controller-to-controller sharing, not a processor DPA.</li>
+<li>Consent for internet installation does not permit unrelated marketing, another job or broader fields.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The displayed and released field lists match, and each field's lent-vs-transferred disposition matches the job type.</li>
+<li>A gate/access code is never written to a provider's systems; it is only ever shown in the time-boxed view.</li>
+<li>An EU/UK-origin grant cannot issue to a provider without the EU addendum accepted.</li>
+<li>No purchase is created by accepting the data-sharing permission.</li>
+</ul>
+<h3>SV-02 — Approve an order with known terms</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner   <strong>Journey / trigger:</strong> Maya chooses a plan and confirms its price and installation terms.   <strong>Preconditions:</strong> Valid provider selection, live authority and an unexpired quote.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Show price, recurring charges where applicable, offering and material terms supplied by the provider.</li>
+<li>Record explicit purchase approval tied to a terms version or digest.</li>
+<li>Create one durable job and its dispatch event atomically.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Materially changed or expired terms require fresh approval.</li>
+<li>Maya changing her mind without changed terms is a cancellation request, not an automatic replacement approval.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A sharing grant alone cannot create the approved-order state.</li>
+<li>Double taps with the same request key return the same job; different terms cannot reuse an earlier approval.</li>
+</ul>
+<h3>SV-03 — Dispatch safely and resolve an unknown result</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> System and provider   <strong>Journey / trigger:</strong> An internet order is submitted without accidental duplication.   <strong>Preconditions:</strong> Approved durable job and provider-specific delivery capabilities.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Recheck current grant, ownership version and accepted terms immediately before dispatch.</li>
+<li>Use a stable job key with provider-supported idempotency or equivalent reconciliation.</li>
+<li>Persist provider receipt or mark the result unknown when acknowledgment is ambiguous.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A stable Tessera ID alone does not force a provider to deduplicate.</li>
+<li>Without safe status lookup or idempotency, do not automatically retry an ambiguous external order; send it to manual review.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>An internal retry cannot generate a second externally accepted order in the supported provider integration.</li>
+<li>Unknown is visible as unknown; a timeout is not labeled rejected, successful or cancelled without evidence.</li>
+</ul>
+<h3>SV-04 — Change, reschedule or cancel a job</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner and provider   <strong>Journey / trigger:</strong> Maya needs a different installation date or wants to cancel.   <strong>Preconditions:</strong> An existing job and its current provider status.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Determine whether the change affects terms, cost or authorization.</li>
+<li>Capture fresh approval when needed and submit a distinct, deduplicated amendment or cancellation.</li>
+<li>Show requested, pending and confirmed outcomes separately.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A provider may reject cancellation after acceptance; show the actual status and escalation path.</li>
+<li>Revoking data access does not prove that a physical visit or subscription was cancelled.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The old order is not silently replaced by a second independent order.</li>
+<li>Cancellation confirmation is based on a provider response or reviewed reconciliation.</li>
+</ul>
+<h3>SV-05 — Revoke or expire a sharing grant</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Owner or time-based policy   <strong>Journey / trigger:</strong> Maya ends a provider’s permission to fetch fresh data.   <strong>Preconditions:</strong> A live grant or a scheduled expiry.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Commit the revocation or evaluate the expiry against current authority.</li>
+<li>Block new releases and queued dispatch that depends on that grant.</li>
+<li>Identify other applicable grants, in-flight jobs and necessary cancellation requests.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Data already delivered cannot be recalled.</li>
+<li>An authorization decision made before revocation may already have released data; represent the actual ordering of events.</li>
+<li>Short-lived signed links cannot promise instant revocation unless every read passes a live gateway.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A stale session or previously minted grant reference cannot authorize new post-revocation requests.</li>
+<li>The owner sees the difference between revoked access, retained copies and pending work.</li>
+</ul>
+<h3>SV-06 — Manage recurring service and renewal</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Owner and provider   <strong>Journey / trigger:</strong> Maya considers a renewal or ongoing maintenance plan.   <strong>Preconditions:</strong> The recurring scope and provider obligations are explicitly supported.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Define duration, renewal rules, limits and the approval required for changed terms.</li>
+<li>Re-evaluate authority and consent for each new action or disclosure.</li>
+<li>On sale or revocation, stop new Tessera-authorized activity and reconcile external subscriptions separately.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Owning the home does not automatically assign the seller’s provider subscription to a buyer.</li>
+<li>A one-time installation grant cannot authorize recurring charges.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>If recurring authorization is outside the pilot, reject it clearly.</li>
+<li>A transfer does not silently carry forward a personal payment mandate or service contract.</li>
+</ul>
+<hr>
+<h2>5. Resale and transfer</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>TR-01</td><td>Prepare a resale without granting the buyer ownership</td><td>P1</td></tr>
+<tr><td>TR-02</td><td>Complete resale as one authority change</td><td>P1</td></tr>
+<tr><td>TR-03</td><td>Handle a transfer racing with access or a job</td><td>P1</td></tr>
+<tr><td>TR-04</td><td>Give the former owner access to their own retained records</td><td>P1</td></tr>
+<tr><td>TR-05</td><td>Resolve delayed, erroneous or reversed transfer evidence</td><td>P1</td></tr>
+<tr><td>TR-06</td><td>Handle estates, entities and exceptional authority</td><td>P2</td></tr>
+</tbody></table></div>
+<h3>TR-01 — Prepare a resale without granting the buyer ownership</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Seller   <strong>Journey / trigger:</strong> Maya prepares a trustworthy record for Daniel to review.   <strong>Preconditions:</strong> Maya remains authorized and the record is classified.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Generate a preview of the eligible sale disclosure.</li>
+<li>Exclude personal contact, payment, provider account and restricted attachment data.</li>
+<li>Optionally issue a limited buyer-view grant or a dated export.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Buyer review is not ownership transfer.</li>
+<li>Warranty transferability or document completeness must not be assumed from the existence of a file.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The seller can inspect what the buyer will receive.</li>
+<li>A prospective buyer cannot grant access, order services or transfer the home.</li>
+</ul>
+<h3>TR-02 — Complete resale as one authority change</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Seller, buyer and closing partner   <strong>Journey / trigger:</strong> Daniel becomes the authorized owner at the verified transfer event.   <strong>Preconditions:</strong> Approved evidence, required approvals and buyer identity validation.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Lock the home authority state and validate the effective transfer.</li>
+<li>Increment the ownership version, close previous bindings and create the new verified bindings atomically.</li>
+<li>Invalidate all previous-version grants and delegates; record audit and downstream work to reconcile.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Original-builder availability is not a dependency.</li>
+<li>A failed transaction does not leave two independently active ownership epochs or half-applied grants.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>New requests after transfer cannot use the previous epoch.</li>
+<li>All old co-owner grants are invalidated, not just grants issued by the named seller.</li>
+</ul>
+<h3>TR-03 — Handle a transfer racing with access or a job</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> System, former owner and provider   <strong>Journey / trigger:</strong> An old-owner request overlaps Daniel’s closing.   <strong>Preconditions:</strong> Authorization and dispatch use the authoritative ownership version.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Serialize release authorization with authority updates.</li>
+<li>Revalidate queued jobs and callbacks according to their specific allowed operation.</li>
+<li>Mark already dispatched work for reconciliation if affected by the transfer.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A previously authorized response or external side effect cannot be reversed by changing a database field.</li>
+<li>Do not let a lagging read replica approve a request using stale ownership.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A deterministic test demonstrates which operation committed first and what was released.</li>
+<li>No worker dispatches a new old-epoch job after observing the completed transfer.</li>
+</ul>
+<h3>TR-04 — Give the former owner access to their own retained records</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Former owner   <strong>Journey / trigger:</strong> Maya needs her earlier receipt or closing document.   <strong>Preconditions:</strong> The relevant document is retained and authorized for Maya independently of current home authority.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Offer a personal historical view or export.</li>
+<li>Keep current-home access, buyer information and new grants unavailable.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Possession of an old document does not renew current home authority.</li>
+<li>A historical export may be accurate for its stated date without being the latest record.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Maya can retrieve permitted own records without seeing Daniel’s data.</li>
+<li>Daniel does not automatically inherit Maya’s private archive.</li>
+</ul>
+<h3>TR-05 — Resolve delayed, erroneous or reversed transfer evidence</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Closing partner and reviewer   <strong>Journey / trigger:</strong> A partner discovers that a submitted closing event was wrong.   <strong>Preconditions:</strong> An identified evidence event and a controlled correction process.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Suspend affected risky operations under the incident policy while verifying the correction.</li>
+<li>Record the corrected evidence and evaluate who should hold authority now.</li>
+<li>Apply a new reviewed authority transition; reconcile affected grants and jobs explicitly.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Do not roll back the database wholesale or erase intervening history.</li>
+<li>Do not automatically reactivate grants belonging to an earlier owner version.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The event history explains the correction and responsible reviewer.</li>
+<li>Permissions after correction are intentionally rebuilt and tested, not inferred from a historical snapshot.</li>
+</ul>
+<h3>TR-06 — Handle estates, entities and exceptional authority</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Authorized representative and reviewer   <strong>Journey / trigger:</strong> A representative acts for an estate, trust or company that owns the home.   <strong>Preconditions:</strong> Approved evidence policy for this category, or an explicit unsupported-case route.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Verify both the owning entity and the person’s authority to represent it.</li>
+<li>Limit representative capabilities and duration to the accepted evidence.</li>
+<li>Review succession, expiry or replacement of the representative.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>The platform does not determine inheritance or legal authority from a relationship label.</li>
+<li>Court-directed or non-voluntary changes need their own reviewed evidence route rather than the ordinary all-owner approval flow.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>An unsupported case is held for review, never converted into an ordinary owner by convenience.</li>
+<li>The identity of the acting person and represented owner remain separately auditable.</li>
+</ul>
+<hr>
+<h2>6. Closing evidence partners</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>CP-01</td><td>Onboard a closing evidence partner</td><td>P0</td></tr>
+<tr><td>CP-02</td><td>Submit duplicate, late or conflicting closing evidence</td><td>P0</td></tr>
+<tr><td>CP-03</td><td>Revoke a compromised attestor or credential</td><td>P0</td></tr>
+</tbody></table></div>
+<h3>CP-01 — Onboard a closing evidence partner</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Partner administrator and Tessera reviewer   <strong>Journey / trigger:</strong> A title or escrow organization becomes an approved evidence source.   <strong>Preconditions:</strong> Organization, agreement and reviewer approval are established.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Register the organization, allowed evidence types and permitted geography or project scope where relevant.</li>
+<li>Provision scoped credentials and record who may submit or attest.</li>
+<li>Test a claim and correction flow before enabling live evidence.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A credential authenticates the sender, not the truth of the submitted claim.</li>
+<li>Unapproved sources may submit a review request but cannot activate ownership directly.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Partner permissions have a documented scope, expiration or review schedule and accountable owner.</li>
+<li>A revoked partner credential fails on subsequent submissions.</li>
+</ul>
+<h3>CP-02 — Submit duplicate, late or conflicting closing evidence</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Closing partner   <strong>Journey / trigger:</strong> A partner sends the same closing event twice or later corrects it.   <strong>Preconditions:</strong> A stable partner event identifier and home mapping.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Deduplicate exact retries and acknowledge the existing event.</li>
+<li>Reject or quarantine reuse of the same event ID with different content.</li>
+<li>Record event time and receipt time; apply current reviewed authority rules rather than arrival order alone.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A late old closing does not overwrite a newer verified owner.</li>
+<li>Conflicting evidence preserves both sources for review; no last-write-wins transfer.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Duplicate submission produces one authority transition.</li>
+<li>Partner receipt and processing outcome are visible without exposing another partner’s evidence.</li>
+</ul>
+<h3>CP-03 — Revoke a compromised attestor or credential</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Partner security team and Tessera operations   <strong>Journey / trigger:</strong> A stolen partner credential must stop authorizing new evidence.   <strong>Preconditions:</strong> Incident reporting and credential inventory.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Disable the affected credential and suspend new evidence where required.</li>
+<li>Identify submissions and authority changes associated with the exposure window.</li>
+<li>Review impacted homes and notify affected parties through the incident process.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Credential revocation does not automatically prove every historical attestation was false.</li>
+<li>Do not mass-transfer homes or erase evidence as an automated response.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>New submissions fail while the historical chain remains attributable.</li>
+<li>Affected authority changes have tracked review outcomes and corrective actions.</li>
+</ul>
+<hr>
+<h2>7. Builder contribution</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>BU-01</td><td>Publish approved home facts from builder systems</td><td>P0</td></tr>
+<tr><td>BU-02</td><td>Reconcile duplicates, stale data and source conflicts</td><td>P0</td></tr>
+<tr><td>BU-03</td><td>Resolve a wrong home mapping or duplicate home identity</td><td>P0</td></tr>
+<tr><td>BU-04</td><td>Provide post-close warranty support</td><td>P1</td></tr>
+<tr><td>BU-05</td><td>Offboard a builder without stranding the home</td><td>P1</td></tr>
+</tbody></table></div>
+<h3>BU-01 — Publish approved home facts from builder systems</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Builder administrator and connector   <strong>Journey / trigger:</strong> The builder contributes equipment and construction records.   <strong>Preconditions:</strong> Authorized source credentials, home mapping and field publication policy.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Use source-issued read scopes and endpoint restrictions.</li>
+<li>Import source-attributed events into the authorized tenant context.</li>
+<li>Publish only the approved home projection; keep cost, margin and pipeline in the builder workspace.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Read-only behavior is not determined solely by HTTP verb; endpoint semantics and credentials matter.</li>
+<li>HomePassport does not need to ingest the builder’s entire business database.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The connector cannot write back to the source in this scope.</li>
+<li>No home-history response includes internal builder fields, even through nested payloads or attachments.</li>
+</ul>
+<h3>BU-02 — Reconcile duplicates, stale data and source conflicts</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Builder operations and ingestion service   <strong>Journey / trigger:</strong> Two source systems disagree about an installation date.   <strong>Preconditions:</strong> Source event IDs, observation times and received times are retained.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Deduplicate identical events and keep conflicting statements separately attributed.</li>
+<li>Apply an explicit accepted-view policy and display uncertainty where unresolved.</li>
+<li>Expose freshness and ingestion status to authorized builder staff.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Connector outage must not silently turn stale data into a current verified claim.</li>
+<li>A newer receipt timestamp alone does not make the underlying observation more authoritative.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>One source cannot overwrite another’s evidence silently.</li>
+<li>Replay after an outage does not duplicate maintenance or ownership events.</li>
+</ul>
+<h3>BU-03 — Resolve a wrong home mapping or duplicate home identity</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Builder and authorized reviewer   <strong>Journey / trigger:</strong> A document was attached to the wrong lot or two IDs describe the same home.   <strong>Preconditions:</strong> Evidence identifying the mapping problem.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Quarantine disputed records from affected public-to-owner views where needed.</li>
+<li>Review the physical-home mapping and correct associations with an audit trail.</li>
+<li>Preserve aliases or merge references only through an approved identity operation.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Address changes, unit renumbering, parcel splits and rebuilds are not automatically identity merges.</li>
+<li>Moving an attachment may be a disclosure incident for the original recipient and needs review.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A repair does not merge owners, grants or personal vaults automatically.</li>
+<li>All affected assertions remain traceable to their source and prior association.</li>
+</ul>
+<h3>BU-04 — Provide post-close warranty support</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Builder warranty team and owner   <strong>Journey / trigger:</strong> Maya needs the builder to address a defect after closing.   <strong>Preconditions:</strong> An explicitly authorized warranty/service scope.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Open a scoped work case tied to the relevant home component.</li>
+<li>Allow authorized staff the minimum records needed for the case.</li>
+<li>Record attributed work and close or expire the service access.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Closing ends construction authority, not every possible separately authorized warranty relationship.</li>
+<li>A warranty case does not reopen unrestricted access to the owner’s vault.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Builder staff can complete the supported case without seeing unrelated personal data.</li>
+<li>Staff termination or case expiry removes the relevant access.</li>
+</ul>
+<h3>BU-05 — Offboard a builder without stranding the home</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Builder administrator and Tessera operations   <strong>Journey / trigger:</strong> A builder ends the integration after the home has been sold.   <strong>Preconditions:</strong> HomePassport owns its independent service lifecycle and publication/retention rights are defined.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Revoke source credentials and stop new synchronization.</li>
+<li>Preserve eligible previously published home records according to the applicable policy.</li>
+<li>Keep owner access and resale evidence routes independent of the terminated source integration.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Builder offboarding does not automatically entitle Tessera to retain every imported private payload.</li>
+<li>Kestrel risk/model offboarding is a separate product workflow.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The homeowner’s supported access does not require the builder to remain a customer.</li>
+<li>The record clearly indicates source updates have stopped.</li>
+</ul>
+<hr>
+<h2>8. Service providers</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>PR-01</td><td>Onboard a provider and its acting identities</td><td>P0</td></tr>
+<tr><td>PR-02</td><td>Request data within a job scope</td><td>P0</td></tr>
+<tr><td>PR-03</td><td>Report completion, partial work or a correction</td><td>P0</td></tr>
+<tr><td>PR-04</td><td>Delegate work to a subcontractor</td><td>P2</td></tr>
+<tr><td>PR-05</td><td>Respond to offboarding or a retention request</td><td>P1</td></tr>
+</tbody></table></div>
+<h3>PR-01 — Onboard a provider and its acting identities</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Provider administrator   <strong>Journey / trigger:</strong> An internet company becomes eligible to receive jobs.   <strong>Preconditions:</strong> Applicable agreement route and provider integration review.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Register organization identity, approved endpoints, fields, scopes and supported operations.</li>
+<li>Provision machine credentials separately from technician identities.</li>
+<li>Validate status lookup, duplicate handling and cancellation behavior before live dispatch.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>An MCP endpoint is optional transport, not proof of trust or authorization.</li>
+<li>A provider employee leaving the organization must lose employer-based access.</li>
+<li>The lent-view access log ties a named technician to an owner's data, so the technician is themselves a data subject. Provider users need their own privacy notice and a rights-handling path; a technician's subject-access request is an expected case.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Every accepted result is attributed to the actual authenticated organization and, when proven, the acting person.</li>
+<li>The integration documents what happens after a timeout before accepting orders.</li>
+<li>Provider users are given a privacy notice covering the access log, and a subject-access request from a technician has a defined handling path.</li>
+</ul>
+<h3>PR-02 — Request data within a job scope</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Provider worker or technician   <strong>Journey / trigger:</strong> The installer retrieves the authorized installation location.   <strong>Preconditions:</strong> Authenticated recipient and a specific live job grant.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Validate recipient, job, home, purpose, epoch and allowed fields.</li>
+<li>Serve lent fields through the time-boxed Tessera view (logged on every look, watermarked with provider, user, job and time); transfer only the fields the job type requires to the provider's systems.</li>
+<li>Record disclosure intent and return no unrelated field or home data.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A field outside the allowlist is denied or omitted under the documented API contract.</li>
+<li>Lent fields must not be persisted by the provider; only transferred fields land in provider systems, and those carry a deletion obligation on job close.</li>
+<li>The service must not combine multiple grants into a broader payload unless a separately approved policy explicitly permits it.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Direct object identifiers and batch requests cannot bypass scope.</li>
+<li>The lent view logs which named technician saw which field for which job; a lent field never appears in a transfer payload.</li>
+<li>Payload logs, traces and error messages do not disclose ungranted data.</li>
+</ul>
+<h3>PR-03 — Report completion, partial work or a correction</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Provider   <strong>Journey / trigger:</strong> The installer reports what actually happened.   <strong>Preconditions:</strong> Authenticated callback route and stable job/source event identifiers.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Verify sender, signature where used, replay protections and event identity.</li>
+<li>Record reported status and supporting evidence without asserting independent verification.</li>
+<li>Apply allowed job-state transitions; link later corrections rather than overwriting evidence.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Duplicate or out-of-order callbacks must not regress a completed job to pending.</li>
+<li>A result for an already dispatched job may be accepted after read-grant expiry through a narrowly scoped write-only callback route; it grants no fresh data access.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Forged callbacks cannot close a job or change ownership.</li>
+<li>A contradictory result creates a visible dispute/correction path.</li>
+</ul>
+<h3>PR-04 — Delegate work to a subcontractor</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Provider administrator and subcontractor   <strong>Journey / trigger:</strong> The provider wants another company to complete installation.   <strong>Preconditions:</strong> Subcontracting policy and recipient approval are explicitly supported.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Identify the actual recipient organization and required fields.</li>
+<li>Obtain the required owner permission and agreement route before sharing.</li>
+<li>Issue a distinct limited authorization and retain the delegation chain.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>The original provider’s grant is not a transferable bearer permission for any subcontractor.</li>
+<li>If subcontracting is unsupported, keep the job pending or use an approved alternative.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The owner can see which organization received data and performed work.</li>
+<li>Subcontractor access cannot outlive or exceed the permitted parent scope.</li>
+</ul>
+<h3>PR-05 — Respond to offboarding or a retention request</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Provider administrator and Tessera operations   <strong>Journey / trigger:</strong> A provider leaves or must account for copies already delivered.   <strong>Preconditions:</strong> Provider data inventory and applicable retention obligations.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Revoke new-access credentials and block new dispatch where required.</li>
+<li>Reconcile outstanding jobs, service accounts and cancellation requests.</li>
+<li>Track requested downstream retention/deletion actions and acknowledgments.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Tessera cannot independently prove deletion inside a provider’s systems merely from an acknowledgment.</li>
+<li>Existing external subscriptions may require an owner/provider process to close.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The UI distinguishes confirmed API revocation from reported downstream deletion.</li>
+<li>Open jobs do not disappear from the record during offboarding.</li>
+</ul>
+<hr>
+<h2>9. Operations and security</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>OP-01</td><td>Assist a user through controlled support access</td><td>P0</td></tr>
+<tr><td>OP-02</td><td>Handle audit or policy-service failure</td><td>P0</td></tr>
+<tr><td>OP-03</td><td>Recover from queue failures and provider outages</td><td>P0</td></tr>
+<tr><td>OP-04</td><td>Restore the service after an outage</td><td>P0</td></tr>
+<tr><td>OP-05</td><td>Investigate a credential leak or unauthorized disclosure</td><td>P0</td></tr>
+<tr><td>OP-06</td><td>Deploy a policy, schema or integration change</td><td>P0</td></tr>
+</tbody></table></div>
+<h3>OP-01 — Assist a user through controlled support access</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Support operator and second approver   <strong>Journey / trigger:</strong> Support investigates a broken claim without browsing unrelated homes.   <strong>Preconditions:</strong> Verified support identity and an incident/case reference.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Start with non-content diagnostics.</li>
+<li>Request the least necessary, time-limited scope and obtain the required independent approval.</li>
+<li>Record access, purpose and outcome; end the scope at expiry or case completion.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Support cannot bypass ownership review or impersonate an owner to approve an order.</li>
+<li>Owner-visible records may need to omit restricted security detail while retaining an independently auditable event.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>There is no standing support access to all customer content.</li>
+<li>An expired incident role cannot read further data; the second approver is not the requesting operator.</li>
+</ul>
+<h3>OP-02 — Handle audit or policy-service failure</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Application and operations   <strong>Journey / trigger:</strong> An access request arrives while a required control is unavailable.   <strong>Preconditions:</strong> Protected releases depend on current authority and durable intent logging.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Reject or safely retry a new protected operation when authoritative permission cannot be checked.</li>
+<li>Block new release when audit intent cannot be committed.</li>
+<li>Alarm on audit export lag and separately report optional witness-publication delays.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Do not fall back to a cached owner binding or raw unfiltered record.</li>
+<li>External anchoring delay need not stop ordinary authorized access when core policy and durable audit are healthy.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Failure injection demonstrates no unauthorized fallback response.</li>
+<li>An incomplete audit view is labeled incomplete, not presented as proof of no access.</li>
+</ul>
+<h3>OP-03 — Recover from queue failures and provider outages</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Operations and job workers   <strong>Journey / trigger:</strong> A queue or provider outage delays installations.   <strong>Preconditions:</strong> Durable jobs, outbox events and retry policy exist.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Retain undispatched work and show pending status.</li>
+<li>Retry within configured bounds; route persistent failures to a dead-letter/manual-review path.</li>
+<li>Before replay, check current authority and whether the external effect already occurred.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Queue redelivery is expected; it must not duplicate external orders.</li>
+<li>Dead-letter movement is not cancellation or deletion of the customer’s request.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Replay after recovery produces the same supported job outcome without repeating completed external effects.</li>
+<li>The owner sees unresolved jobs and an escalation path.</li>
+</ul>
+<h3>OP-04 — Restore the service after an outage</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Operations   <strong>Journey / trigger:</strong> A database failure requires recovery while preserving who may access each home.   <strong>Preconditions:</strong> Tested backup, identity recovery and restore procedures.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Restore authority, records and document references to a consistent recoverable state.</li>
+<li>Reconcile newer audit evidence and external provider outcomes before resuming risky actions.</li>
+<li>Verify identity-provider continuity and invalidate stale recovered sessions/grants where necessary.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Database restore alone does not recover the sign-in system or prove subscriptions were not placed.</li>
+<li>Do not revive a revoked grant simply because it exists in an older backup.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A timed drill demonstrates the agreed recovery point and recovery time.</li>
+<li>Post-restore tests cover revoked access, completed jobs and personal-record separation.</li>
+</ul>
+<h3>OP-05 — Investigate a credential leak or unauthorized disclosure</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Security responders   <strong>Journey / trigger:</strong> Tessera detects suspicious use of a provider or operator credential.   <strong>Preconditions:</strong> Independent security logs and incident procedures.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Contain the identity and affected access paths.</li>
+<li>Determine which fields and homes may have been accessed using application and infrastructure evidence.</li>
+<li>Preserve evidence, review authority changes and communicate through the approved incident process.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A denied-request log does not prove nothing leaked through another route.</li>
+<li>Compromised application administrators may affect local logs; separate audit storage and export-lag monitoring reduce that risk but do not eliminate it.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The incident record separates known disclosure from uncertain scope.</li>
+<li>Restoring a credential does not automatically restore suspended grants or approve suspicious jobs.</li>
+</ul>
+<h3>OP-06 — Deploy a policy, schema or integration change</h3>
+<p><strong>Priority:</strong> P0   <strong>Actor:</strong> Engineering and release approver   <strong>Journey / trigger:</strong> A new field or provider adapter is introduced safely.   <strong>Preconditions:</strong> Versioned change, review and non-production evidence.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Test authorization defaults, data classification and backward compatibility.</li>
+<li>Deploy using separated deployment and runtime roles with rollback criteria.</li>
+<li>Monitor denial changes, leakage tests, audit completeness and job reconciliation.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A new field is excluded from existing grants unless explicitly authorized.</li>
+<li>A migration must not change owner bindings, classification or retention as an accidental side effect.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>Policy version is recorded for relevant decisions.</li>
+<li>A rollback does not replay orders or resurrect access; the release has a reviewed recovery strategy.</li>
+</ul>
+<hr>
+<h2>10. Exports and independent proof</h2>
+<div class="tw"><table><thead><tr><th>ID</th><th>Use case</th><th>Priority</th></tr></thead><tbody>
+<tr><td>EX-01</td><td>Export the eligible home record</td><td>P1</td></tr>
+<tr><td>EX-02</td><td>Verify committed content independently</td><td>P2</td></tr>
+<tr><td>EX-03</td><td>Handle delayed witnessing, key compromise or company closure</td><td>P2</td></tr>
+</tbody></table></div>
+<h3>EX-01 — Export the eligible home record</h3>
+<p><strong>Priority:</strong> P1   <strong>Actor:</strong> Owner or permitted recipient   <strong>Journey / trigger:</strong> Maya wants a copy she can retain independently of the app.   <strong>Preconditions:</strong> Live export authorization and classified content.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Generate a dated manifest stating included, omitted, redacted and unavailable material.</li>
+<li>Include eligible records, provenance and requested verification material.</li>
+<li>Deliver through controlled access and record the export event.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>A redacted file will not have the same digest as its original; label the proof that actually covers the delivered version.</li>
+<li>Downloading a copy removes Tessera’s ability to revoke that copy.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The export opens without an active Tessera login once legitimately delivered.</li>
+<li>It contains no unapproved personal or builder records, including filenames, hidden metadata and attachments.</li>
+</ul>
+<h3>EX-02 — Verify committed content independently</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Buyer, insurer or independent verifier   <strong>Journey / trigger:</strong> Daniel checks that delivered content matches a witnessed commitment.   <strong>Preconditions:</strong> Optional external proof service is enabled and an authorized proof package exists.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Provide canonical bytes or a clearly scoped projection, algorithm/version metadata, required nonce and inclusion receipt.</li>
+<li>Verify against the external checkpoint and report pass, fail or insufficient material.</li>
+<li>State the checkpoint date and what the proof actually covers.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>Integrity is not physical truth, complete history or current ownership.</li>
+<li>Missing salt, path, receipt or checkpoint prevents a complete offline verification.</li>
+<li>Offline verification cannot discover a later event or prove a shown version is latest.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>The verifier works without Tessera’s API for the exported scope.</li>
+<li>Tampered content fails and redacted/unwitnessed content is not incorrectly labeled fully verified.</li>
+</ul>
+<h3>EX-03 — Handle delayed witnessing, key compromise or company closure</h3>
+<p><strong>Priority:</strong> P2   <strong>Actor:</strong> Owner and operations   <strong>Journey / trigger:</strong> An external witness is unavailable or Tessera stops operating.   <strong>Preconditions:</strong> Export format, key lifecycle and continuity policy are documented.</p>
+<p><strong>Expected flow</strong></p>
+<ol>
+<li>Label pending commitments and retry publication without blocking healthy core access.</li>
+<li>For compromised signing keys, preserve key history and publish the reviewed status without rewriting old claims.</li>
+<li>Offer available exports and explain the remaining operational dependencies.</li>
+</ol>
+<p><strong>Exceptions and boundaries</strong></p>
+<ul>
+<li>The ledger does not host the full record or operate future transfers.</li>
+<li>Verification may survive closure only for users holding sufficient records and proofs; do not imply all owners have already exported.</li>
+</ul>
+<p><strong>Acceptance criteria</strong></p>
+<ul>
+<li>A pending commitment is not presented as externally witnessed.</li>
+<li>The continuity plan distinguishes reading/verifying old records from obtaining new services or changing authority.</li>
+</ul>
+<hr>
+<h2>State transitions</h2>
+<p>These are product states to make user outcomes and engineering behavior agree. Implementation may use separate state machines for identity, home authority, disclosure and external work.</p>
+<div class="tw"><table><thead><tr><th>Object</th><th>Main states</th><th>Required interpretation</th></tr></thead><tbody>
+<tr><td>Claim</td><td>Pending → more evidence / approved / rejected / disputed</td><td>Pending is not ownership; rejection has a reason and appropriate review path</td></tr>
+<tr><td>Home authority</td><td>Unclaimed → active → transfer pending → active at new epoch</td><td>Ordinary transfer changes authority atomically; disputes and exceptions use reviewed transitions</td></tr>
+<tr><td>Relationship</td><td>Pending → active → suspended / expired / ended</td><td>Suspension need not erase the historical relationship</td></tr>
+<tr><td>Grant</td><td>Draft → active → revoked / expired / suspended / invalidated by transfer</td><td>Effective access also depends on current binding, recipient, epoch and policy</td></tr>
+<tr><td>Order</td><td>Draft → approved → queued → dispatching → confirmed → completed</td><td>Unknown, failed and manual-review are explicit alternatives; timeout is not a definitive outcome</td></tr>
+<tr><td>Cancellation</td><td>Requested → pending → confirmed / rejected / unknown</td><td>A cancellation request is not confirmation that work stopped</td></tr>
+<tr><td>Assertion</td><td>Source-reported, with linked verification/dispute/correction assessments</td><td>Preserve provenance; verification has a scope and reviewer, not a universal truth flag</td></tr>
+<tr><td>Audit delivery</td><td>Intent committed → dispatch attempted → known outcome recorded → archive exported</td><td>Intent is not proof of successful delivery; export can lag</td></tr>
+<tr><td>Export</td><td>Requested → authorized → assembled → delivered / failed</td><td>Manifest identifies omissions and date; authorization is checked before release</td></tr>
+<tr><td>Witness commitment</td><td>Pending → submitted → confirmed / failed</td><td>Optional; unconfirmed content is not externally witnessed</td></tr>
+</tbody></table></div>
+<h3>Essential distinctions</h3>
+<ul>
+<li>A <strong>grant</strong> permits a defined disclosure or operation; an <strong>order approval</strong> accepts commercial terms.</li>
+<li>A <strong>binding</strong> relates a principal to a home; a <strong>session</strong> authenticates a principal for a period.</li>
+<li>A <strong>revocation</strong> blocks new authorization; a <strong>cancellation</strong> attempts to stop outside work.</li>
+<li>A <strong>correction</strong> adds new evidence; a <strong>deletion/redaction</strong> changes retained or presented personal content under policy.</li>
+<li>A <strong>verification receipt</strong> concerns committed content; it does not establish current ownership or completeness.</li>
+</ul>
+<h2>Decisions required before implementation</h2>
+<div class="tw"><table><thead><tr><th>Decision</th><th>Recommended starting position</th><th>Accountable reviewers</th><th>Cases affected</th></tr></thead><tbody>
+<tr><td>Acceptable ownership evidence</td><td>Approved closing attestations plus identity evidence; explicit manual exception route</td><td>Product, closing partner, security, policy review</td><td>ID-03–05, CP-01–03, TR-01–06</td></tr>
+<tr><td>Co-owner everyday authority and objections</td><td>Independent bindings; no silent grant union; scope-level objection suspends disputed sharing pending review</td><td>Product, security, policy review</td><td>CO-01–03, SV-05</td></tr>
+<tr><td>Transfer approval and exceptional authority</td><td>All verified owners for supported voluntary transfer; separate reviewed exceptional route</td><td>Product, closing partner, policy review</td><td>TR-02, TR-05–06</td></tr>
+<tr><td>What follows the home</td><td>Field and attachment classification with an explicit successor projection</td><td>Data architecture, product, privacy review</td><td>HM-01–06, TR-01–04, EX-01</td></tr>
+<tr><td>Identity-evidence retention (AML/KYC)</td><td>Determine whether Tessera or its closing partners are obliged entities; if so, retain-and-seal instead of discard. Default to retain-and-seal until confirmed</td><td>Counsel, security, privacy review</td><td>ID-03, HM-02, CP-01</td></tr>
+<tr><td>Personal-data erasure mechanism</td><td>Crypto-shred via per-principal keys; de-link property facts; retain only named legal-basis classes</td><td>Data architecture, security, privacy review</td><td>HM-06, EX-01</td></tr>
+<tr><td>International transfer / EU-UK residency</td><td>Separate EU region for EU/UK principals, region follows the person; grant-time SCC/addendum check; per-region keys and ledger. Fallback: EU-held keys over us-east-1 ciphertext</td><td>Privacy review, engineering, founders</td><td>ID-02–03, SV-01, PR-02</td></tr>
+<tr><td>Provider guarantees</td><td>One launch provider with documented idempotency/status/cancellation behavior</td><td>Partnerships, engineering</td><td>SV-01–06, PR-01–05</td></tr>
+<tr><td>Sharing permissions and third-party agreements</td><td>Purpose-specific route; owner services independent of the original builder</td><td>Partnerships, product, policy review</td><td>SV-01, PR-01–02</td></tr>
+<tr><td>Downloads and revocation</td><td>Prefer live-gated access; declare short-lived link expiry where direct transfers are needed</td><td>Security, engineering, product</td><td>HM-04, SV-05, EX-01</td></tr>
+<tr><td>Audit visibility and retention</td><td>Minimized application events plus separate security archive; publish export-lag expectations</td><td>Security, privacy review, operations</td><td>HM-05, OP-01–06</td></tr>
+<tr><td>Recovery objectives</td><td>Agree and test RPO/RTO across authority, documents, identity and provider reconciliation</td><td>Operations, engineering, pilot customer</td><td>ID-05, OP-03–04</td></tr>
+<tr><td>External proof and continuity</td><td>Export first; optional witness only for an explicit verification requirement</td><td>Founders, architecture, customer</td><td>EX-01–03</td></tr>
+</tbody></table></div>
+<p>None of the decisions above is treated as approved merely because it appears in this document. Unresolved policy blocks the affected workflow, not unrelated authorized use.</p>
+<h2>Release acceptance scenarios</h2>
+<p>These cross-user scenarios supplement each case’s criteria. They are release evidence to collect, not tests claimed as executed.</p>
+<div class="tw"><table><thead><tr><th>Test</th><th>Given / when</th><th>Required result</th><th>Traceability</th></tr></thead><tbody>
+<tr><td>AT-01: plaque attacker</td><td>A signed-in stranger scans or guesses a valid home ID</td><td>No protected content and no owner binding</td><td>ID-01–03</td></tr>
+<tr><td>AT-02: mismatched buyer</td><td>Approved partner supplies conflicting buyer evidence</td><td>Pending/review, with no premature access</td><td>ID-03–04, CP-02</td></tr>
+<tr><td>AT-03: account recovery</td><td>A lost-device recovery completes</td><td>Same verified principal access; revoked grants stay revoked</td><td>ID-05</td></tr>
+<tr><td>AT-04: cross-home access</td><td>A user substitutes another Home ID in a read, export or job</td><td>Denied without content leakage</td><td>ID-06, PR-02</td></tr>
+<tr><td>AT-05: attachment privacy</td><td>A receipt has payment data in metadata or a preview</td><td>The unapproved content never enters the buyer projection</td><td>HM-02, TR-01, EX-01</td></tr>
+<tr><td>AT-06: changed terms</td><td>An expired or changed quote is used for dispatch</td><td>No dispatch until fresh explicit approval</td><td>SV-02–03</td></tr>
+<tr><td>AT-07: provider timeout</td><td>An accepted order loses its acknowledgment</td><td>Reconciled or safely deduplicated; no blind duplicate order</td><td>SV-03, OP-03</td></tr>
+<tr><td>AT-08: revoked grant</td><td>A stale token or queued job is used after revocation</td><td>New dependent release/dispatch denied</td><td>SV-05</td></tr>
+<tr><td>AT-09: alternate grant</td><td>A provider switches to another co-owner grant during a scope suspension</td><td>Suspension applies; no bypass</td><td>CO-02</td></tr>
+<tr><td>AT-10: expiry and callback</td><td>Read permission expires after legitimate dispatch</td><td>No new read; authenticated narrowly scoped result may still be recorded</td><td>PR-03</td></tr>
+<tr><td>AT-11: resale race</td><td>Old-owner request and transfer overlap</td><td>Recorded ordering; no authorization under the old epoch after the transfer commit</td><td>TR-02–03</td></tr>
+<tr><td>AT-12: resale privacy</td><td>Daniel receives the successor view</td><td>Eligible home history only; no automatic seller vault access</td><td>TR-01–04</td></tr>
+<tr><td>AT-13: transfer correction</td><td>An attestation is later corrected</td><td>Reviewed new transition; no automatic resurrection of old grants</td><td>TR-05</td></tr>
+<tr><td>AT-14: forged provider result</td><td>A callback is replayed, modified or signed by the wrong party</td><td>Rejected or deduplicated; no false job completion</td><td>PR-03</td></tr>
+<tr><td>AT-15: duplicate source event</td><td>A builder/partner event repeats with the same or changed payload</td><td>Same event deduplicated; inconsistent reuse quarantined</td><td>CP-02, BU-02</td></tr>
+<tr><td>AT-16: break-glass abuse</td><td>Support requests excessive scope or self-approval</td><td>Denied; permitted sessions expire and are audited</td><td>OP-01</td></tr>
+<tr><td>AT-17: audit failure</td><td>Intent cannot be committed</td><td>No new protected release; clear retry/failure state</td><td>OP-02</td></tr>
+<tr><td>AT-18: stale restore</td><td>A backup contains a grant later revoked and a job later completed</td><td>Neither access nor external work is blindly replayed</td><td>OP-04</td></tr>
+<tr><td>AT-19: export tampering</td><td>Delivered proof content changes or required proof parts are missing</td><td>Fail or insufficient-material result, not verified</td><td>EX-01–02</td></tr>
+<tr><td>AT-20: witness outage</td><td>Optional anchoring is delayed</td><td>Pending proof status; healthy core permissions remain enforced</td><td>EX-03</td></tr>
+<tr><td>AT-21: lent field never transferred</td><td>A provider job requests a gate/access code</td><td>The code is shown only in the time-boxed view; it never lands in a transfer payload or provider system</td><td>SV-01, PR-02</td></tr>
+<tr><td>AT-22: erasure reaches backups</td><td>An owner is erased, then a backup/version is inspected</td><td>No personal value is recoverable because the per-principal key is destroyed</td><td>HM-06</td></tr>
+<tr><td>AT-23: EU grant without addendum</td><td>An EU/UK owner grants to a provider lacking the EU addendum</td><td>The grant is refused at issue</td><td>SV-01</td></tr>
+<tr><td>AT-24: mislabelled identity doc</td><td>An ID scan is submitted labelled as a home document</td><td>Quarantine classification/PII backstop catches it; it never reaches the property bucket</td><td>HM-02</td></tr>
+</tbody></table></div>
+<h3>Operational measures to review during the pilot</h3>
+<p>Measure claim completion and review time; unresolved disputes; unauthorized-access test outcomes; grant-revocation race outcomes; unknown/duplicate job rates; time to reconcile provider results; data freshness; audit export lag; dead-letter age; export failures; and achieved restore time/recovery point. Do not invent numerical service guarantees before validating the operating baseline and agreeing customer needs.</p>
+<h2>Suggested first end-to-end pilot</h2>
+<ol>
+<li>An approved builder publishes one home’s equipment and documents.</li>
+<li>A closing partner supplies evidence; Maya establishes her verified owner binding.</li>
+<li>Maya reads the record and reports one inaccurate field; both source and correction remain traceable.</li>
+<li>Maya grants one provider limited installation data and separately approves one order.</li>
+<li>A simulated provider timeout follows the documented reconciliation route.</li>
+<li>Maya revokes access; a stale read and a queued dependent job are denied.</li>
+<li>Operations runs an audit-failure test, a support-access test and a restore drill.</li>
+<li>Before enabling resale, repeat with Alex as co-owner and Daniel as buyer, proving joint policy, atomic epoch change and seller privacy.</li>
+</ol>
+<p>The first pilot should not quietly enable unsupported recurring billing, complex ownership, subcontracting or optional witness claims. Each is a separate expansion decision with cases above.</p>
+<h2>Review provenance</h2>
+<p>This revision retains and expands the supplied “Tessera — Use Cases by User.” It incorporates the reviewed trust principles and HomePassport identity architecture from this conversation. It is a product requirements and review catalog, not a legal opinion, a deployment attestation or a claim that acceptance tests have passed.</p>
+<p>The original draft’s stray closing code fence has been removed. New cases and policy defaults are deliberately labeled proposed; partners and the product team must approve the decisions before treating them as operational promises.</p>
+<p class="foot">Tessera HomePassport · Proposed design for review — not a statement of implemented capability, and not a legal opinion. No live data.</p>
+</main></body></html>

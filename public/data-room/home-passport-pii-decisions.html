@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>PII Decisions &amp; Critical Path — Tessera HomePassport</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#0d1420;color:#e9eff8;font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:880px;margin:auto;padding:48px 26px 90px}
+  a{color:#6aa8ff}
+  h1,h2,h3,h4{color:#fff;line-height:1.2;letter-spacing:-.01em;font-weight:700}
+  h1{font-size:32px;margin:0 0 20px;border-bottom:1px solid #2c3d55;padding-bottom:14px}
+  h2{font-size:24px;margin:38px 0 10px}
+  h3{font-size:18px;margin:26px 0 8px}
+  h4{font-size:15px;margin:20px 0 6px;color:#c3d0e2}
+  p{margin:0 0 14px;color:#c3d0e2}
+  strong{color:#fff}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#c3d0e2}
+  li{margin:5px 0}
+  blockquote{margin:0 0 18px;padding:12px 18px;border-left:3px solid #ffca5f;background:rgba(255,202,95,.08);border-radius:0 8px 8px 0;color:#e9eff8}
+  blockquote p{margin:0;color:#e9eff8}
+  code{font:13px ui-monospace,monospace;background:rgba(106,168,255,.12);color:#9cc0ff;padding:2px 6px;border-radius:5px;overflow-wrap:anywhere}
+  hr{border:0;border-top:1px solid #2c3d55;margin:30px 0}
+  .tw{overflow-x:auto;border:1px solid #2c3d55;border-radius:10px;margin:0 0 20px}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid #2c3d55;vertical-align:top;color:#c3d0e2}
+  th{font:11px ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:#8fc0ff;background:#111c2c}
+  tr:last-child td{border-bottom:none}
+  .back{display:inline-block;font:12px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:#6aa8ff;margin-bottom:24px;text-decoration:none}
+  .foot{margin-top:40px;padding-top:20px;border-top:1px solid #2c3d55;font-size:12px;color:#7f90aa}
+</style></head><body><main>
+<a class="back" href="./home-passport-architecture.html">← Back to the architecture summary</a>
+<h1>Tessera / HomePassport — PII Decisions &amp; Critical Path</h1>
+<p>2026-09-20 · @Someone</p>
+<h2>Scope</h2>
+<p>All eight open items from the data and PII audit are now decided. This document records each decision, the reasoning behind it, and the work that follows — for engineering and the DPO.</p>
+<p>Two things changed during the review that the original audit did not anticipate. Item 5 was scoped as a data residency question; with EU and UK owners in scope it is an international transfer question, which is a larger problem. And the erasure decision in item 1 introduces a new insider risk that did not previously exist, covered under item 8.</p>
+<p>The decisions are recorded with their rationale so they can be re-opened knowingly rather than rediscovered. One of them has a named fallback if schedule pressure demands it; the rest are load-bearing.</p>
+<h2>Decisions</h2>
+<p>Regulatory scope for all of the below: US state comprehensive privacy laws plus GDPR and UK GDPR.</p>
+<div class="tw"><table><thead><tr><th>#</th><th>Open item</th><th>Decision</th></tr></thead><tbody>
+<tr><td>1</td><td>Right to erasure vs. append-only history</td><td>Separate and crypto-shred. Per-principal data keys; property facts de-linked and out of erasure scope</td></tr>
+<tr><td>2</td><td>Hash of PII may itself be personal data</td><td>Per-record salt held in the shreddable layer. Pseudonymized while live, anonymous by construction after erasure</td></tr>
+<tr><td>3</td><td>Data sent to providers cannot be recalled</td><td>Lend sensitive fields in a time-boxed view; transfer only the minimum. Controller-to-controller agreement enforced at grant time</td></tr>
+<tr><td>4</td><td>Evidence files are the densest PII</td><td>Tiered by document type. Proxied streaming, no signed URLs</td></tr>
+<tr><td>5</td><td>Data residency / cross-region copies</td><td>Re-scoped to transfers. Separate EU region for EU and UK principals; region follows the person, not the property</td></tr>
+<tr><td>6</td><td>Ownership binding confirms who owns an address</td><td>Not a decision — a 404-equivalence test, plus locking down address resolution</td></tr>
+<tr><td>7</td><td>Provider machine identity is not a technician</td><td>Named provider users required for any view of personal data</td></tr>
+<tr><td>8</td><td>Privileged admin residual risk</td><td>As designed, plus controls for the new key-destruction risk crypto-shredding creates</td></tr>
+</tbody></table></div>
+<h2>Item 1 — erasure vs. append-only history</h2>
+<p>A home fact is data about a property, not about a person. "HVAC installed, serial X" outlives every owner. It becomes personal data only when linked to a principal, or when a personal value is embedded inside it.</p>
+<p>That gives the rule: the append-only layer holds de-linked property facts, the erasable layer holds the linkage and the person. Erasure never touches the append-only chain, and the conflict the audit identified dissolves.</p>
+<p>Three consequences carry the real work.</p>
+<p><strong>Assertions must stop embedding personal values.</strong> The audit notes that assertions "may embed PII (serials, names)". That is the crack. A name inside a hashed record event cannot be deleted without destroying the Merkle proof. Commitments must be computed over a canonicalized fact object where personal fields are pointers — principal ID, evidence URI — never values. Destroying the pointed-to data then leaves the hash intact and verifiable.</p>
+<p><strong>Aurora's KMS encryption does not provide crypto-shredding.</strong> RDS at-rest encryption uses one cluster key; destroying it kills the database, not one person. Shredding requires application-level envelope encryption with a per-principal data key: personal columns stored as ciphertext, data keys wrapped by KMS, erasure destroying the wrapped key. This also solves backups and S3 versions, where surgical deletion is impossible. Data not written this way on day one can never be shredded.</p>
+<p><strong>Erasure is not absolute, and the policy should say so.</strong> GDPR Art. 17(3) and the US state laws carve out legal obligations and defence of legal claims. Title, closing and ownership-evidence records sit there, with statutory tails.</p>
+<h3>Data classification</h3>
+<div class="tw"><table><thead><tr><th>Class</th><th>Lawful basis</th><th>Retention</th><th>On erasure request</th></tr></thead><tbody>
+<tr><td>Property fact (de-linked assertion)</td><td>Legitimate interest — record integrity</td><td>Indefinite</td><td>Out of scope — not personal data once de-linked</td></tr>
+<tr><td>Ownership binding</td><td>Contract + Art. 17(3)(e) legal claims</td><td>Active epoch + statutory tail</td><td>Tombstone: keep epoch and version, shred identifying content</td></tr>
+<tr><td>Principal (Cognito mapping)</td><td>Contract</td><td>Account life + 30 days</td><td>Shred; internal ID tombstoned so audit stays referentially intact</td></tr>
+<tr><td>Personal vault (contact, payment)</td><td>Contract</td><td>Account life; auto-purge after ownership epoch ends</td><td>Shred immediately</td></tr>
+<tr><td>Personal evidence (ID, closing)</td><td>Legal obligation / claims</td><td>Tiered — see item 4</td><td>Shred via key destruction</td></tr>
+<tr><td>Home documents (manuals, permits)</td><td>Legitimate interest</td><td>Follows the property, indefinite</td><td>Out of scope if de-personalized at ingest</td></tr>
+<tr><td>Grant</td><td>Consent</td><td>Expiry + consent-proof tail</td><td>Retained — Art. 7(1) requires proving consent</td></tr>
+<tr><td>Order approval / job</td><td>Contract</td><td>Financial-record tail</td><td>Not erasable during tail</td></tr>
+<tr><td>Audit event</td><td>Legal obligation</td><td>Long, under Object Lock</td><td>Not erasable — Art. 17(3)(b)</td></tr>
+<tr><td>Lent-view access log</td><td>Legitimate interest — accountability and security</td><td>Matches audit-event retention</td><td>Not erasable during the accountability window</td></tr>
+<tr><td>Outbox</td><td>—</td><td>Transient, purged after dispatch</td><td>n/a</td></tr>
+<tr><td>Ledger commitment</td><td>—</td><td>Permanent</td><td>See item 2</td></tr>
+</tbody></table></div>
+<p>The lent-view access log is the accountability record created by items 3 and 7 — which named provider user saw which field, for which job, when. Note that it is personal data about <strong>two</strong> subjects: the owner whose data was shown, and the technician who viewed it. Provider users therefore need their own privacy notice and their own rights-handling path; a subject access request from a technician is a case we will receive and should not be improvising when it arrives.</p>
+<p>The erasure SLA is one month, extendable by two under GDPR, with a 14-day internal target so there is room to chase provider deletion confirmations before the external deadline. Retention must be implemented as automation, not as a written policy someone is meant to follow.</p>
+<h2>Item 2 — legal classification of the salted hash</h2>
+<p>The ledger is immutable. If a commitment is personal data, there is an erasure obligation that can never be satisfied, permanently. So the goal is not to argue the hash is anonymous but to build it so that it demonstrably becomes anonymous.</p>
+<p><strong>The per-record salt lives in the crypto-shreddable layer</strong>, envelope-encrypted under the same key as the personal data it relates to. While the record is live, the hash is pseudonymized personal data — concede that, it is the correct reading and disputing it costs credibility. On erasure, salt and plaintext are destroyed together, and the commitment becomes unlinkable to any person by anyone, including us.</p>
+<p>The resulting statement for the DPO: commitments are pseudonymized while the underlying record exists and irreversibly anonymized on erasure, by construction rather than by policy.</p>
+<h3>Salts need two classes</h3>
+<p>If every salt sits under the owner's data key, then when a house sells — or when a former owner exercises erasure — the new owner can no longer verify the home's history. The property's verifiability would be hostage to a previous occupant.</p>
+<p>So: <strong>property-fact salts under a home key</strong>, never shredded, because those facts are not personal data. <strong>Personal-linked-event salts under the principal data key</strong>, shredded on erasure. Home history survives ownership transfer; personal events do not.</p>
+<h3>Owner exports</h3>
+<p>Per-record salts bound the export risk the audit raised. An owner's export carries salts only for their own records, so an owner sharing an export cannot help anyone attack another owner's commitments. A data subject disclosing their own data is their choice, not our incident.</p>
+<p>The export flow should state that offline verification stops working after erasure. That is expected behaviour and worth saying before someone reports it as a fault.</p>
+<h2>Item 3 — data delivered to providers cannot be recalled</h2>
+<p>The audit concludes that this must be contractual rather than technical. It is true that sent data cannot be un-sent, but the conclusion does not follow: the alternative to better enforcement of sending is <strong>sending less, or not at all</strong>.</p>
+<p><strong>Lend rather than transfer.</strong> Contact details, access codes and anything transient are shown in a time-boxed view inside our own surface, for the duration of the job window, with every look logged. Nothing is retained, nothing needs recalling, revocation is real. Only fields a provider's own systems genuinely need — a shipping address for a parts order — are transferred under agreement. The set that must land in a provider's database is much smaller than the set currently would.</p>
+<p>This fits a self-serve marketplace particularly well: lending requires nothing of the provider technically, which matters when the typical provider is a two-person shop that will not build a webhook.</p>
+<h3>Field disposition</h3>
+<p>A starting point for product sign-off, not a finished list. The default is lent; transfer is the exception and must be justified per field.</p>
+<div class="tw"><table><thead><tr><th>Field</th><th>Default</th><th>Note</th></tr></thead><tbody>
+<tr><td>Owner name</td><td>Lent</td><td>First name only in the view; full name is never transferred</td></tr>
+<tr><td>Owner phone / email</td><td>Lent</td><td>Prefer a masked relay number over the real one, so revocation actually works</td></tr>
+<tr><td>Property address</td><td>Transferred on job acceptance</td><td>Operationally unavoidable for dispatch and routing. Carries a deletion obligation on job close — the main thing the agreement has to enforce</td></tr>
+<tr><td>Access code, lockbox, alarm</td><td>Lent, time-boxed to the visit window</td><td>Never transferred under any job type. This is the field the lend model exists for</td></tr>
+<tr><td>Scheduling window</td><td>Transferred</td><td>Not personal data on its own</td></tr>
+<tr><td>Equipment record (make, model, serial)</td><td>Transferred</td><td>Property data; strip owner-entered free text, which is where names leak in</td></tr>
+<tr><td>Document excerpt (warranty, manual)</td><td>Lent</td><td>Transfer only the specific page when a manufacturer claim requires it</td></tr>
+<tr><td>Prior job history</td><td>Lent, current property only</td><td>Never transferred; never across properties</td></tr>
+<tr><td>Payment and billing</td><td>Not shared</td><td>Providers bill through the platform</td></tr>
+</tbody></table></div>
+<p>By job type, the only question that matters is what leaves:</p>
+<div class="tw"><table><thead><tr><th>Job type</th><th>Transferred to provider systems</th></tr></thead><tbody>
+<tr><td>Diagnostic or repair visit</td><td>Address, scheduling window, equipment record</td></tr>
+<tr><td>Parts or equipment order</td><td>Address, equipment record</td></tr>
+<tr><td>Warranty claim</td><td>Address, equipment record, the specific document page</td></tr>
+<tr><td>Inspection or appraisal</td><td>Address, scheduling window</td></tr>
+<tr><td>Quote or estimate, no visit</td><td>Equipment record only — address stays in the view</td></tr>
+</tbody></table></div>
+<p>Two things follow. The address is the only field that routinely leaves for a physical-visit job, which means the deletion-propagation obligation in the agreement has one clear target rather than an open-ended list. And a quote-only job transfers nothing at all, so that flow needs no agreement-version check for transfers — worth keeping it that way as the product grows.</p>
+<h3>Marketplace providers are controllers, not processors</h3>
+<p>The owner contracts with the provider, who decides their own purposes. That makes this controller-to-controller sharing: a data-sharing agreement and SCCs Module 1, not the processor DPA the audit assumes. The owner's consent carries correspondingly more weight as the lawful basis.</p>
+<h3>Enforce the paper at the grant</h3>
+<p>The grant is already tied to an agreement version in the schema. Use it: <strong>the grant service refuses to issue a grant from an EU or UK principal to a provider whose accepted agreement version lacks the EU addendum.</strong> A legal requirement becomes a runtime check at the right choke point, and it scales to self-serve onboarding.</p>
+<p>Art. 19 obliges us to communicate erasure to each recipient, so the agreement needs a deletion-propagation channel we can invoke and evidence — not merely a clause.</p>
+<h3>Assume some provider accounts are hostile</h3>
+<p>Self-serve vetting is weak by definition. Watermark the lent view with provider ID, user, job ID and timestamp; alert on view-volume anomalies; keep the field set per job type minimal. Lending makes item 7 more important, not less — if the gate code is shown rather than sent, who looked is the entire accountability story.</p>
+<h2>Item 4 — evidence files</h2>
+<p>The guiding principle: <strong>we do not need the driver's licence, we need proof that someone competent checked one.</strong> Most evidence files exist to establish a binding at a moment in time. Once the binding is established and the check is attested, the document itself is pure liability — it is what turns a breach into an identity-theft incident.</p>
+<h3>Three tiers</h3>
+<div class="tw"><table><thead><tr><th>Tier</th><th>Contents</th><th>Treatment</th></tr></thead><tbody>
+<tr><td>Identity evidence</td><td>ID documents, proof of person</td><td>Verify, record an attestation (who checked, when, method, document type, hash, expiry), discard the file within days — subject to the AML question below</td></tr>
+<tr><td>Transfer evidence</td><td>Closing and title documents</td><td>Retain under the per-principal key for the statutory claims tail, then shred</td></tr>
+<tr><td>Home documents</td><td>Manuals, permits, inspections, warranties</td><td>Follow the property indefinitely; de-personalize at ingest</td></tr>
+</tbody></table></div>
+<p><strong>The tiering assumes discarding is lawful, and that assumption is unverified.</strong> Before asking how long to keep identity documents, counsel must answer whether they can be discarded at all. Anti-money-laundering and know-your-customer regimes impose mandatory retention on obliged entities — commonly around five years after the end of the business relationship in the EU, with comparable US recordkeeping duties — and real-estate transfer sits inside the scope of several of them. Fraud-prevention and dispute-defence obligations may pull the same way.</p>
+<p>If HomePassport, or the closing partners whose evidence we hold, are obliged entities, tier 1 collapses into tier 2: identity documents must be retained on a mandatory schedule and the attestation becomes a supplement rather than a replacement. That is a lawful-basis question, not a GDPR conflict — mandatory AML retention is exactly the Art. 17(3)(b) legal-obligation exception, so it survives an erasure request cleanly.</p>
+<p>If we must retain, most of the blast-radius benefit is still available structurally: hold the documents in a sealed archive under a separate key with no application read path, reachable only by break-glass with dual control and an audit event. Retained is not the same as reachable.</p>
+<h3>Quarantine is the enforcement point</h3>
+<p>Tiering only works if classification happens before anything reaches a durable bucket. Make classification a release condition: nothing leaves quarantine without a type label, the label selects the bucket, the key and the retention, and ambiguity defaults to the most restrictive tier.</p>
+<p>The failure mode to design against is an ID scan mislabelled as a home document — that one sits in the property bucket indefinitely <strong>and transfers to the next owner at resale</strong>. Run PII detection on quarantine as a backstop, and re-scan the home-documents bucket periodically as a canary for misclassification that has already happened.</p>
+<h3>Access is proxied, not presigned</h3>
+<p>Reads go through the application layer, which re-checks the grant on every request and streams the bytes. Revocation is instant, every access is evaluated against a live authorization decision, and no bearer token to the object exists outside the session.</p>
+<p>One constraint: API Gateway caps responses at 10 MB, and closing packets exceed that. Proxied reads need Lambda function URLs in response-streaming mode behind CloudFront — a separate ingress from the rest of the application, and a real line item.</p>
+<p>Log the access, not the intent. The advantage of proxying over signed URLs is auditing bytes actually served, so record stream start, completion and truncation.</p>
+<h2>Item 5 — transfers, not residency</h2>
+<p>The audit scopes this as backup residency. With EU and UK owners and a single us-east-1 deployment, every record is an international transfer from the moment it is written. That needs a transfer mechanism, not a backup policy.</p>
+<p><strong>Decision: a separate EU region for EU and UK principals.</strong> Region follows the person, not the property — an EU-resident owner can own a house in Texas. The property fact stays global, because it is not personal data once de-linked; the ownership binding pins to the EU region.</p>
+<p>Five consequences the current architecture does not account for:</p>
+<ol>
+<li><strong>Cross-region authorization.</strong> Authorizing access to a US home may require an EU-region lookup, which couples availability across regions on a hot path unless designed for.</li>
+<li><strong>A global principal directory is unavoidable.</strong> Routing must follow the owner's account region, not their IP — a US owner travelling in Berlin must still land in us-east-1. That requires a thin global map from login identifier to region. Keep it to a hash of the identifier plus a region code; anything richer rebuilds the vault globally.</li>
+<li><strong>Two Cognito pools.</strong> The schema survives this: Principal is keyed on issuer and subject, so a second issuer slots in.</li>
+<li><strong>Per-region customer master keys, not multi-region keys.</strong> Multi-region keys replicate key material and would destroy the shredding guarantee from item 1.</li>
+<li><strong>Two ledger streams.</strong> Separate outbox and batcher per region, separate Merkle roots. A single global batcher would move EU-derived material across the boundary for no benefit.</li>
+</ol>
+<p>And the egress path is still a transfer: an EU owner granting to a US provider needs SCCs regardless of where the data is stored. That is enforced at the grant, as described in item 3.</p>
+<h3>The fallback</h3>
+<p>The EDPB's guidance treats strong encryption with keys held outside the third country as a valid supplementary measure. Given per-principal envelope encryption is being built anyway, "ciphertext in us-east-1, keys only in the EU" was available at roughly a quarter of the cost.</p>
+<p>Full regionalization is the stronger position and the right default for a product touching property ownership. But if the EU stack becomes what delays launch, this is the fallback — a real one, decided in advance rather than improvised under pressure.</p>
+<h2>Items 6, 7 and 8</h2>
+<h3>6 — ownership lookup leakage</h3>
+<p>This is a test, not a decision. One authorization decision point returns identical 404s for unbound and forbidden, and a CI property test asserts equivalence across status, body, headers and a timing envelope.</p>
+<p>The subtler exposure sits elsewhere: if an unauthenticated caller can resolve an address to a home ID, we have built an ownership lookup service regardless of what the record endpoint returns. Address resolution should not be exposed outside an authenticated, rate-limited, audited path.</p>
+<h3>7 — technician attribution</h3>
+<p><strong>Named provider users are required for any view of personal data.</strong> Providers create named users under a provider organization; a shared machine credential can read job metadata but cannot open the lent view. Every sight of a gate code or a phone number attributes to a person.</p>
+<p>This is the accountability story the lend model depends on. Named-user signup is cheap for self-serve providers; the cost is onboarding friction and a provider user-management surface.</p>
+<h3>8 — privileged admin</h3>
+<p>Mostly as the audit describes: a separate audit-archive account with distinct administrators, service control policies the organization root cannot override, Object Lock in compliance mode, dual-control break-glass, and alerting on KMS key policy changes.</p>
+<p><strong>The item 1 decision adds a risk the audit does not contain.</strong> Once deletion equals key destruction, a privileged insider can irreversibly destroy customer data at scale in a single call. Crypto-shredding cuts both ways. Required controls:</p>
+<ul>
+<li>Dual control on any bulk data-key destruction</li>
+<li>A rate limit on the erasure workflow itself</li>
+<li>Alerting on <code>ScheduleKeyDeletion</code></li>
+<li>KMS deletion waiting period kept at its maximum, so there is a window to intervene</li>
+</ul>
+<p>This belongs in the residual-risk register explicitly. It is a new risk accepted in exchange for the erasure guarantee, and that trade should be visible to whoever signs it off.</p>
+<h2>Critical path</h2>
+<p>Four changes cannot be retrofitted. They gate <strong>first production data and first ledger anchor</strong>, not launch — an earlier deadline than most of the team will assume.</p>
+<ol>
+<li><strong>Assertion canonicalization with personal fields as pointers.</strong> Anchor one record with an embedded name and it is attested forever. Changing the canonicalization format later invalidates every prior proof.</li>
+<li><strong>Two salt classes — home key and principal key.</strong> Retrofitting means re-deriving salts for existing records, which changes their hashes, which breaks every commitment made over them.</li>
+<li><strong>Application-level envelope encryption for personal columns.</strong> Aurora's at-rest encryption does not provide this. Data written without per-principal keys can never be shredded, and it will sit in backups long after anyone remembers why.</li>
+<li><strong>Classification as a quarantine release condition.</strong> Files that reach a durable bucket unlabelled are misfiled until someone finds them, and the item 4 tiering has nothing to act on.</li>
+</ol>
+<p>Everything else is ordinary pre-launch work.</p>
+<h2>Pre-launch workstreams</h2>
+<p>These run in parallel with each other, after the critical path is committed.</p>
+<p><strong>Engineering</strong></p>
+<ul>
+<li>EU region stack: second Cognito pool, per-region customer master keys, global principal directory</li>
+<li>Region-aware ownership binding and authorization path</li>
+<li>Two ledger batchers, one per region</li>
+<li>Provider lent view: time-boxed, watermarked, rate-limited, access-logged</li>
+<li>Named provider users and provider organization management</li>
+<li>Proxied streaming ingress via Lambda function URLs behind CloudFront</li>
+<li>Retention and deletion automation, per class, driven by the item 1 table</li>
+<li>Erasure workflow with dual control on bulk key destruction</li>
+<li>404-equivalence property tests, including the timing envelope</li>
+<li>Address resolution moved behind authentication and rate limiting</li>
+<li>PII detection on quarantine, plus periodic re-scan of the home-documents bucket</li>
+</ul>
+<p><strong>Legal</strong></p>
+<ul>
+<li>AML / KYC obliged-entity determination for HomePassport and its closing partners — blocks item 4</li>
+<li>Controller-to-controller data-sharing agreement, click-through, versioned</li>
+<li>SCCs Module 1 and the UK addendum for providers serving EU and UK owners</li>
+<li>DPIA</li>
+<li>Art. 30 records of processing</li>
+<li>Art. 27 representative appointment, if there is no EU establishment</li>
+<li>Retention schedule sign-off against the item 1 classification table</li>
+<li>Provider-user privacy notice and rights-handling path for the lent-view access log</li>
+</ul>
+<p><strong>Operations</strong></p>
+<ul>
+<li>Erasure SOP: 14-day internal target, one-month external SLA, documented Art. 17(3) exceptions</li>
+<li>Residual-risk register, including the key-destruction risk from item 8</li>
+<li>Runbook for deletion propagation to providers under Art. 19</li>
+</ul>
+<h2>Open questions</h2>
+<p>Five inputs are needed before the classification table can be finalized. The AML question is the most urgent: an answer of "no, they must be retained" rewrites item 4.</p>
+<div class="tw"><table><thead><tr><th>Question</th><th>Needed from</th><th>Why it blocks</th></tr></thead><tbody>
+<tr><td>Can identity documents be discarded at all, or do AML / KYC / fraud rules mandate retention? Are we, or our closing partners, obliged entities?</td><td>Counsel</td><td>Decides whether tier 1 of item 4 exists. A "must retain" answer replaces extract-and-discard with a sealed archive</td></tr>
+<tr><td>Statutory retention tail for title and closing records in each launch state</td><td>Counsel</td><td>Sets the retention value for ownership binding, transfer evidence and order approvals</td></tr>
+<tr><td>Which documents count as "transfer evidence" versus identity evidence</td><td>Counsel</td><td>Decides which files are discarded and which are retained for years</td></tr>
+<tr><td>Is an Art. 27 representative required?</td><td>Counsel</td><td>Serving EU owners without an EU establishment triggers the obligation regardless of where servers sit. Routinely missed</td></tr>
+<tr><td>Is a DPIA mandatory here?</td><td>DPO</td><td>Large-scale processing linking identified people to physical properties sits squarely in the criteria. Assume yes unless advised otherwise</td></tr>
+</tbody></table></div>
+<p>One further question for the business: whether the EU stack is funded as critical path or as a fast-follow. That determines whether the item 5 fallback is a contingency or the actual plan.</p>
+<h2>Accepted risks and revisit triggers</h2>
+<p>Three risks are accepted knowingly rather than mitigated away.</p>
+<p><strong>Insider key destruction.</strong> Crypto-shredding gives a privileged insider the ability to destroy customer data irreversibly at scale. Mitigated by dual control, rate limiting, alerting and the KMS waiting period, but not eliminated. Accepted in exchange for the erasure guarantee.</p>
+<p><strong>Hostile provider accounts.</strong> Self-serve onboarding means some provider accounts will be bad actors. The lend model limits what they can take, and watermarking plus anomaly detection limits how long they take it undetected. Accepted in exchange for marketplace growth.</p>
+<p><strong>Attestation in place of documents.</strong> Discarding identity documents after verification means a disputed binding cannot be re-examined against the original. Accepted in exchange for a much smaller breach blast radius — and conditional on counsel confirming that discarding is lawful at all.</p>
+<h3>Revisit triggers</h3>
+<ul>
+<li><strong>EU region:</strong> if the second stack becomes the critical path item delaying launch, fall back to EU-held keys over us-east-1 ciphertext. This is the only decision he</li>
+</ul>
+<div class="tw"><table><thead><tr><th></th><th></th><th></th></tr></thead><tbody>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<p>  re with a pre-agreed fallback.</p>
+<ul>
+<li><strong>Lend model:</strong> if provider adoption data shows the time-boxed view is blocking jobs from completing, revisit the boundary between lent and transferred fields — not the model itself.</li>
+<li><strong>Named users:</strong> if onboarding drop-off is material, consider stepping up to named users only for high-sensitivity fields rather than all personal data.</li>
+</ul>
+<p>Nothing else here should be re-opened without returning to the reasoning that produced it.</p>
+<p class="foot">Tessera HomePassport · Proposed design for review — not a statement of implemented capability, and not a legal opinion. No live data.</p>
+</main></body></html>
