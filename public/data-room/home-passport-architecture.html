@@ -86,15 +86,37 @@
   .chartcard h3{font-size:15px;margin:0 0 10px}
   .chartcard svg{min-width:0;width:100%;height:auto}
 
-  /* threat model */
-  .threats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
-  .threat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;border-left:3px solid var(--red)}
-  .threat .attack{font:11px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
-  .threat h3{font-size:15.5px}
-  .threat p{font-size:13.5px;margin:0;color:var(--muted)}
-  .threat .stop{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
-  .threat .stop b{color:var(--green)}
-  .threat .stop .mk{color:var(--green);font-weight:700;margin-right:6px}
+  /* privacy & compliance */
+  .compgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .comp{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;border-top:3px solid var(--green)}
+  .comp h3{font-size:15.5px}
+  .comp p{font-size:13.5px;margin:0;color:var(--muted)}
+  .erasure{margin-top:20px;background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+  .erasure h3{font-size:17px;margin-bottom:10px}
+  .erasure p{font-size:14px}
+  .erasure ol{margin:12px 0 14px;padding-left:22px;color:var(--muted);font-size:14px}
+  .erasure li{margin:8px 0}
+  .erasure li strong{color:#fff}
+  .erasure .ercaveat{margin:0;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+  .doclinks{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+  .doclink{display:flex;flex-direction:column;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;transition:border-color .15s}
+  .doclink:hover{border-color:var(--violet)}
+  .doclink .dk{font:11px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+  .doclink b{color:#fff;font-size:15px}
+  .doclink .dd{font-size:13px;color:var(--muted)}
+
+  /* STRIDE threat model */
+  .stride{display:grid;grid-template-columns:190px 1fr;gap:14px;margin-top:14px}
+  .scat{background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:16px 14px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;align-self:start}
+  .sletter{width:34px;height:34px;border-radius:8px;background:rgba(255,143,143,.14);border:1px solid rgba(255,143,143,.4);color:var(--red);font:18px ui-monospace,monospace;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+  .sname{font-size:15px;font-weight:700;color:#fff}
+  .sq{font-size:12px;color:var(--muted)}
+  .sitems{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .sitem{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:0 10px 10px 0;padding:14px 16px}
+  .sitem .st{font-size:13px;margin:0 0 8px;color:var(--fg)}
+  .sitem .st b{color:#fff}
+  .sitem .sm{margin:0;padding-top:8px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted)}
+  .sitem .sm .mk{color:var(--green);font-weight:700;margin-right:5px}
 
   /* ledger chip */
   .chip{font:13px ui-monospace,monospace;color:var(--violet);background:rgba(193,168,255,.12);border:1px solid rgba(193,168,255,.4);border-radius:8px;padding:10px 14px;display:inline-block}
@@ -110,7 +132,9 @@
   footer{padding:30px 0 10px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line)}
 
   @media(max-width:860px){
-    .pillars,.stores,.threats{grid-template-columns:1fr}
+    .pillars,.stores,.compgrid,.doclinks,.docgrid{grid-template-columns:1fr}
+    .stride{grid-template-columns:1fr}
+    .sitems{grid-template-columns:1fr}
     .flow{grid-template-columns:1fr;gap:14px}
     .fstep{margin-right:0}
     .fstep .arr{right:50%;top:auto;bottom:-13px;transform:translateX(50%) rotate(90deg)}
@@ -120,9 +144,9 @@
 </head>
 <body>
 <header>
-  <div class="eyebrow">Tessera · HomePassport</div>
+  <div class="eyebrow">Tessera · Home Passport identity submodule</div>
   <h1>One home, one verified record, activated safely.</h1>
-  <p class="lede">HomePassport gives every home a lasting digital identity: a source-attributed history the owner controls, services they can turn on in a tap, and tamper-evidence underneath — without any one party seeing more than they should.</p>
+  <p class="lede">Tessera's promise is a digital identity for every home. This is the identity submodule behind it — a small set of cooperating microservices that establish who owns a home, control who can see its record, and coordinate authorized services, without any one party seeing more than they should.</p>
   <span class="badge">PROPOSED ARCHITECTURE · AMALGAMATED FROM THE TESSERA IDENTITY DOCUMENTS · 21 SEP 2026</span>
 </header>
 
@@ -130,9 +154,9 @@
 
 <!-- 1. WHAT IT IS -->
 <section id="concept" style="border-top:none">
-  <div class="snum">01 · The concept</div>
-  <h2>What Tessera HomePassport is.</h2>
-  <p class="sub">Three parties touch a home and none of them fully trust each other: the builder who built it, the owner who lives in it, and the providers who service it. HomePassport sits between them and does three jobs.</p>
+  <div class="snum">01 · Where this fits</div>
+  <h2>A digital identity for every home.</h2>
+  <p class="sub">That is Tessera's promise across the board. This document zooms into one part of it — the <strong>Home Passport identity submodule</strong>: the set of microservices that establish who owns a home, control who can see its record, and coordinate authorized services. Three parties touch a home and none of them fully trust each other — the builder who built it, the owner who lives in it, and the providers who service it. This submodule sits between them and does three jobs.</p>
 
   <div class="pillars">
     <div class="pillar">
@@ -301,7 +325,7 @@
     <p><strong>Activating a home = the verified owner approves sharing a few home facts with a provider and approves the order, and Tessera dispatches one tracked job — no address to type, nothing sensitive copied out.</strong></p>
   </div>
 
-  <p class="sub" style="margin-top:20px">It stays one tap because the identity proof happened earlier, at closing — so the tap only confirms an already-verified owner acting on an already-known home. The full step-by-step (claim → share → approve → dispatch), with every edge case, lives in the <a href="tessera-use-cases.md">use-case catalog</a>.</p>
+  <p class="sub" style="margin-top:20px">It stays one tap because the identity proof happened earlier, at closing — so the tap only confirms an already-verified owner acting on an already-known home. The full step-by-step (claim → share → approve → dispatch), with every edge case, lives in the <a href="home-passport-use-cases.html">use-case catalog</a>.</p>
 </section>
 
 <!-- 4. COST -->
@@ -391,64 +415,188 @@
   </div>
 </section>
 
-<!-- 5. THREAT MODEL -->
-<section id="threat">
-  <div class="snum">05 · Our threat model</div>
-  <h2>How we stress-tested the design.</h2>
-  <p class="sub">Lawyers are welcome to review; our contribution is threat modelling. For each way the system could betray trust, we name the attack and the one rule that makes it structurally hard — not merely discouraged. This is the data-security position.</p>
+<!-- 5. PRIVACY & COMPLIANCE -->
+<section id="privacy">
+  <div class="snum">05 · Privacy &amp; compliance</div>
+  <h2>How we follow the rules — and where a person’s data lives.</h2>
+  <p class="sub">The design was audited against GDPR, UK GDPR and US state privacy laws, and every open item was decided. The short version: personal data is separated from home data, kept minimal, and built so it can be truly deleted.</p>
 
-  <div class="threats">
-    <div class="threat">
-      <div class="attack">Attack · impersonate an owner</div>
-      <h3>Claim a home you don’t own</h3>
-      <p>Scan a plaque, guess an ID, or reuse an invite to seize a home’s record.</p>
-      <div class="stop"><span class="mk">✓</span><b>Locator ≠ credential.</b> Ownership needs verified closing evidence + identity; unbound lookups return a plain not-found; address→home resolution sits behind auth.</div>
+  <div class="compgrid">
+    <div class="comp">
+      <h3>Separate what’s personal from what’s the home’s</h3>
+      <p>A home fact (“HVAC installed, serial X”) is data about a property and outlives every owner. A person’s name, contact, payment and identity evidence are separate. Home facts and personal data live in different stores with different access rules and different lifecycles.</p>
     </div>
-    <div class="threat">
-      <div class="attack">Attack · over-collect at a provider</div>
-      <h3>Pull more than the job needs</h3>
-      <p>A provider (or a hostile provider account) tries to read fields or homes outside its job.</p>
-      <div class="stop"><span class="mk">✓</span><b>Lend, don’t send.</b> Payload is built from the grant; sensitive fields shown in a watermarked time-boxed view; only the minimum (usually the address) transfers.</div>
+    <div class="comp">
+      <h3>Collect the minimum, share even less</h3>
+      <p>Each grant names a purpose, the exact fields, the recipient and an expiry. Sensitive fields are lent in a time-boxed view rather than copied out. That is purpose limitation and data minimisation, enforced at the point of sharing.</p>
     </div>
-    <div class="threat">
-      <div class="attack">Attack · defeat deletion</div>
-      <h3>Make erasure impossible</h3>
-      <p>Append-only history and an immutable ledger seem to block a right-to-erasure request forever.</p>
-      <div class="stop"><span class="mk">✓</span><b>Crypto-shred.</b> Personal data is encrypted per person; erasure destroys the key across live storage and backups. Property facts are de-linked and stay.</div>
-    </div>
-    <div class="threat">
-      <div class="attack">Attack · read a person off the ledger</div>
-      <h3>Recover PII from the chain</h3>
-      <p>Someone holding the ledger tries to work backwards to a name or address.</p>
-      <div class="stop"><span class="mk">✓</span><b>Hashes only, salted.</b> Personal fields are pointers; the secret salt lives with the owner’s export. After erasure the commitment is anonymous by construction.</div>
-    </div>
-    <div class="threat">
-      <div class="attack">Attack · duplicate or silent purchase</div>
-      <h3>Order twice, or share becomes buy</h3>
-      <p>A timeout retries into a second order; a data share is treated as a purchase.</p>
-      <div class="stop"><span class="mk">✓</span><b>Two approvals + one durable job.</b> Sharing and buying are separate consents; a stable job key blocks duplicates; ambiguous outcomes go to review.</div>
-    </div>
-    <div class="threat">
-      <div class="attack">Attack · stale power after sale</div>
-      <h3>Old owner keeps access</h3>
-      <p>A former owner acts on a home after closing, or an old grant still works.</p>
-      <div class="stop"><span class="mk">✓</span><b>Versioned authority.</b> Transfer atomically bumps the ownership epoch and kills every prior grant. Every request is checked against current authority.</div>
-    </div>
-    <div class="threat">
-      <div class="attack">Attack · rogue insider</div>
-      <h3>An admin bypasses the walls</h3>
-      <p>A privileged operator reads content or destroys data at scale.</p>
-      <div class="stop"><span class="mk">✓</span><b>No standing access.</b> Support is time-boxed and dual-approved; the audit archive is write-once with separate admins; bulk key destruction needs dual control. Residual risk is documented, not hidden.</div>
-    </div>
-    <div class="threat">
-      <div class="attack">Attack · dense-PII documents</div>
-      <h3>Leak an ID or closing packet</h3>
-      <p>An identity document lingers and turns a breach into identity theft.</p>
-      <div class="stop"><span class="mk">✓</span><b>Tier + discard.</b> Documents are classified at intake; identity evidence is attested then discarded or sealed under mandatory retention; nothing reaches a durable store unlabelled.</div>
+    <div class="comp">
+      <h3>Every access is logged; the ledger holds no PII</h3>
+      <p>Disclosure intent is recorded before data is released, in an audit trail. The ledger underneath only ever receives salted hashes — never names, documents or personal values.</p>
     </div>
   </div>
 
-  <p style="margin-top:22px;color:var(--muted)">Four choices must be right <strong>before the first record is anchored</strong>, because they can’t be retrofitted: personal fields as pointers, two salt classes, per-person encryption, and classification at intake. <span class="chip">get these right on day one</span></p>
+  <div class="erasure">
+    <h3>“Delete my data” — how it actually happens</h3>
+    <p>A person has the right to erasure. Because an append-only history and an immutable ledger can’t simply be edited, we designed for deletion up front rather than promising the impossible:</p>
+    <ol>
+      <li><strong>Where the data lives:</strong> every person’s personal fields are stored encrypted with a <strong>key that belongs only to that person</strong> (per-principal envelope encryption), in the personal store — separate from home facts.</li>
+      <li><strong>How deletion works:</strong> on a verified erasure request we <strong>destroy that person’s key</strong> (“crypto-shredding”). The encrypted data — in the live database, in backups, and in object versions — becomes unreadable at once, without hunting down every copy.</li>
+      <li><strong>What stays, and why:</strong> the home’s facts are <strong>de-linked</strong> from the person and remain (they are not personal data once de-linked). A few classes are kept under a named legal basis — AML/identity records, records needed to defend a legal claim — in a sealed archive, then shredded when the obligation ends.</li>
+      <li><strong>What we can’t undo:</strong> data a provider already received, or an offline export already handed out, can’t be recalled — those are covered by provider agreements and disclosed to the owner.</li>
+    </ol>
+    <p class="ercaveat">One honest consequence: after erasure, that person’s ledger commitments become unlinkable to anyone — anonymous by construction — and their own offline verification stops working. That is expected behaviour, not a fault.</p>
+  </div>
+
+  <div class="doclinks">
+    <a class="doclink" href="home-passport-pii-audit.html"><span class="dk">Audit</span><b>Data flow, encryption &amp; PII audit ↗</b><span class="dd">What data comes from where, where it is encrypted at rest and in transit, and exactly what goes on the ledger.</span></a>
+    <a class="doclink" href="home-passport-pii-decisions.html"><span class="dk">Decisions</span><b>PII decisions &amp; critical path ↗</b><span class="dd">The eight decisions behind the above — including crypto-shredding, the two salt classes, and the AML retention question routed to counsel.</span></a>
+  </div>
+</section>
+
+<!-- 6. THREAT MODEL -->
+<section id="threat">
+  <div class="snum">06 · Threat model (STRIDE)</div>
+  <h2>Threats we found by walking the architecture.</h2>
+  <p class="sub">We use <strong>STRIDE</strong> — the six categories below — and step through each component of the current design (the gate, the ownership, permission and records services, the database and document store, the job queue and providers, the ledger, and the operations/security account) asking where each category could bite. Lawyers can review the privacy side; this is our security side.</p>
+
+  <div class="stride">
+    <!-- S -->
+    <div class="scat">
+      <div class="sletter">S</div>
+      <div class="sname">Spoofing</div>
+      <div class="sq">Pretending to be someone you’re not.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Owner spoofing</b> — a stranger claims a home via a scanned/guessed plaque or a forwarded invite.</p>
+        <p class="sm"><span class="mk">✓</span> The plaque is a locator, not a credential. Ownership requires verified closing evidence matched to a verified identity; sign-in alone never mints ownership.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Provider / technician spoofing</b> — a shared machine credential is used to act as a provider, hiding who really looked.</p>
+        <p class="sm"><span class="mk">✓</span> Named provider users are required to view personal data; machine credentials can read job metadata only. Callbacks are signed and verified.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Closing-partner spoofing</b> — a forged attestation asserts a false buyer.</p>
+        <p class="sm"><span class="mk">✓</span> Only onboarded partners with scoped credentials can submit evidence; a credential authenticates the sender, not the claim, so conflicting evidence goes to review.</p>
+      </div>
+    </div>
+
+    <!-- T -->
+    <div class="scat">
+      <div class="sletter">T</div>
+      <div class="sname">Tampering</div>
+      <div class="sq">Changing data or records you shouldn’t.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Rewriting home history</b> — altering a past record to hide a defect or swapped unit.</p>
+        <p class="sm"><span class="mk">✓</span> Records are append-only with linked corrections; each is hashed and anchored, so a silent edit breaks the ledger commitment and is detectable.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Cross-store / cross-home writes</b> — a request tampering with another home’s or plane’s data.</p>
+        <p class="sm"><span class="mk">✓</span> Row-level security and separate database roles per store; every write is scoped to the authorized home and default-deny.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Forged provider result</b> — a replayed or modified callback marks a job complete.</p>
+        <p class="sm"><span class="mk">✓</span> Callbacks are authenticated, deduplicated and replay-protected; a result is recorded as “reported,” never silently promoted to “verified.”</p>
+      </div>
+    </div>
+
+    <!-- R -->
+    <div class="scat">
+      <div class="sletter">R</div>
+      <div class="sname">Repudiation</div>
+      <div class="sq">Denying you did something, with no proof either way.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Disputed disclosure</b> — “I never shared that / you never asked me.”</p>
+        <p class="sm"><span class="mk">✓</span> Disclosure intent is written to the audit trail before any data is released; the record names actor, fields, purpose and time.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Tampered logs</b> — someone edits the audit trail to cover their tracks.</p>
+        <p class="sm"><span class="mk">✓</span> Audit is exported to a separate security account with write-once (Object Lock) storage and separate administrators; a failed audit write blocks the release.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Ambiguous who-acted</b> — a provider org denies which technician viewed a gate code.</p>
+        <p class="sm"><span class="mk">✓</span> The lent-view access log attributes each look to a named provider user, watermarked with user, job and time.</p>
+      </div>
+    </div>
+
+    <!-- I -->
+    <div class="scat">
+      <div class="sletter">I</div>
+      <div class="sname">Information disclosure</div>
+      <div class="sq">Data reaching someone who shouldn’t see it.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Over-collection at a provider</b> — pulling fields or homes outside the job.</p>
+        <p class="sm"><span class="mk">✓</span> Payload is built from the grant, not filtered after; sensitive fields are lent in a time-boxed view; only the minimum (usually the address) transfers.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Reading PII off the ledger</b> — working backwards from a hash to a person.</p>
+        <p class="sm"><span class="mk">✓</span> The ledger holds salted hashes only; personal fields are pointers, and after erasure the commitment is anonymous by construction.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Ownership-lookup leak</b> — probing whether an address maps to an owner.</p>
+        <p class="sm"><span class="mk">✓</span> Unbound lookups return an identical not-found; address→home resolution sits behind an authenticated, rate-limited, audited path.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Dense-PII documents</b> — an ID or closing packet lingering in storage.</p>
+        <p class="sm"><span class="mk">✓</span> Documents are classified at intake and tiered; identity evidence is attested then discarded or sealed; encryption at rest (per-principal) and TLS in transit throughout.</p>
+      </div>
+    </div>
+
+    <!-- D -->
+    <div class="scat">
+      <div class="sletter">D</div>
+      <div class="sname">Denial of service</div>
+      <div class="sq">Making the system unavailable or unsafe under load.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Flooding the gate</b> — request floods or claim-spam against the API.</p>
+        <p class="sm"><span class="mk">✓</span> WAF + throttling at the gate; enumeration is rate-limited; reserved capacity protects the database from bursts.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Provider / queue outage</b> — a downstream failure stalls activations.</p>
+        <p class="sm"><span class="mk">✓</span> Jobs are durable with retries and a dead-letter path; a provider outage pauses/reconciles jobs while authorized home history stays readable.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Region / database failure</b> — infrastructure loss blocks access.</p>
+        <p class="sm"><span class="mk">✓</span> Two-AZ database with failover and tested backups; recovery targets agreed and drilled before a live pilot.</p>
+      </div>
+    </div>
+
+    <!-- E -->
+    <div class="scat">
+      <div class="sletter">E</div>
+      <div class="sname">Elevation of privilege</div>
+      <div class="sq">Gaining rights you were never granted.</div>
+    </div>
+    <div class="sitems">
+      <div class="sitem">
+        <p class="st"><b>Stale power after sale</b> — an old owner or old grant still authorizes actions.</p>
+        <p class="sm"><span class="mk">✓</span> Transfer atomically bumps the ownership epoch and invalidates every prior-epoch grant; every request is re-checked against current authority, not the login.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Token over-reach</b> — a cached sign-in token treated as ownership.</p>
+        <p class="sm"><span class="mk">✓</span> Authentication ≠ entitlement; ownership rights are never carried in tokens — the permission service re-evaluates the live relationship on every call.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Rogue insider</b> — a privileged operator reads content or destroys data at scale.</p>
+        <p class="sm"><span class="mk">✓</span> No standing access to content; support is time-boxed and dual-approved; bulk key destruction needs dual control, rate limits and alerting. Compromise of top infrastructure privileges remains a documented residual risk.</p>
+      </div>
+      <div class="sitem">
+        <p class="st"><b>Silent purchase / duplicate order</b> — a share becomes a buy, or a timeout orders twice.</p>
+        <p class="sm"><span class="mk">✓</span> Sharing and buying are separate approvals; a stable job key blocks duplicates; ambiguous outcomes go to manual review, not blind retry.</p>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:24px;color:var(--muted)">Four choices must be right <strong>before the first record is anchored</strong>, because they can’t be retrofitted: personal fields as pointers, two salt classes, per-person encryption, and classification at intake. The full analysis, accepted residual risks and revisit triggers live in the <a href="home-passport-pii-decisions.html">PII decisions &amp; critical path</a>. <span class="chip">get these right on day one</span></p>
 </section>
 
 <p class="close">One home, one record: claimed by <b>proven ownership</b>, activated in <b>one honest tap</b>, where sensitive data is <b>lent not sent</b>, personal data can be <b>truly deleted</b>, and the ledger holds a <b>fingerprint, never you</b>.</p>
