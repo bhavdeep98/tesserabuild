@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tessera HomePassport — Executive Summary</title>
+<style>
+  *{box-sizing:border-box}
+  :root{
+    --bg:#0d1420;--panel:#182536;--raised:#1f2f44;--fg:#f4f7fc;--muted:#c3d0e2;
+    --line:#2c3d55;--blue:#6aa8ff;--blue-2:#8fc0ff;--green:#4fdca8;--amber:#ffca5f;
+    --red:#ff8f8f;--violet:#c1a8ff;--teal:#63e0d2;
+  }
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font:16.5px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:1100px;margin:auto;padding:0 28px 90px}
+  header{max-width:1100px;margin:auto;padding:44px 28px 24px}
+  .eyebrow{font:12px/1.4 ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--blue)}
+  .badge{display:inline-block;font:12px ui-monospace,monospace;color:var(--amber);border:1px solid #6a5528;background:rgba(255,202,95,.1);border-radius:20px;padding:5px 12px;margin-top:16px}
+  h1{font-size:clamp(30px,3.6vw,42px);line-height:1.14;letter-spacing:-.02em;margin:16px 0 12px;font-weight:800;color:#fff}
+  h2{font-size:27px;letter-spacing:-.01em;margin:0 0 8px;font-weight:800;color:#fff}
+  h3{font-size:18px;margin:0 0 8px;font-weight:700;color:#fff}
+  p{margin:0 0 15px;color:var(--muted)}
+  .lede{font-size:19px;color:var(--fg);max-width:900px}
+  section{padding:44px 0;border-top:1px solid var(--line)}
+  .sub{color:var(--muted);max-width:880px;margin:0 0 26px;font-size:16px}
+  a{color:var(--blue)}
+  strong{color:#fff}
+
+  .snum{font:13px ui-monospace,monospace;color:var(--blue);letter-spacing:.1em}
+
+  /* concept pillars */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:10px}
+  .pillar{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;border-top:3px solid var(--blue)}
+  .pillar h3{font-size:17px}
+  .pillar p{font-size:14px;margin:0;color:var(--muted)}
+
+  /* three stores */
+  .stores{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+  .store{background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .store .k{font:11px ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .store.b .k{color:var(--blue-2)} .store.h .k{color:var(--green)} .store.p .k{color:var(--violet)}
+  .store h3{font-size:16px}
+  .store p{font-size:13.5px;margin:0;color:var(--muted)}
+
+  /* diagram */
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}
+  .toolbar button{font:13px system-ui,sans-serif;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:8px 13px;background:var(--panel);cursor:pointer}
+  .toolbar button[aria-pressed=true]{background:#1d3860;border-color:#6aa8ff;color:#fff}
+  .toolbar button:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .diagram{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#0b121e;margin-top:10px}
+  svg{display:block;width:100%;height:auto;min-width:1000px}
+  .layer{transition:opacity .15s}
+  .layer.dim{opacity:.2}
+  @media(prefers-reduced-motion:reduce){.layer{transition:none}}
+  .cap{font-size:13px;color:var(--muted);margin-top:12px}
+
+  /* activation steps */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:12px}
+  .fstep{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px;margin-right:16px;position:relative;display:flex;flex-direction:column}
+  .fstep:last-child{margin-right:0}
+  .fstep .n{font:12px ui-monospace,monospace;color:var(--blue);letter-spacing:.12em}
+  .fstep h3{font-size:15.5px;margin:9px 0 8px}
+  .fstep p{font-size:13.5px;color:var(--muted);margin:0}
+  .fstep .rule{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--green)}
+  .fstep .arr{position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--blue);font-size:20px;z-index:3}
+  .fstep:last-child .arr{display:none}
+  .flownote{margin-top:20px;background:rgba(106,168,255,.09);border:1px solid rgba(106,168,255,.4);border-radius:12px;padding:16px 20px}
+  .flownote p{margin:0;color:var(--fg);font-size:14.5px}
+  .oneline{background:linear-gradient(135deg,#16273f,#101d30);border:1px solid var(--blue);border-radius:14px;padding:24px 26px}
+  .oneline p{margin:0;color:#fff;font-size:19px;line-height:1.5}
+
+  /* cost */
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-top:8px}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+  th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted)}
+  th{font:11px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--blue-2);background:#111c2c}
+  td b,td strong{color:#fff}
+  tr:last-child td{border-bottom:none}
+  .totalrow td{background:#111c2c;color:#fff;font-weight:700}
+  .costnote{margin-top:16px;background:rgba(255,202,95,.08);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:15px 19px}
+  .costnote p{margin:0;color:var(--fg);font-size:14px}
+  .costgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;margin-top:8px}
+  .chartcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .chartcard h3{font-size:15px;margin:0 0 10px}
+  .chartcard svg{min-width:0;width:100%;height:auto}
+
+  /* threat model */
+  .threats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
+  .threat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;border-left:3px solid var(--red)}
+  .threat .attack{font:11px ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+  .threat h3{font-size:15.5px}
+  .threat p{font-size:13.5px;margin:0;color:var(--muted)}
+  .threat .stop{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
+  .threat .stop b{color:var(--green)}
+  .threat .stop .mk{color:var(--green);font-weight:700;margin-right:6px}
+
+  /* ledger chip */
+  .chip{font:13px ui-monospace,monospace;color:var(--violet);background:rgba(193,168,255,.12);border:1px solid rgba(193,168,255,.4);border-radius:8px;padding:10px 14px;display:inline-block}
+
+  .close{margin-top:34px;font-size:20px;line-height:1.5;color:#fff;max-width:920px;font-family:Georgia,serif}
+  .close b{color:var(--blue-2)}
+  footer{padding:30px 0 10px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line)}
+
+  @media(max-width:860px){
+    .pillars,.stores,.threats{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr;gap:14px}
+    .fstep{margin-right:0}
+    .fstep .arr{right:50%;top:auto;bottom:-13px;transform:translateX(50%) rotate(90deg)}
+  }
+  @media print{body{background:#fff;color:#111}.diagram{border-color:#ccc}section{break-inside:avoid}h1,h2,h3{color:#111}}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Tessera · HomePassport</div>
+  <h1>One home, one verified record, activated safely.</h1>
+  <p class="lede">HomePassport gives every home a lasting digital identity: a source-attributed history the owner controls, services they can turn on in a tap, and tamper-evidence underneath — without any one party seeing more than they should.</p>
+  <span class="badge">PROPOSED ARCHITECTURE · AMALGAMATED FROM THE TESSERA IDENTITY DOCUMENTS · 21 SEP 2026</span>
+</header>
+
+<main>
+
+<!-- 1. WHAT IT IS -->
+<section id="concept" style="border-top:none">
+  <div class="snum">01 · The concept</div>
+  <h2>What Tessera HomePassport is.</h2>
+  <p class="sub">Three parties touch a home and none of them fully trust each other: the builder who built it, the owner who lives in it, and the providers who service it. HomePassport sits between them and does three jobs.</p>
+
+  <div class="pillars">
+    <div class="pillar">
+      <h3>One home identity</h3>
+      <p>A stable, opaque ID for the home that outlives every owner, builder and vendor. The plaque points to it — it does not unlock it.</p>
+    </div>
+    <div class="pillar">
+      <h3>A continuous history</h3>
+      <p>Equipment, work, warranties and documents — each fact naming its source and whether it is reported, verified, disputed or corrected. It travels with the home to the next owner.</p>
+    </div>
+    <div class="pillar">
+      <h3>Authorized services</h3>
+      <p>The owner turns on internet, utilities and trades in a tap. Providers get only what one job needs, for a limited time, and return an attributed result.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:26px">The reason all three can accept a middle party is that the data is <strong>walled into three separate stores</strong> — the wall is the product.</p>
+  <div class="stores">
+    <div class="store b"><div class="k">Builder workspace</div><h3>Stays with the builder</h3><p>Cost, margin, pipeline. Only an approved home projection is published outward.</p></div>
+    <div class="store h"><div class="k">Home history</div><h3>Follows the home</h3><p>Equipment, work, eligible warranties. Relevant history transfers at resale.</p></div>
+    <div class="store p"><div class="k">Personal vault</div><h3>Follows the person</h3><p>Contact, payment, service accounts. Never auto-transfers to the next owner.</p></div>
+  </div>
+</section>
+
+<!-- 2. ARCHITECTURE -->
+<section id="architecture">
+  <div class="snum">02 · The architecture</div>
+  <h2>One protected door, three stores, a ledger underneath.</h2>
+  <p class="sub">Everyone enters through one protected gate. Inside a dedicated environment, an application layer checks authority, limits data to exactly what is allowed, and coordinates approved work. The database and document storage are encrypted with per-person keys; a separate security account holds audit and backups; the ledger underneath receives only tamper-evidence. <strong>Use the buttons to highlight one path.</strong></p>
+
+  <div class="toolbar" aria-label="Highlight architecture layer">
+    <button data-layer="all" aria-pressed="true">Whole system</button>
+    <button data-layer="identity" aria-pressed="false">Identity</button>
+    <button data-layer="policy" aria-pressed="false">Permissions</button>
+    <button data-layer="records" aria-pressed="false">Records</button>
+    <button data-layer="jobs" aria-pressed="false">Service jobs</button>
+    <button data-layer="audit" aria-pressed="false">Audit &amp; ledger</button>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 1320 980" role="img" aria-labelledby="hldT hldD" xmlns="http://www.w3.org/2000/svg">
+      <title id="hldT">HomePassport high-level design</title>
+      <desc id="hldD">Owners sign in through a protected gate. Approved builder and closing partners send evidence through protected APIs. Inside a dedicated environment, the gate leads to application services for ownership, permission checks and records. Private networking connects to the database. Document storage holds encrypted evidence. A queue feeds provider workers. A separate security account receives audit exports. An underlying ledger receives only batched hashes.</desc>
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#6aa8ff"/></marker></defs>
+      <rect width="1320" height="980" fill="#0b121e"/>
+      <rect x="16" y="164" width="1288" height="649" rx="16" fill="#0c1626" stroke="#3a5478" stroke-width="1.5" stroke-dasharray="7 5"/>
+      <text x="36" y="191" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6aa8ff">TESSERA · HOMEPASSPORT ENVIRONMENT</text>
+
+      <g data-layer-group="identity" class="layer">
+        <rect x="30" y="16" width="382" height="112" rx="10" fill="#182536" stroke="#6aa8ff" stroke-opacity=".6"/>
+        <text x="48" y="45" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">OWNER / CO-OWNER</text>
+        <text x="48" y="70" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Sign-in, MFA and federation</text>
+        <text x="48" y="92" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">View history · approve sharing + orders</text>
+        <text x="48" y="114" font-family="Arial,sans-serif" font-size="12" fill="#6aa8ff">The plaque locates the home; it grants no access.</text>
+
+        <rect x="470" y="16" width="382" height="112" rx="10" fill="#182536" stroke="#6aa8ff" stroke-opacity=".6"/>
+        <text x="488" y="45" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">BUILDER / CLOSING PARTNER</text>
+        <text x="488" y="70" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Approved home data + ownership evidence</text>
+        <text x="488" y="92" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Authenticated partner API clients</text>
+        <text x="488" y="114" font-family="Arial,sans-serif" font-size="12" fill="#6aa8ff">Source systems and cost/margin stay outside.</text>
+
+        <rect x="910" y="16" width="382" height="112" rx="10" fill="#182536" stroke="#6aa8ff" stroke-opacity=".6"/>
+        <text x="928" y="45" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">SERVICE PROVIDER</text>
+        <text x="928" y="70" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Scoped job · sensitive fields lent, not sent</text>
+        <text x="928" y="92" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Returns status and attributed results</text>
+        <text x="928" y="114" font-family="Arial,sans-serif" font-size="12" fill="#6aa8ff">No direct database or document access.</text>
+
+        <path d="M221 128V145H450V212H221V223" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+        <path d="M661 128V209H565V223" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+        <path d="M1101 128V145H880V209H895V223" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      </g>
+
+      <g data-layer-group="gateway" class="layer">
+        <rect x="55" y="225" width="1210" height="78" rx="10" fill="#132339" stroke="#6aa8ff" stroke-opacity=".6"/>
+        <text x="73" y="254" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">ONE PROTECTED GATE · WAF + API Gateway</text>
+        <text x="73" y="279" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Verify the caller · throttle abuse · signed provider callbacks · TLS on every hop. Sign-in proves who you are — never what you own.</text>
+        <path d="M660 303V343" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      </g>
+
+      <rect x="40" y="326" width="1240" height="229" rx="12" fill="#0c1f34" stroke="#2c3d55"/>
+      <text x="58" y="348" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#6aa8ff">APPLICATION · CHECK AUTHORITY → LIMIT DATA → COORDINATE APPROVED WORK</text>
+
+      <g data-layer-group="identity" class="layer">
+        <rect x="62" y="366" width="372" height="163" rx="10" fill="#182536" stroke="#c1a8ff" stroke-opacity=".6"/>
+        <text x="80" y="395" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">1. Ownership &amp; identity</text>
+        <text x="80" y="420" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Map signed-in user to a home relationship.</text>
+        <text x="80" y="443" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Validate closing evidence; handle disputes.</text>
+        <text x="80" y="466" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Store owner, co-owner and ownership version.</text>
+        <text x="80" y="515" font-family="Arial,sans-serif" font-size="12" fill="#c1a8ff">Evidence creates ownership — a login does not.</text>
+      </g>
+
+      <g data-layer-group="policy" class="layer">
+        <rect x="474" y="366" width="372" height="163" rx="10" fill="#182536" stroke="#6aa8ff" stroke-opacity=".6"/>
+        <text x="492" y="395" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">2. Permission decision</text>
+        <text x="492" y="420" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Check live relationship, grant and purpose.</text>
+        <text x="492" y="443" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Select allowed fields; record access intent.</text>
+        <text x="492" y="466" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Recheck authority before new disclosure.</text>
+        <text x="492" y="515" font-family="Arial,sans-serif" font-size="12" fill="#6aa8ff">Default deny · no ownership rights in cached tokens.</text>
+      </g>
+
+      <g data-layer-group="records" class="layer">
+        <rect x="886" y="366" width="372" height="163" rx="10" fill="#182536" stroke="#4fdca8" stroke-opacity=".6"/>
+        <text x="904" y="395" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">3. Records &amp; service jobs</text>
+        <text x="904" y="420" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Read history; accept attributed corrections.</text>
+        <text x="904" y="443" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Keep personal records separately controlled.</text>
+        <text x="904" y="466" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Record approved terms and a durable job.</text>
+        <text x="904" y="515" font-family="Arial,sans-serif" font-size="12" fill="#4fdca8">Sharing consent and purchase approval are separate.</text>
+      </g>
+
+      <path d="M434 447H474" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      <path d="M846 447H886" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      <path d="M240 555V599" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      <path d="M660 555V599" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      <path d="M1080 555V599" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+
+      <g data-layer-group="records" class="layer">
+        <rect x="60" y="599" width="374" height="179" rx="10" fill="#182536" stroke="#4fdca8" stroke-opacity=".5"/>
+        <text x="78" y="628" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">Database</text>
+        <text x="78" y="653" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Private subnets; no public access.</text>
+        <text x="78" y="676" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Authority + grants + home metadata.</text>
+        <text x="78" y="699" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Personal schema; audit + transactional outbox.</text>
+        <text x="78" y="764" font-family="Arial,sans-serif" font-size="12" fill="#4fdca8">Personal columns encrypted per principal.</text>
+
+        <rect x="474" y="599" width="374" height="179" rx="10" fill="#182536" stroke="#4fdca8" stroke-opacity=".5"/>
+        <text x="492" y="628" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">Document storage + keys</text>
+        <text x="492" y="653" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Encrypted home / evidence storage.</text>
+        <text x="492" y="676" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Separate personal and home-data access.</text>
+        <text x="492" y="699" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Classify at intake; proxied reads.</text>
+        <text x="492" y="764" font-family="Arial,sans-serif" font-size="12" fill="#4fdca8">Per-principal keys · erasure destroys the key.</text>
+      </g>
+
+      <g data-layer-group="jobs" class="layer">
+        <rect x="888" y="599" width="374" height="179" rx="10" fill="#182536" stroke="#ffca5f" stroke-opacity=".6"/>
+        <text x="906" y="628" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">Queue + provider workers</text>
+        <text x="906" y="653" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Outbox relay → queue → provider adapter.</text>
+        <text x="906" y="676" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Recheck grant and approved terms at dispatch.</text>
+        <text x="906" y="699" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Deduplicate, reconcile, retry safely.</text>
+        <text x="906" y="764" font-family="Arial,sans-serif" font-size="12" fill="#ffca5f">Controlled egress; providers stay outside.</text>
+      </g>
+
+      <path d="M270 813V853" fill="none" stroke="#6aa8ff" stroke-width="2" marker-end="url(#a)"/>
+      <path d="M1046 813V853" fill="none" stroke="#c1a8ff" stroke-width="2" marker-end="url(#a)"/>
+
+      <g data-layer-group="audit" class="layer">
+        <rect x="40" y="853" width="605" height="111" rx="10" fill="#182536" stroke="#ffca5f" stroke-opacity=".6"/>
+        <text x="58" y="882" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">SEPARATE SECURITY ACCOUNT</text>
+        <text x="58" y="907" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Audit exports → write-once archive; tested backups.</text>
+        <text x="58" y="930" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Retention lock on selected objects; restricted admin.</text>
+
+        <rect x="675" y="853" width="605" height="111" rx="10" fill="#141f36" stroke="#c1a8ff" stroke-opacity=".7"/>
+        <text x="693" y="882" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#fff">UNDERLYING LEDGER (tamper-evidence)</text>
+        <text x="693" y="907" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Batched hashes only — no names, documents or PII.</text>
+        <text x="693" y="930" font-family="Arial,sans-serif" font-size="14" fill="#c3d0e2">Owners hold exports + receipts to verify offline.</text>
+      </g>
+    </svg>
+  </div>
+  <p class="cap">Adapted from the interactive AWS &amp; identity architecture diagram. Arrows are logical flows, not open network access. Builder source systems, analytics and cost/margin databases stay outside — only approved home projections come in.</p>
+</section>
+
+<!-- 3. HOW ACTIVATION HAPPENS -->
+<section id="activation">
+  <div class="snum">03 · How activation happens</div>
+  <h2>In one line.</h2>
+
+  <div class="oneline">
+    <p><strong>Activating a home = the verified owner approves sharing a few home facts with a provider and approves the order, and Tessera dispatches one tracked job — no address to type, nothing sensitive copied out.</strong></p>
+  </div>
+
+  <p class="sub" style="margin-top:20px">It stays one tap because the identity proof happened earlier, at closing — so the tap only confirms an already-verified owner acting on an already-known home. The full step-by-step (claim → share → approve → dispatch), with every edge case, lives in the <a href="tessera-use-cases.md">use-case catalog</a>.</p>
+</section>
+
+<!-- 4. COST -->
+<section id="cost">
+  <div class="snum">04 · Cost analysis</div>
+  <h2>Calculated from AWS list prices, sized to the design.</h2>
+  <p class="sub">Not a guess. Each line below is a service in the architecture, sized from the design (1,000 homes, steady state) and multiplied by the public us-east-1 list price. The model and its assumptions are shown so anyone can re-run it.</p>
+
+  <div class="costgrid">
+    <div class="chartcard">
+      <h3>Monthly cost by service · 1,000 homes</h3>
+      <svg viewBox="0 0 520 380" role="img" aria-label="Bar chart of estimated monthly AWS cost by service at 1,000 homes. Aurora database is the largest at about 131 dollars, then ledger anchoring 50, NAT and transfer 40, RDS Proxy 16, Cognito 15, backups and audit 12, WAF 9, S3 and KMS 8, API Gateway 7, Lambda 5, SQS 1.">
+        <!-- y gridlines -->
+        <g font-family="ui-monospace,monospace" font-size="10" fill="#7f90aa">
+          <line x1="150" y1="20" x2="150" y2="330" stroke="#22364f"/>
+          <line x1="242" y1="20" x2="242" y2="330" stroke="#1c2c40" stroke-dasharray="3 4"/>
+          <line x1="334" y1="20" x2="334" y2="330" stroke="#1c2c40" stroke-dasharray="3 4"/>
+          <line x1="426" y1="20" x2="426" y2="330" stroke="#1c2c40" stroke-dasharray="3 4"/>
+          <text x="150" y="348" text-anchor="middle">$0</text>
+          <text x="242" y="348" text-anchor="middle">$50</text>
+          <text x="334" y="348" text-anchor="middle">$100</text>
+          <text x="426" y="348" text-anchor="middle">$150</text>
+        </g>
+        <!-- bars: x0=150, scale 1.84 px/$ -->
+        <g font-family="system-ui,Arial" font-size="12.5">
+          <!-- Aurora 131 -->
+          <text x="144" y="38" text-anchor="end" fill="#c3d0e2">Database (Aurora)</text>
+          <rect x="150" y="27" width="241" height="16" rx="3" fill="#4fdca8"/><text x="397" y="40" fill="#fff" font-size="11">$131</text>
+          <!-- Ledger 50 -->
+          <text x="144" y="62" text-anchor="end" fill="#c3d0e2">Ledger anchoring</text>
+          <rect x="150" y="51" width="92" height="16" rx="3" fill="#c1a8ff"/><text x="248" y="64" fill="#fff" font-size="11">$50</text>
+          <!-- NAT 40 -->
+          <text x="144" y="86" text-anchor="end" fill="#c3d0e2">NAT + transfer</text>
+          <rect x="150" y="75" width="74" height="16" rx="3" fill="#ffca5f"/><text x="230" y="88" fill="#fff" font-size="11">$40</text>
+          <!-- RDS Proxy 16 -->
+          <text x="144" y="110" text-anchor="end" fill="#c3d0e2">RDS Proxy</text>
+          <rect x="150" y="99" width="29" height="16" rx="3" fill="#4fdca8"/><text x="185" y="112" fill="#c3d0e2" font-size="11">$16</text>
+          <!-- Cognito 15 -->
+          <text x="144" y="134" text-anchor="end" fill="#c3d0e2">Identity (Cognito)</text>
+          <rect x="150" y="123" width="28" height="16" rx="3" fill="#6aa8ff"/><text x="184" y="136" fill="#c3d0e2" font-size="11">$15</text>
+          <!-- Backups+audit 12 -->
+          <text x="144" y="158" text-anchor="end" fill="#c3d0e2">Backups + audit</text>
+          <rect x="150" y="147" width="22" height="16" rx="3" fill="#ffca5f"/><text x="178" y="160" fill="#c3d0e2" font-size="11">$12</text>
+          <!-- WAF 9 -->
+          <text x="144" y="182" text-anchor="end" fill="#c3d0e2">WAF</text>
+          <rect x="150" y="171" width="17" height="16" rx="3" fill="#6aa8ff"/><text x="173" y="184" fill="#c3d0e2" font-size="11">$9</text>
+          <!-- S3+KMS 8 -->
+          <text x="144" y="206" text-anchor="end" fill="#c3d0e2">S3 + KMS</text>
+          <rect x="150" y="195" width="15" height="16" rx="3" fill="#4fdca8"/><text x="171" y="208" fill="#c3d0e2" font-size="11">$8</text>
+          <!-- API GW 7 -->
+          <text x="144" y="230" text-anchor="end" fill="#c3d0e2">API Gateway</text>
+          <rect x="150" y="219" width="13" height="16" rx="3" fill="#6aa8ff"/><text x="169" y="232" fill="#c3d0e2" font-size="11">$7</text>
+          <!-- Lambda 5 -->
+          <text x="144" y="254" text-anchor="end" fill="#c3d0e2">Lambda</text>
+          <rect x="150" y="243" width="9" height="16" rx="3" fill="#6aa8ff"/><text x="165" y="256" fill="#c3d0e2" font-size="11">$5</text>
+          <!-- SQS 1 -->
+          <text x="144" y="278" text-anchor="end" fill="#c3d0e2">SQS</text>
+          <rect x="150" y="267" width="3" height="16" rx="2" fill="#ffca5f"/><text x="159" y="280" fill="#c3d0e2" font-size="11">$1</text>
+        </g>
+        <text x="150" y="372" font-family="system-ui,Arial" font-size="13" font-weight="700" fill="#fff">Total ≈ $294 / month  ·  ≈ $0.29 per home</text>
+      </svg>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Service</th><th>Sizing (1,000 homes)</th><th>List price</th><th>/mo</th></tr></thead>
+        <tbody>
+          <tr><td><b>Aurora Serverless v2</b></td><td>~1.5 ACU avg (writer + reader), 730 h</td><td>$0.12 / ACU-hr</td><td>$131</td></tr>
+          <tr><td><b>Ledger anchoring</b></td><td>Hourly batched roots via managed endpoint</td><td>allowance</td><td>$50</td></tr>
+          <tr><td><b>NAT + data transfer</b></td><td>2 AZ NAT + provider egress</td><td>$0.045/hr + /GB</td><td>$40</td></tr>
+          <tr><td><b>RDS Proxy</b></td><td>1.5 ACU, 730 h</td><td>$0.015 / ACU-hr</td><td>$16</td></tr>
+          <tr><td><b>Cognito (Essentials)</b></td><td>~1,000 monthly active users</td><td>~$0.015 / MAU</td><td>$15</td></tr>
+          <tr><td><b>Backups + audit archive</b></td><td>Snapshots + write-once log store</td><td>storage</td><td>$12</td></tr>
+          <tr><td><b>WAF</b></td><td>1 web ACL + ~3 rules + 2M req</td><td>$5 + $1/rule + $0.60/M</td><td>$9</td></tr>
+          <tr><td><b>S3 + KMS</b></td><td>~50 GB docs + per-principal keys</td><td>$0.023/GB + key/req</td><td>$8</td></tr>
+          <tr><td><b>API Gateway (REST)</b></td><td>~2M requests</td><td>$3.50 / M</td><td>$7</td></tr>
+          <tr><td><b>Lambda</b></td><td>~2M invocations, light compute</td><td>$0.20/M + GB-s</td><td>$5</td></tr>
+          <tr><td><b>SQS</b></td><td>~1M messages</td><td>$0.40 / M</td><td>$1</td></tr>
+          <tr class="totalrow"><td>Total (steady state)</td><td>1,000 homes</td><td>us-east-1 list</td><td>≈ $294</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="costnote">
+    <p><strong>How to read this:</strong> the database dominates because it is the one always-on component; everything else scales with activity, not passport count. At ~<strong>$294/month for 1,000 homes that is ~$0.29 per home per month</strong> in cloud cost. Two caveats: these are <strong>list prices</strong> (real bills are lower with commitments/free tiers), and <strong>identity-evidence vendors, legal review and operating staff are separate</strong> from cloud spend. As homes grow, per-home cost falls — the fixed database floor is shared across more homes.</p>
+  </div>
+</section>
+
+<!-- 5. THREAT MODEL -->
+<section id="threat">
+  <div class="snum">05 · Our threat model</div>
+  <h2>How we stress-tested the design.</h2>
+  <p class="sub">Lawyers are welcome to review; our contribution is threat modelling. For each way the system could betray trust, we name the attack and the one rule that makes it structurally hard — not merely discouraged. This is the data-security position.</p>
+
+  <div class="threats">
+    <div class="threat">
+      <div class="attack">Attack · impersonate an owner</div>
+      <h3>Claim a home you don’t own</h3>
+      <p>Scan a plaque, guess an ID, or reuse an invite to seize a home’s record.</p>
+      <div class="stop"><span class="mk">✓</span><b>Locator ≠ credential.</b> Ownership needs verified closing evidence + identity; unbound lookups return a plain not-found; address→home resolution sits behind auth.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · over-collect at a provider</div>
+      <h3>Pull more than the job needs</h3>
+      <p>A provider (or a hostile provider account) tries to read fields or homes outside its job.</p>
+      <div class="stop"><span class="mk">✓</span><b>Lend, don’t send.</b> Payload is built from the grant; sensitive fields shown in a watermarked time-boxed view; only the minimum (usually the address) transfers.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · defeat deletion</div>
+      <h3>Make erasure impossible</h3>
+      <p>Append-only history and an immutable ledger seem to block a right-to-erasure request forever.</p>
+      <div class="stop"><span class="mk">✓</span><b>Crypto-shred.</b> Personal data is encrypted per person; erasure destroys the key across live storage and backups. Property facts are de-linked and stay.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · read a person off the ledger</div>
+      <h3>Recover PII from the chain</h3>
+      <p>Someone holding the ledger tries to work backwards to a name or address.</p>
+      <div class="stop"><span class="mk">✓</span><b>Hashes only, salted.</b> Personal fields are pointers; the secret salt lives with the owner’s export. After erasure the commitment is anonymous by construction.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · duplicate or silent purchase</div>
+      <h3>Order twice, or share becomes buy</h3>
+      <p>A timeout retries into a second order; a data share is treated as a purchase.</p>
+      <div class="stop"><span class="mk">✓</span><b>Two approvals + one durable job.</b> Sharing and buying are separate consents; a stable job key blocks duplicates; ambiguous outcomes go to review.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · stale power after sale</div>
+      <h3>Old owner keeps access</h3>
+      <p>A former owner acts on a home after closing, or an old grant still works.</p>
+      <div class="stop"><span class="mk">✓</span><b>Versioned authority.</b> Transfer atomically bumps the ownership epoch and kills every prior grant. Every request is checked against current authority.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · rogue insider</div>
+      <h3>An admin bypasses the walls</h3>
+      <p>A privileged operator reads content or destroys data at scale.</p>
+      <div class="stop"><span class="mk">✓</span><b>No standing access.</b> Support is time-boxed and dual-approved; the audit archive is write-once with separate admins; bulk key destruction needs dual control. Residual risk is documented, not hidden.</div>
+    </div>
+    <div class="threat">
+      <div class="attack">Attack · dense-PII documents</div>
+      <h3>Leak an ID or closing packet</h3>
+      <p>An identity document lingers and turns a breach into identity theft.</p>
+      <div class="stop"><span class="mk">✓</span><b>Tier + discard.</b> Documents are classified at intake; identity evidence is attested then discarded or sealed under mandatory retention; nothing reaches a durable store unlabelled.</div>
+    </div>
+  </div>
+
+  <p style="margin-top:22px;color:var(--muted)">Four choices must be right <strong>before the first record is anchored</strong>, because they can’t be retrofitted: personal fields as pointers, two salt classes, per-person encryption, and classification at intake. <span class="chip">get these right on day one</span></p>
+</section>
+
+<p class="close">One home, one record: claimed by <b>proven ownership</b>, activated in <b>one honest tap</b>, where sensitive data is <b>lent not sent</b>, personal data can be <b>truly deleted</b>, and the ledger holds a <b>fingerprint, never you</b>.</p>
+
+<footer>
+  Tessera HomePassport · Executive summary. Amalgamated from the Tessera Identity documents: the AWS &amp; identity architecture, the data &amp; PII audit, the PII decisions &amp; critical path, and the use-case catalog. Proposed design for review — not a statement of implemented capability, and not a legal opinion. Cost figures are rough planning estimates to validate. No live data.
+</footer>
+
+</main>
+<script>
+  // HLD diagram: highlight one layer path. "gateway" and the environment frame stay lit for context.
+  const groups = [...document.querySelectorAll('.layer')];
+  document.querySelectorAll('[data-layer]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pick = btn.dataset.layer;
+      document.querySelectorAll('[data-layer]').forEach(b => b.setAttribute('aria-pressed', b === btn));
+      groups.forEach(g => {
+        const grp = g.dataset.layerGroup;
+        const keep = pick === 'all' || grp === pick || grp === 'gateway';
+        g.classList.toggle('dim', !keep);
+      });
+    });
+  });
+</script>
+</body>
+</html>
