@@ -8,9 +8,8 @@ import { story } from '@/content/home';
  * Immersive lifetime narrative from data-room/future-story.html.
  *
  * Kept in an iframe so its CSS/JS stay isolated from the marketing site.
- * The frame is a full viewport; scroll happens inside the story (sticky
- * scenes). On short mobile screens we still mount the same frame — the
- * story’s own media queries handle layout — and offer a fullscreen route.
+ * The frame fills the viewport under the sticky header; scroll happens
+ * inside the story. Phones also get a fullscreen route for easier browsing.
  */
 export function FutureStory() {
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -37,20 +36,33 @@ export function FutureStory() {
           </div>
           <div className="flex max-w-[40ch] flex-col gap-4">
             <p className="text-[14px] leading-relaxed text-ink-2">{story.lede}</p>
-            <a
-              href={story.fullscreen.href}
-              className="inline-flex w-fit items-center gap-3 border-b border-line/40 py-1 text-[12px] text-ink-2 transition-colors duration-300 hover:text-ink"
-            >
-              {story.fullscreen.label}
-              <span aria-hidden="true">↗</span>
-            </a>
+            <div className="flex flex-wrap items-center gap-4">
+              <a
+                href={story.fullscreen.href}
+                className="inline-flex items-center gap-3 rounded-tile bg-ink px-4 py-3 text-[12px] font-medium text-bg transition-colors duration-300 hover:bg-accent sm:hidden"
+              >
+                {story.fullscreen.mobileLabel}
+                <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                href={story.fullscreen.href}
+                className="hidden items-center gap-3 border-b border-line/40 py-1 text-[12px] text-ink-2 transition-colors duration-300 hover:text-ink sm:inline-flex"
+              >
+                {story.fullscreen.label}
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="relative mt-8 w-full sm:mt-10">
+        {/*
+          Height accounts for the sticky site header (~77px) so the story
+          frame can sit fully in view once you scroll to it.
+        */}
         <div
-          className={`relative isolate h-[100dvh] min-h-[520px] w-full overflow-hidden overscroll-contain bg-[#f7f4ed] touch-pan-y sm:min-h-[640px] ${
+          className={`relative isolate h-[calc(100dvh-77px)] min-h-[480px] w-full overflow-hidden overscroll-contain bg-[#f7f4ed] touch-pan-y sm:min-h-[640px] ${
             ready ? '' : 'animate-pulse'
           }`}
         >

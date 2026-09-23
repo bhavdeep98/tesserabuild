@@ -120,10 +120,14 @@ export const story = {
   title: 'From first plan to the next owner.',
   lede:
     'An interactive journey through what Home Passport makes possible — construction, handoff, activation, care, and the next chapter.',
-  src: '/data-room/future-story.html?embed=1',
+  src: '/data-room/future-story.html?embed=1&v=20260923b',
   iframeTitle: 'A home with a lifetime ahead',
   hint: 'Scroll inside the frame to move through each chapter — or open full screen on a phone.',
-  fullscreen: { label: 'Open full screen', href: '/story/' },
+  fullscreen: {
+    label: 'Open full screen',
+    mobileLabel: 'Play the full story',
+    href: '/story/',
+  },
 } as const;
 
 /* ─────────────────────────────────────────────────────────────
