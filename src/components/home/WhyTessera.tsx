@@ -18,7 +18,12 @@ export function WhyTessera() {
             {why.title}
           </h2>
         </div>
-        <p className="max-w-[44ch] text-[14px] leading-relaxed text-ink-2">{why.lede}</p>
+        <div className="max-w-[44ch]">
+          <p className="font-display text-[22px] leading-snug tracking-[-0.02em] text-ink sm:text-[24px]">
+            {why.pull}
+          </p>
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-2">{why.lede}</p>
+        </div>
       </div>
 
       <ol className="mt-12 grid gap-px sm:grid-cols-3">

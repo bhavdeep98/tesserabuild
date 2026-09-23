@@ -182,6 +182,7 @@ export const answers = {
 export const why = {
   eyebrow: 'Why Tessera',
   title: 'We’ve run this from the inside.',
+  pull: 'You should never know more about your car than about your home.',
   lede:
     'Tessera is built by people who have worked in a top builder’s operations and strategic investment — who know what builder systems can and cannot do, and what it takes to read across them.',
   reasons: [
