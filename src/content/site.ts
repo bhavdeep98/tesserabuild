@@ -208,16 +208,16 @@ export const gap = {
 
 export const tenets = {
   eyebrow: 'What we believe',
-  title: 'Two commitments we will not trade away',
+  title: 'Three commitments we will not trade away',
   lede:
-    'Plenty of software makes a builder faster. We are trying to make a home cost less to deliver, and to be adopted without asking anyone to change how they work. Those two things constrain every decision we make.',
+    'Plenty of software makes a builder faster. We are trying to make a home cost less to deliver, be adopted without asking anyone to change how they work, and leave a record that outlives any one company’s systems.',
   items: [
     {
       index: '01',
       name: 'Affordability for all',
       claim: 'Every day a finished home sits unclosed is priced into the home.',
       body:
-        'Carrying cost, rate-lock extensions, incentives handed over to rescue a slipping date — none of it makes a house better. It lands in the price a family pays, or in the margin that funds the next community. Coordination waste is one of the few costs in homebuilding that can fall without cutting quality, cutting labour, or cutting the builder. That is the lever we chose on purpose.',
+        'Carrying cost, rate-lock extensions, incentives handed over to rescue a slipping date — none of it makes a house better. Close risk and coordination waste are costs that can fall without cutting quality, labour, or the builder. That is the lever we chose on purpose.',
       pull: 'Take the waste out of the transaction, not out of the house.',
     },
     {
@@ -225,8 +225,16 @@ export const tenets = {
       name: 'Ease to connect',
       claim: 'The only thing a builder has to do is say yes.',
       body:
-        'No migration. No rip-and-replace. No new system for anyone to learn, and no change to a single existing workflow. We read the tools your teams already trust, and we never write back to them. A new system is a connector definition plus an optional normaliser — measured in hours of our work and about an hour of your IT team\u2019s, once.',
+        'No migration. No rip-and-replace. No new system for anyone to learn, and no change to a single existing workflow. We read the tools your teams already trust, and we never write back to them.',
       pull: 'If adoption is expensive, it does not matter how good the insight is.',
+    },
+    {
+      index: '03',
+      name: 'Trust in the record',
+      claim: 'The Passport has to outlast any one company’s systems.',
+      body:
+        'A home’s history only matters if the next owner, provider, or lender can still check it. We keep the Passport verifiable — so the record stays trustworthy after warranty ends and after any one party stops answering the phone.',
+      pull: 'Identity without trust is just another login.',
     },
   ],
 } as const;

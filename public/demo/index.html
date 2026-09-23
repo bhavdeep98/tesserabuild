@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Tessera — Prototype demo</title>
+<title>Tessera — Demo + video</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
   :root {
     --bg:#f7f4ed; --surface:#fdfbf6; --card:#fcfaf6; --panel:#f1ede3;
     --text:#20352f; --text-2:#4a5c56; --text-3:#6c7b75;
-    --accent:#2d7d6f; --teal-50:#e6f5f2; --teal-100:#ccebe5; --teal-800:#1f4f47;
+    --accent:#2d7d6f; --teal-50:#e6f5f2;
     --line:rgba(32,53,47,0.12); --line-2:rgba(45,125,111,0.30);
     --display:'Plus Jakarta Sans',system-ui,sans-serif;
     --body:'Inter',system-ui,sans-serif;
@@ -30,29 +30,36 @@
   .topbar .bk{font:800 13px/1 var(--display);letter-spacing:.24em;color:var(--text);text-decoration:none}
   .topbar .home{font:600 12px/1 var(--mono);color:var(--accent);text-decoration:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;margin-left:auto}
   .hero{padding:56px 0 24px}
-  .hero h1{font-size:clamp(30px,4.6vw,46px);max-width:14ch;margin:16px 0 14px}
+  .hero h1{font-size:clamp(30px,4.6vw,46px);max-width:16ch;margin:16px 0 14px}
   .hero p{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:62ch}
   .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
   .btn{display:inline-flex;align-items:center;gap:8px;font:700 13px/1 var(--display);letter-spacing:.02em;padding:12px 18px;border-radius:999px;text-decoration:none}
   .btn-primary{background:var(--accent);color:#fff}
   .btn-ghost{border:1px solid var(--line-2);color:var(--accent);background:var(--surface)}
-  .video-wrap{margin:28px 0;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#111;aspect-ratio:16/9}
-  .video-wrap iframe{width:100%;height:100%;border:0;display:block}
+  .live-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  @media(max-width:720px){.live-grid{grid-template-columns:1fr}}
+  .live-card{display:block;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;text-decoration:none;color:inherit;transition:border-color .2s,box-shadow .2s}
+  .live-card:hover{border-color:var(--line-2);box-shadow:0 10px 30px #20352f12}
+  .live-card .k{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .live-card h3{font-size:22px;margin-bottom:8px}
+  .live-card p{font-size:14px;color:var(--text-2);margin-bottom:14px}
+  .live-card .go{font:700 13px/1 var(--display);color:var(--accent)}
+  .video-grid{display:grid;gap:28px;margin-top:20px}
+  .video-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .video-card .meta{padding:18px 20px 8px}
+  .video-card .meta .k{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .video-card .meta h3{font-size:20px;margin-bottom:6px}
+  .video-card .meta p{font-size:14px;color:var(--text-2);max-width:58ch}
+  .video-wrap{margin:12px 16px 16px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#111;aspect-ratio:16/9}
+  .video-wrap video,.video-wrap iframe{width:100%;height:100%;display:block;border:0;background:#111}
   section{padding:36px 0;border-top:1px solid var(--line)}
   section h2{font-size:clamp(22px,2.6vw,28px);margin-bottom:12px}
-  .beats{display:grid;gap:12px;counter-reset:beat}
+  .beats{display:grid;gap:12px}
   .beat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start}
   .beat .n{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--teal-50);color:var(--accent);font:800 16px/1 var(--display)}
   .beat h3{font-size:17px;margin-bottom:4px}
   .beat p{font-size:14px;color:var(--text-2)}
-  .roles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  @media(max-width:720px){.roles{grid-template-columns:1fr}}
-  .role{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
-  .role .k{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-  .role h3{font-size:16px;margin-bottom:6px}
-  .role code{font:600 12px/1.5 var(--mono);color:var(--text);background:var(--panel);padding:2px 6px;border-radius:6px}
-  .role p{font-size:13.5px;color:var(--text-2);margin-top:8px}
-  .note{margin-top:18px;padding:14px 16px;border-radius:12px;background:var(--panel);border:1px dashed var(--line-2);font-size:13.5px;color:var(--text-2)}
+  .beat a{color:var(--accent);font-weight:600}
   footer{border-top:1px solid var(--line);padding:36px 0 60px}
   footer p{font:500 12px/1.7 var(--mono);color:var(--text-3)}
   footer a{color:var(--accent)}
@@ -65,93 +72,109 @@
 </div></div>
 
 <header class="hero"><div class="wrap">
-  <div class="eyebrow">Prototype · Home Passport</div>
-  <h1>See the same home across every role.</h1>
-  <p>Start with the experience video (open to anyone with the link), then walk the live prototype: builder close risk → Passport handoff → homeowner and provider on one identity.</p>
+  <div class="eyebrow">Home Passport · Demo</div>
+  <h1>See it live. Watch how it plays.</h1>
+  <p>Open the product as a builder or homeowner, then watch today’s narrated walkthroughs and the future-vision story.</p>
   <div class="cta-row">
-    <a class="btn btn-primary" href="https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/view?usp=sharing" target="_blank" rel="noopener">Open experience video ↗</a>
-    <a class="btn btn-ghost" href="#video">Watch embedded</a>
-    <a class="btn btn-ghost" href="#walkthrough">3-beat walkthrough</a>
-    <a class="btn btn-ghost" href="#accounts">Demo accounts</a>
+    <a class="btn btn-primary" href="https://app.tesserabuild.ai/builder" target="_blank" rel="noopener">Open builder ↗</a>
+    <a class="btn btn-primary" href="https://app.tesserabuild.ai/claim" target="_blank" rel="noopener">Open homeowner ↗</a>
+    <a class="btn btn-ghost" href="#video">Watch videos</a>
   </div>
 </div></header>
 
+<section id="live"><div class="wrap">
+  <h2>Try the product</h2>
+  <p style="color:var(--text-2);max-width:62ch;margin-bottom:4px">Open the live product for each seat.</p>
+  <div class="live-grid">
+    <a class="live-card" href="https://app.tesserabuild.ai/builder" target="_blank" rel="noopener">
+      <div class="k">Builder</div>
+      <h3>Close path &amp; home record</h3>
+      <p>See close risk across systems and the Passport taking shape during the build.</p>
+      <span class="go">app.tesserabuild.ai/builder ↗</span>
+    </a>
+    <a class="live-card" href="https://app.tesserabuild.ai/claim" target="_blank" rel="noopener">
+      <div class="k">Homeowner</div>
+      <h3>Claim &amp; use the Passport</h3>
+      <p>Activation, care, and services on the same property identity after the keys.</p>
+      <span class="go">app.tesserabuild.ai/claim ↗</span>
+    </a>
+  </div>
+</div></section>
+
 <section id="video"><div class="wrap">
-  <h2>Experience video</h2>
-  <p style="color:var(--text-2);margin-bottom:14px;max-width:60ch">Home Passport experience — shared publicly via Google Drive. Prefer the button above if the embed does not load.</p>
-  <p style="margin:0 0 16px">
-    <a class="btn btn-primary" href="https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/view?usp=sharing" target="_blank" rel="noopener">https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/</a>
-  </p>
-  <div class="video-wrap">
-    <iframe
-      src="https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/preview"
-      allow="autoplay"
-      allowfullscreen
-      title="Tessera Home Passport experience video"></iframe>
+  <h2>Videos</h2>
+  <p style="color:var(--text-2);margin-bottom:4px;max-width:62ch">What runs today, plus the longer story of where Home Passport goes.</p>
+  <div class="video-grid">
+    <article class="video-card" id="builder-video">
+      <div class="meta">
+        <div class="k">Today · Builder</div>
+        <h3>Close risk across systems you already run</h3>
+        <p>Narrated builder walkthrough — then open the live product.</p>
+      </div>
+      <div class="video-wrap">
+        <video controls playsinline preload="metadata" title="Tessera builder demo">
+          <source src="./videos/builder.mp4" type="video/mp4">
+        </video>
+      </div>
+    </article>
+    <article class="video-card" id="homeowner-video">
+      <div class="meta">
+        <div class="k">Today · Homeowner</div>
+        <h3>The Passport after the keys</h3>
+        <p>Narrated homeowner walkthrough — then claim the live Passport.</p>
+      </div>
+      <div class="video-wrap">
+        <video controls playsinline preload="metadata" title="Tessera homeowner demo">
+          <source src="./videos/homeowner.mp4" type="video/mp4">
+        </video>
+      </div>
+    </article>
+    <article class="video-card" id="future-video">
+      <div class="meta">
+        <div class="k">Future vision</div>
+        <h3>From first plan to the next owner</h3>
+        <p>The longer Home Passport story — construction through ownership and care. Prefer <a href="https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/view?usp=sharing" target="_blank" rel="noopener" style="color:var(--accent);font-weight:700">Open in Drive ↗</a> if the embed does not load.</p>
+      </div>
+      <div class="video-wrap">
+        <iframe
+          src="https://drive.google.com/file/d/1tijxn80Yiw3foRnOvd-fVvkBvRlDvoe2/preview"
+          allow="autoplay"
+          allowfullscreen
+          title="Tessera Home Passport future vision"></iframe>
+      </div>
+    </article>
   </div>
 </div></section>
 
 <section id="walkthrough"><div class="wrap">
-  <h2>Three beats · ~3 minutes</h2>
+  <h2>Three beats</h2>
   <div class="beats">
     <div class="beat">
       <div class="n">1</div>
       <div>
         <h3>Builder — see the close at risk</h3>
-        <p>Sign in as the builder. Open Outlook / construction for a lot. Predictability (Kestrel) surfaces cross-system risk — house ready, loan or title not — on the same home identity.</p>
+        <p>Open <a href="https://app.tesserabuild.ai/builder" target="_blank" rel="noopener">the builder experience</a>. Close intelligence surfaces cross-system risk — house ready, loan or title not — on the same home identity.</p>
       </div>
     </div>
     <div class="beat">
       <div class="n">2</div>
       <div>
         <h3>Handoff — the Passport stays with the home</h3>
-        <p>Move through handoff. The record is not a forked binder for a new login; it is the property’s continuous Passport that the owner will claim.</p>
+        <p>The record is not a forked binder for a new login; it is the property’s continuous Passport the owner will claim.</p>
       </div>
     </div>
     <div class="beat">
       <div class="n">3</div>
       <div>
-        <h3>Homeowner + provider — act on that identity</h3>
-        <p>Sign in as Maya (owner) for passport / care / move-in. Sign in as Jordan (provider) for a job that only receives what the grant allows. Same home. Different authority.</p>
+        <h3>Homeowner — act on that identity</h3>
+        <p>Open <a href="https://app.tesserabuild.ai/claim" target="_blank" rel="noopener">the homeowner experience</a> for claim, activation, and care on the same Passport.</p>
       </div>
     </div>
   </div>
 </div></section>
 
-<section id="accounts"><div class="wrap">
-  <h2>Demo accounts</h2>
-  <p style="color:var(--text-2);margin-bottom:16px">Password for all: <code style="font-family:var(--mono);background:var(--panel);padding:2px 6px;border-radius:6px">demo</code></p>
-  <div class="roles">
-    <div class="role">
-      <div class="k">Builder</div>
-      <h3><code>builder@field.test</code></h3>
-      <p>Ops spine + Outlook leadership view. Closing confidence embeds on construction, inspections, handoff.</p>
-    </div>
-    <div class="role">
-      <div class="k">Homeowner</div>
-      <h3><code>maya@home.test</code></h3>
-      <p>Passport, care, explore, move-in — the living record after close.</p>
-    </div>
-    <div class="role">
-      <div class="k">Provider</div>
-      <h3><code>jordan@fiberlink.test</code></h3>
-      <p>Provider workspace + field jobs. Scoped views only.</p>
-    </div>
-    <div class="role">
-      <div class="k">Closer</div>
-      <h3><code>closer@closing.test</code></h3>
-      <p>Title queue — optional fourth beat for the close path.</p>
-    </div>
-  </div>
-  <div class="note">
-    <b>Run locally (current prototype):</b> Identity API from <code>Tessera Identity/prototype</code> → <code>npm run dev:api</code> (:8787). Front End → <code>npm run dev</code> in the Tessera Front End repo → <a href="http://localhost:3000" style="color:var(--accent)">http://localhost:3000</a>.
-    Optional live scores: housing passport Docker predictability on :3004.
-    A public hosted demo URL will replace localhost when the seed environment is published — this page stays the script and credential sheet either way.
-  </div>
-</div></section>
-
 <footer><div class="wrap">
-  <p>Tessera · Prototype demo sheet. <a href="../data-room/">Data room</a> · <a href="../data-room/architecture.html">Architecture</a> · <a href="../data-room/competitive-landscape.html">Competition</a></p>
+  <p>Tessera · Demo. <a href="../data-room/index.html">Data room</a></p>
 </div></footer>
 </body>
 </html>
