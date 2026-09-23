@@ -49,7 +49,7 @@ export const reasons = {
       name: 'The record outlives the builder',
       claim: 'The builder says "warranty\u2019s up, don\u2019t call us." The record stays.',
       body:
-        'Everything a builder knows about a home — what was permitted, what was installed, which trade did the work, what the warranty covered — is stranded in systems the homeowner loses access to the day the builder walks away. We assemble that into a record that belongs to the home, not the vendor, and anchor it so it cannot be quietly altered. That is the "Carfax for a house" that does not exist today. It is only credible because the data was captured accurately at the source, during the build, which is exactly what the first layer does.',
+        'Everything a builder knows about a home — what was permitted, what was installed, which trade did the work, what the warranty covered — is stranded in systems the homeowner loses access to the day the builder walks away. We assemble that into a Home Passport that belongs to the home, not the vendor, and anchor it so it cannot be quietly altered. Digs and others already use the Carfax analogy for document portals; the gap is a property-bound identity that survives close and ownership change. It is only credible because the data was captured accurately at the source, during the build — which is exactly what predictability earns us the right to do.',
       pull: 'You cannot reconstruct a verified build history after the fact. You have to be there when it happens.',
     },
     {
@@ -77,13 +77,17 @@ export const reasons = {
 
 export const competition = {
   eyebrow: 'The obvious rebuttals',
-  title: 'The three questions that follow, answered',
+  title: 'The questions that follow, answered',
   lede:
-    'A generalist investor is right to press on these. None of them has a hand-waving answer, so here are the real ones.',
+    'A generalist investor is right to press on these. Digs made the category loud. None of the answers below is hand-waving.',
   items: [
     {
-      q: 'Why hasn\u2019t Lennar just built this internally?',
-      a: 'They have tried adjacent versions and the marketplace attempts have not held. The barrier is not engineering talent — it is that an internal build only ever sees that builder\u2019s own systems, and stops at the buyer-lender boundary. A single builder also cannot build the cross-builder ground truth that makes the intelligence improve. The neutral layer is a different company, not a backlog item.',
+      q: 'Digs just raised $25.3M with Builders FirstSource. Aren\u2019t they the Carfax for homes?',
+      a: 'They validated the language and bought distribution. Digs is a builder document/AI workspace; at handoff it forks a new homeowner project. It does not span mortgage or title, and the record is not a parcel identity across owners. That is the gap Home Passport is built for — and why we keep the product name Passport, not HomeFax.',
+    },
+    {
+      q: 'Why hasn\u2019t Lennar (or Pulte, or Horton) just built this internally?',
+      a: 'Nationals already ship homeowner UX apps. That is not the same as a neutral property identity through close. An internal build only ever sees that builder\u2019s own systems, and stops at the buyer-lender boundary. A single builder also cannot build the cross-builder ground truth that makes the intelligence improve. The neutral layer is a different company, not a backlog item.',
     },
     {
       q: 'What happens when an ERP ships this as a feature?',
@@ -91,7 +95,7 @@ export const competition = {
     },
     {
       q: 'A well-funded construction-tech player could do this in 18 months.',
-      a: 'They could build Layer 1. What they cannot buy in 18 months is the accumulated cross-system history, and they carry the same neutrality problem if they also sell a system of record. The defensibility compounds with time in market, which is the one input a later entrant cannot purchase.',
+      a: 'They could build a predictability plane. What they cannot buy in 18 months is accumulated cross-system history through close, and they carry the same neutrality problem if they also sell a system of record. Digs\u2019 distribution makes the portal definition of the category sticky — so the identity thesis has to be obvious now, not after that sticks.',
     },
   ],
 } as const;

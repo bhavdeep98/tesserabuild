@@ -43,7 +43,7 @@ export const hero = {
   },
   /** Authored as two lines — at 10px with wide tracking, letting this wrap
       on its own produced four. */
-  bridge: ['One product', 'Five capabilities'],
+  bridge: ['One product', 'One Passport · five chapters'],
 } as const;
 
 /* ─────────────────────────────────────────────────────────────

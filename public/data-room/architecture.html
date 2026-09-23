@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Home Passport architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f7f4ed; --surface:#fdfbf6; --card:#fcfaf6; --panel:#f1ede3;
+    --text:#20352f; --text-2:#4a5c56; --text-3:#6c7b75;
+    --accent:#2d7d6f; --teal-50:#e6f5f2; --teal-100:#ccebe5; --teal-800:#1f4f47;
+    --line:rgba(32,53,47,0.12); --line-2:rgba(45,125,111,0.30);
+    --display:'Plus Jakarta Sans',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.62;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.12}
+  .wrap{max-width:980px;margin:0 auto;padding:0 28px}
+  .eyebrow{font:700 12px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);opacity:.7}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(247,244,237,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .row{max-width:980px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:12px}
+  .topbar .bk{font:800 13px/1 var(--display);letter-spacing:.24em;color:var(--text);text-decoration:none}
+  .topbar .home{font:600 12px/1 var(--mono);color:var(--accent);text-decoration:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;margin-left:auto}
+  .hero{padding:64px 0 28px}
+  .hero h1{font-size:clamp(30px,4.6vw,46px);max-width:14ch;margin:18px 0 16px}
+  .hero p{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:68ch}
+  .thesis{margin:24px 0;padding:18px 20px;border-radius:var(--r);background:var(--teal-50);border:1px solid var(--teal-100);color:var(--teal-800);font-size:15px}
+  section{padding:36px 0;border-top:1px solid var(--line)}
+  section h2{font-size:clamp(22px,2.6vw,28px);margin-bottom:12px}
+  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0}
+  @media(max-width:900px){.flow{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.flow{grid-template-columns:1fr}}
+  .flow .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 14px}
+  .flow .step .n{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .flow .step h3{font-size:15px;margin-bottom:6px}
+  .flow .step p{font-size:12.5px;color:var(--text-2);margin:0}
+  .shell{background:var(--card);border:1px solid var(--line-2);border-radius:16px;padding:22px 24px;margin:18px 0}
+  .shell .label{font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  .shell h3{font-size:22px;margin-bottom:8px}
+  .shell > p{font-size:14.5px;color:var(--text-2);margin-bottom:16px}
+  .mods{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:760px){.mods{grid-template-columns:1fr}}
+  .mod{background:var(--panel);border-radius:12px;padding:14px 16px;border:1px solid var(--line)}
+  .mod h4{font-size:14px;margin-bottom:6px}
+  .mod p{font-size:12.5px;color:var(--text-2);margin:0}
+  .surf{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+  @media(max-width:760px){.surf{grid-template-columns:1fr}}
+  .surf div{border:1px dashed var(--line-2);border-radius:10px;padding:12px 14px}
+  .surf strong{display:block;font-size:13px;margin-bottom:4px}
+  .surf span{font-size:12.5px;color:var(--text-2)}
+  .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .links a{font:600 11px/1.3 var(--mono);color:var(--accent);text-decoration:none;padding:6px 12px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface)}
+  .links a:hover{background:var(--teal-50)}
+  .cost{background:var(--card);border:1px solid var(--line-2);border-radius:var(--r);padding:22px 24px;margin-top:12px}
+  .cost h3{font-size:18px;margin-bottom:8px}
+  .cost p{font-size:14.5px;color:var(--text-2)}
+  .cost .nums{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .cost .nums div{background:var(--panel);border-radius:10px;padding:14px 16px}
+  .cost .nums strong{display:block;font-family:var(--display);font-size:22px;color:var(--accent)}
+  .cost .nums span{font:600 11px/1.4 var(--mono);color:var(--text-3)}
+  @media(max-width:640px){.cost .nums{grid-template-columns:1fr}}
+  .deeper{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.deeper{grid-template-columns:1fr}}
+  .deeper a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-decoration:none;color:inherit}
+  .deeper a:hover{border-color:var(--line-2)}
+  .deeper a strong{display:block;font-size:14px;margin-bottom:4px;color:var(--accent)}
+  .deeper a span{font-size:13px;color:var(--text-2)}
+  footer{border-top:1px solid var(--line);padding:36px 0 60px}
+  footer p{font:500 12px/1.7 var(--mono);color:var(--text-3);max-width:90ch}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="row">
+  <a class="bk" href="./index.html">TESSERA</a>
+  <a class="home" href="./index.html">← Data room</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Architecture · one product</div>
+  <h1>One Home Passport. One system. Several modules underneath.</h1>
+  <p>What the VC should see first: a single property identity that builders, owners, and providers share. Under the hood we split work into APIs — not into three products.</p>
+  <div class="thesis"><b>Product = Home Passport.</b> Close intelligence, identity/permissions, and ledger fingerprints are internal modules of that product. Tessera Front End is how you demo the same home across roles.</div>
+</div></header>
+
+<section><div class="wrap">
+  <h2>How one home moves through the system</h2>
+  <div class="flow">
+    <div class="step"><div class="n">01</div><h3>Connect</h3><p>Read-only links to the builder’s existing systems. No rip-and-replace.</p></div>
+    <div class="step"><div class="n">02</div><h3>Protect the close</h3><p>Same stream surfaces cross-system risk before the closing date slips.</p></div>
+    <div class="step"><div class="n">03</div><h3>Birth the record</h3><p>Verified facts become the Passport attached to the property, not a forked binder login.</p></div>
+    <div class="step"><div class="n">04</div><h3>Authorize use</h3><p>Owners claim; providers get time-boxed grants; personal data stays walled off.</p></div>
+    <div class="step"><div class="n">05</div><h3>Keep it checkable</h3><p>Fingerprints on a ledger so the history outlives any one company’s database.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>The product shell</h2>
+  <div class="shell">
+    <div class="label">Home Passport · single product boundary</div>
+    <h3>Property identity + continuous record</h3>
+    <p>Everything below serves this object. Modules talk over APIs; the user never buys “three platforms.”</p>
+    <div class="mods">
+      <div class="mod">
+        <h4>Close intelligence <span style="font-weight:600;color:var(--text-3)">(Kestrel)</span></h4>
+        <p>Closing confidence across construction, mortgage, title. Why a builder connects us. Module of the Passport — not a separate SKU.</p>
+      </div>
+      <div class="mod">
+        <h4>Identity &amp; activation</h4>
+        <p>Ownership, grants, jobs, transfer. Who may see and act on this home.</p>
+      </div>
+      <div class="mod">
+        <h4>Ledger</h4>
+        <p>Hashes only — tamper-evidence for the record. Trust plane for the same Passport.</p>
+      </div>
+    </div>
+    <div class="surf">
+      <div><strong>Builder</strong><span>Ops + Outlook risk on the same home ID</span></div>
+      <div><strong>Homeowner</strong><span>Passport, care, move-in</span></div>
+      <div><strong>Provider</strong><span>Scoped jobs from a grant</span></div>
+    </div>
+    <div class="links">
+      <a href="../demo/index.html">Demo + experience video</a>
+      <a href="./home-passport-architecture.html">Identity deep dive</a>
+      <a href="./why-predictability-is-the-wedge.html">Why close intelligence wins adoption</a>
+      <a href="./connector-architecture-technical.html">Connectors</a>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Go deeper by concern</h2>
+  <p style="color:var(--text-2);margin-bottom:16px;max-width:60ch">Same product. Different documents for the part you want to pressure-test.</p>
+  <div class="deeper">
+    <a href="./predictability-engine-overview.html"><strong>Close intelligence</strong><span>Engine overview, findings, connectors</span></a>
+    <a href="./findings-engine.html"><strong>Findings engine</strong><span>What the data can prove</span></a>
+    <a href="./home-passport-system-diagram.html"><strong>System diagram</strong><span>Builder · owner · provider · proof</span></a>
+    <a href="./home-passport-aws-identity.html"><strong>AWS &amp; identity</strong><span>Gate, stores, encryption</span></a>
+    <a href="./home-passport-use-cases.html"><strong>Use cases</strong><span>Acceptance criteria</span></a>
+    <a href="./home-passport-pii-audit.html"><strong>PII &amp; threat model</strong><span>Audit + decisions</span></a>
+    <a href="./answers.html#q4"><strong>Why a ledger</strong><span>FAQ on fingerprints vs a DB</span></a>
+    <a href="./the-future.html"><strong>Lifetime narrative</strong><span>How the record compounds</span></a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Infrastructure cost (planning model)</h2>
+  <div class="cost">
+    <h3>AWS list-price model for the Home Passport stack</h3>
+    <p>One product’s bill of materials — close-intelligence plane and Passport/ledger plane. Prefer BYOC in the builder’s account.</p>
+    <div class="nums">
+      <div><strong>~$671 / mo</strong><span>Close intelligence · 1 division (~2,100 homes/yr)</span></div>
+      <div><strong>~$7.9k / mo</strong><span>Close intelligence · top-national scale</span></div>
+      <div><strong>~$167 / mo</strong><span>Passport ledger tier · 1,000 homes</span></div>
+      <div><strong>~$4.6k / mo</strong><span>Passport ledger tier · 1M homes</span></div>
+    </div>
+    <p style="margin-bottom:14px">Full identity baseline (Cognito, WAF, proxy, audit) sits above the ledger line alone — see the identity architecture pages.</p>
+    <div class="links">
+      <a href="./aws-infrastructure-cost-kestrel-homepassport.pdf">Download AWS cost PDF</a>
+      <a href="./execution-strategy.html">Execution &amp; economics</a>
+    </div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p>Tessera · Home Passport architecture. Modules are implementation detail; the product boundary is one property identity. <a href="./index.html">← Data room</a></p>
+</div></footer>
+</body>
+</html>

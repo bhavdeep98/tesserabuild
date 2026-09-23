@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Tessera — Competitive landscape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#f7f4ed; --surface:#fdfbf6; --card:#fcfaf6; --panel:#f1ede3;
+    --text:#20352f; --text-2:#4a5c56; --text-3:#6c7b75;
+    --accent:#2d7d6f; --teal-50:#e6f5f2; --teal-100:#ccebe5; --teal-800:#1f4f47;
+    --line:rgba(32,53,47,0.12); --line-2:rgba(45,125,111,0.30);
+    --warn:#c0562f; --warn-bg:#fbeee6;
+    --display:'Plus Jakarta Sans',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);font-weight:450;line-height:1.62;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.12;color:var(--text)}
+  .wrap{max-width:980px;margin:0 auto;padding:0 28px}
+  .eyebrow{font:700 12px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:9px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);opacity:.7}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(247,244,237,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar .row{max-width:980px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;gap:12px}
+  .topbar .bk{font:800 13px/1 var(--display);letter-spacing:.24em;color:var(--text);text-decoration:none}
+  .topbar .home{font:600 12px/1 var(--mono);color:var(--accent);text-decoration:none;border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;margin-left:auto}
+  .hero{padding:64px 0 28px}
+  .hero h1{font-size:clamp(30px,4.6vw,48px);max-width:18ch;margin:18px 0 16px}
+  .hero p{font-size:clamp(15px,1.8vw,18px);color:var(--text-2);max-width:68ch}
+  .thesis{margin:28px 0;padding:20px 22px;border-radius:var(--r);background:var(--teal-50);border:1px solid var(--teal-100);font-size:15.5px;color:var(--teal-800)}
+  section{padding:42px 0;border-top:1px solid var(--line)}
+  section h2{font-size:clamp(22px,2.8vw,30px);margin-bottom:14px}
+  section .lede{color:var(--text-2);margin-bottom:20px;max-width:70ch}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;margin:14px 0}
+  .card h3{font-size:18px;margin-bottom:8px}
+  .card p,.card li{font-size:14.5px;color:var(--text-2)}
+  .card ul{margin:10px 0 0 18px}
+  .card .tag{font:700 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .primary-card{border-color:var(--line-2);border-left:4px solid var(--accent)}
+  .warn{background:var(--warn-bg);border:1px solid rgba(192,86,47,.25);color:var(--warn);padding:14px 18px;border-radius:12px;font-size:14px;margin:16px 0}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:18px 0}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:var(--panel);font:700 11px/1.3 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--text-3)}
+  td.yes{color:var(--accent);font-weight:700}
+  td.no{color:var(--text-3)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  a.inline{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line-2)}
+  .sources{font:500 12px/1.7 var(--mono);color:var(--text-3)}
+  .sources a{color:var(--accent)}
+  footer{border-top:1px solid var(--line);padding:36px 0 60px;margin-top:20px}
+  footer p{font:500 12px/1.7 var(--mono);color:var(--text-3);max-width:90ch}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="row">
+  <a class="bk" href="./index.html">TESSERA</a>
+  <a class="home" href="./index.html">← Data room</a>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Competitive landscape · Sept 2026</div>
+  <h1>Digs validated the category. They did not close the identity gap.</h1>
+  <p>Tessera is a property-bound living identity born from builder systems, carried through close, and persisted across owners — not a project portal, binder replacement, or public-records report.</p>
+  <div class="thesis"><b>One-line map:</b> Digs owns build-time AI + handoff copy. Higharc owns design-to-build. Hyphen / Procore / Salesforce own builder ops. BuildFax / Verisk own insurance history from permits. Centriq / HomeZada / HomeBinder own owner-side binders. Nationals ship their own homeowner apps. <b>None own the property identity that survives close and resale as one continuous record.</b></div>
+</div></header>
+
+<section><div class="wrap">
+  <h2>Primary rival: Digs</h2>
+  <p class="lede">Aug 25, 2026 — Builders FirstSource solo-led Digs’ $25.3M Series A and signed a five-year commercial agreement to embed Digs across BFS’s digital ecosystem (~140k professional builders in reach).</p>
+  <div class="card primary-card">
+    <div class="tag">What Digs sells</div>
+    <h3>Builder-paid AI workspace + homeowner handoff</h3>
+    <ul>
+      <li>Starts from construction documents: plans, selections, takeoffs, 3D twin, AskDigs AI chat, warranty / DigsCare.</li>
+      <li>At handoff, Digs <b>copies the binder into a new homeowner project</b>; the builder keeps a separate project.</li>
+      <li>CEO language: “Carfax for the home.” Product is still a <b>document portal</b>, not a parcel-native identity.</li>
+      <li><b>No mortgage, title, or cross-system close risk.</b> They do not sit across the buyer-chosen lender boundary.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="tag">Why Tessera still wins the identity</div>
+    <p>Same Carfax metaphor — different architecture. Digs forks the record at handoff. Tessera keeps <b>one Home Passport</b> through close and ownership change. Predictability (Kestrel) is the builder adoption driver that gets the verified data born; Identity + Ledger keep it trustworthy after the builder walks away.</p>
+  </div>
+  <p class="sources">Sources: <a href="https://investors.bldr.com/news/news-details/2026/Builders-FirstSource-and-Digs-Announce-Strategic-Partnership-to-Deliver-the-Next-Generation-of-AI-Powered-Homebuilding/default.aspx" target="_blank" rel="noopener">BLDR IR (Aug 25, 2026)</a> · <a href="https://www.digs.com/" target="_blank" rel="noopener">digs.com</a> · Digs support: homeowner handoff creates a distinct project</p>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Nationals already have UX apps</h2>
+  <p class="lede">Pulte, Lennar, and D.R. Horton ship homeowner experience applications. They are not waiting for “an app.” What they still lack — and what Digs does not supply — is a <b>neutral, property-bound passport</b> that spans close parties and survives warranty / resale, plus <b>cross-system predictability</b> on the path to close.</p>
+  <div class="grid">
+    <div class="card"><h3>What they have</h3><p>Branded portals for selections, warranties, service tickets, and post-close communication. Owned UX is table stakes for a national.</p></div>
+    <div class="card"><h3>What they still need</h3><p>A record that is not stranded in the builder’s login when warranty ends; intelligence that reads construction + mortgage + title together; a channel that can include lenders, title, and providers without becoming another ERP.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Adjacent field</h2>
+  <div class="card">
+    <div class="tag">Shut down — lesson</div>
+    <h3>Centriq</h3>
+    <p>Digital binder; claimed 400k+ homes. Shut down Jan 31, 2026; data deleted / migrated. Proof that binder apps without property-native, institutionally anchored persistence die — and take homeowner data with them.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>HomeZada</h3><p>Homeowner SaaS binder. Optional paid transfer of a published subset — not automatic parcel continuity. Starts at ownership, not build + close.</p></div>
+    <div class="card"><h3>HomeBinder</h3><p>B2B2C via inspectors / lenders / agents. Strong partner distribution; thin construction birth; not title/mortgage risk fabric.</p></div>
+    <div class="card"><h3>BuildFax / Verisk</h3><p>Permit-derived history for insurers. Public records about an address — not the builder’s installed home or warranties.</p></div>
+    <div class="card"><h3>Higharc</h3><p>Design → estimate → docs. $95M Series C (2026); &gt;$170M total. Richest possible birth data for a passport — upstream partner, not ownership identity.</p></div>
+    <div class="card"><h3>Hyphen / Procore / Salesforce</h3><p>Builder systems of record. Tessera ingests them read-only. They stop at warranty / CRM; they do not become the property identity.</p></div>
+    <div class="card"><h3>AsBuilt</h3><p>Closest narrative twin: record built during construction, transferable binder messaging. Early / pilot; no close stack. Watch list.</p></div>
+  </div>
+  <div class="warn"><b>Name collision:</b> HomeFax.us, Hive HomeFax, Haushld and others already use “Carfax for homes.” Keep the product name <b>Home Passport</b>. Use Carfax as analogy only — Digs already owns that line in builder distribution.</div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Differentiation matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Capability</th>
+        <th>Digs</th>
+        <th>Nationals’ apps</th>
+        <th>Binders</th>
+        <th>Verisk</th>
+        <th>Tessera</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Born from builder systems</td><td class="yes">Yes</td><td class="yes">Partial</td><td class="no">No</td><td class="no">No</td><td class="yes">Yes</td></tr>
+      <tr><td>AI / docs during build</td><td class="yes">Yes</td><td class="no">Limited</td><td class="no">No</td><td class="no">No</td><td class="yes">Ingest</td></tr>
+      <tr><td>Spans close (mortgage / title)</td><td class="no">No</td><td class="no">No</td><td class="no">No</td><td class="no">Indirect</td><td class="yes">Yes</td></tr>
+      <tr><td>Same identity across owners</td><td class="no">Forked project</td><td class="no">Account-bound</td><td class="no">Manual</td><td class="yes">Address history</td><td class="yes">Yes</td></tr>
+      <tr><td>Property-bound (not login-only)</td><td class="no">Weak</td><td class="no">No</td><td class="no">No</td><td class="yes">Public</td><td class="yes">Yes</td></tr>
+      <tr><td>Distribution today</td><td class="yes">BFS 5-yr</td><td class="yes">Own brand</td><td class="yes">Partners</td><td class="yes">Insurers</td><td>Builders + close parties</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Why now</h2>
+  <div class="card">
+    <ol style="margin-left:18px;color:var(--text-2);font-size:14.5px">
+      <li style="margin-bottom:10px"><b>The close still leaks margin.</b> Census / NAHB: of single-family homes built for sale and completed in 2025, <b>31.5%</b> sold after completion (was 27.0% in 2024). More finished inventory sits waiting on coordination the builder ERP cannot see alone. (<a class="inline" href="https://eyeonhousing.org/2026/09/single-family-home-construction-time-declines-in-2025/" target="_blank" rel="noopener">Eye on Housing</a>)</li>
+      <li style="margin-bottom:10px"><b>The category just got distribution — as a document portal.</b> Digs + BFS are about to put a living home record in front of a huge share of builders. That record is being defined as a forked project binder. The identity thesis has to be obvious before that sticks.</li>
+      <li><b>Handoff is still a binder.</b> Pro Builder × Purtrack Post-Closing Handoff Benchmark (May–Jun 2026): <b>77%</b> of responding builders still hand a physical binder. Sample n=22 — directional, matches what we see inside builders. (<a class="inline" href="https://www.probuilder.com/home/article/55379902/3-takeaways-from-the-post-closing-handoff-benchmark-report" target="_blank" rel="noopener">Pro Builder</a>)</li>
+    </ol>
+  </div>
+  <div class="thesis" style="margin-top:18px"><b>Bottom line for investors:</b> Digs validates demand and language with capital and distribution. Tessera’s wedge is the missing product — property identity born in the build, authenticated through close, and surviving every subsequent owner — with predictability as the reason a builder connects us tomorrow.</div>
+</div></section>
+
+<footer><div class="wrap">
+  <p>Tessera · Competitive landscape for investor and internal use. Figures sourced as linked; where documents disagree, ask us for the current number. Companion: <a href="./why-predictability-is-the-wedge.html">why predictability is the wedge</a> · <a href="./architecture.html">architecture</a> · <a href="./index.html">data room</a></p>
+</div></footer>
+</body>
+</html>

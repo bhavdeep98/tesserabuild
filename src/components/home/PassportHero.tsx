@@ -101,7 +101,7 @@ function HeroVisual() {
 }
 
 /**
- * "One product. Five capabilities." — the anti-silo claim, made before the
+ * "One product. One Passport · five chapters." — the anti-silo claim, made before the
  * reader has seen a single capability. The connecting hairlines are the point;
  * without them this is a list.
  */
