@@ -30,9 +30,8 @@ export const brand = {
  * with investors by link, not discovered by a customer browsing the nav.
  */
 export const nav = [
-  { label: 'Home Passport', href: '/#life' },
-  { label: 'For builders', href: '/for-builders/' },
-  { label: 'Why Tessera', href: '/why-we-win/' },
+  { label: 'Home Passport', href: '/#product' },
+  { label: 'Why Tessera', href: '/#why' },
 ] as const;
 
 export const cta = {

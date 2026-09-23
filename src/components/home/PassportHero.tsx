@@ -1,10 +1,9 @@
-import { hero, capabilities } from '@/content/home';
+import { hero } from '@/content/home';
 
 /**
  * The hero states the product in one sentence, then shows it: a house and a
  * passport sharing one frame, because that pairing *is* the idea.
- *
- * The strip beneath names the Passport chapters — one product, not a menu.
+ * Chapters live in the walkthrough below — not as a second menu under the hero.
  */
 export function PassportHero() {
   return (
@@ -42,8 +41,6 @@ export function PassportHero() {
 
         <HeroVisual />
       </div>
-
-      <CapabilityStrip />
     </section>
   );
 }
@@ -90,44 +87,7 @@ function HeroVisual() {
           </strong>
           <small className="text-[9px] text-ink-2">{hero.visual.record.detail}</small>
         </div>
-        <span className="shrink-0 text-eyebrow uppercase text-accent">
-          {hero.visual.record.state}
-        </span>
       </div>
-    </div>
-  );
-}
-
-/**
- * "One product. Home Passport." — the anti-silo claim, made before the
- * reader has seen a single chapter. The connecting hairlines are the point;
- * without them this is a list.
- */
-function CapabilityStrip() {
-  return (
-    <div className="mt-9 flex flex-col gap-4 border-y border-line/20 py-6 md:flex-row md:items-center md:gap-6">
-      <p className="shrink-0 text-eyebrow uppercase leading-[1.6] text-ink-2 md:w-[124px]">
-        {hero.bridge[0]}
-        <br className="hidden md:inline" />{' '}
-        {hero.bridge[1]}
-      </p>
-
-      <ol className="flex flex-1 items-center justify-between gap-1.5 text-[10px] text-ink md:gap-3 md:text-[12px]">
-        {capabilities.map((capability, index) => (
-          <li key={capability.name} className="flex flex-1 items-center gap-1.5 last:flex-none md:gap-3">
-            <span className="flex items-center gap-2 whitespace-nowrap">
-              <i
-                className="hidden h-[5px] w-[5px] rounded-full bg-accent-bright md:block"
-                aria-hidden="true"
-              />
-              {capability.name}
-            </span>
-            {index < capabilities.length - 1 ? (
-              <i className="h-px max-w-[14px] flex-1 bg-line/30 md:max-w-[90px]" aria-hidden="true" />
-            ) : null}
-          </li>
-        ))}
-      </ol>
     </div>
   );
 }

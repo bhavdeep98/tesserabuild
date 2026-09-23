@@ -7,8 +7,7 @@
  *
  * Lead with one thing: a digital identity for every home. Chapters are the
  * life of that Passport (record → activation → care → ownership) — not a
- * menu of separate products. Close-path intelligence for builders lives on
- * /for-builders, not as a co-headline here.
+ * menu of separate products. Outbound CTAs on this page go to contact only.
  */
 
 export const meta = {
@@ -22,7 +21,7 @@ export const hero = {
   headline: { lead: 'A digital identity for', emphasis: 'every home.' },
   lede:
     'One Passport for the home: builders hand it off, owners use it, providers act on it — so services and care follow the property, not a login that expires.',
-  primary: { label: 'Explore Home Passport', href: '#life' },
+  primary: { label: 'Explore Home Passport', href: '#product' },
   secondary: { label: 'Talk to our team', href: '#contact' },
   visual: {
     label: 'One home. A continuous record.',
@@ -31,12 +30,8 @@ export const hero = {
     record: {
       title: 'The home’s information, connected.',
       detail: 'Plans · systems · services · history',
-      state: 'One identity',
     },
   },
-  /** Authored as two lines — at 10px with wide tracking, letting this wrap
-      on its own produced four. */
-  bridge: ['One product', 'Home Passport'],
 } as const;
 
 /* ─────────────────────────────────────────────────────────────
@@ -46,8 +41,6 @@ export const hero = {
 export type Capability = {
   name: string;
   stage: string;
-  /** Position in the rollout, shown as a stamp on the chapter. */
-  rollout: string;
   /** Rendered as two lines; the break is authored, not left to the browser. */
   title: readonly [string, string];
   intro: string;
@@ -61,7 +54,6 @@ export const capabilities: readonly Capability[] = [
   {
     name: 'Home record',
     stage: 'At handoff / Builder → owner',
-    rollout: 'The product',
     title: ['Know what’s inside', 'the home.'],
     intro: 'Plans, installed equipment, and warranties linked to the same property identity.',
     source: 'Builder systems → one organised handoff',
@@ -70,7 +62,6 @@ export const capabilities: readonly Capability[] = [
   {
     name: 'Activation',
     stage: 'Move-in / Homeowner',
-    rollout: 'Then',
     title: ['From a set of keys', 'to a home that’s ready.'],
     intro:
       'Utilities, internet, warranties, and trusted providers — set up from what’s already in the Passport, on the same identity that later care and services use.',
@@ -80,7 +71,6 @@ export const capabilities: readonly Capability[] = [
   {
     name: 'Care',
     stage: 'Everyday ownership / Homeowner',
-    rollout: 'Ongoing',
     title: ['The home tells you', 'what needs attention.'],
     intro: 'Guidance drawn from the equipment and history already in the Passport.',
     source: 'Installed HVAC + its manual → a relevant reminder',
@@ -89,7 +79,6 @@ export const capabilities: readonly Capability[] = [
   {
     name: 'Ownership',
     stage: 'The next chapter / Same home',
-    rollout: 'When the home sells',
     title: ['New owner.', 'Same home. Same history.'],
     intro: 'Relevant property records carry forward through authorised access — the Passport stays with the house.',
     source: 'Construction + equipment + service history → continuity',
@@ -112,10 +101,14 @@ export const walkthrough = {
   lede:
     'One home. One Passport. Turn the pages — handoff, move-in, care, and the next sale.',
   label: 'Tessera / Home Passport',
-  note: 'Interactive product walkthrough',
+  /** Alternate full-page interactive experience — not a second pitch section. */
+  story: {
+    label: 'Play the full story',
+    href: '/story/',
+  },
 } as const;
 
-/** Lifetime story — full page at /story/, teaser only on the homepage. */
+/** Full-page interactive story at /story/ — linked from the walkthrough, not a homepage section. */
 export const story = {
   eyebrow: 'The life of a home',
   title: 'From first plan to the next owner.',
@@ -123,20 +116,6 @@ export const story = {
     'An interactive journey through what Home Passport makes possible — construction, handoff, activation, care, and the next chapter.',
   src: '/data-room/future-story.html?embed=1&v=20260923c',
   iframeTitle: 'A home with a lifetime ahead',
-  hint: 'Opens as its own full-page story — one scroll, six chapters.',
-  fullscreen: {
-    label: 'Play the story',
-    mobileLabel: 'Play the story',
-    href: '/story/',
-  },
-  preview: {
-    brand: 'Tessera / Home Passport',
-    tag: 'Future experience',
-    eyebrow: '01 / Before the first key',
-    headline: ['A home takes shape.', 'So does its story.'] as const,
-    body: 'Every plan. Every installation. A memory, built in from the beginning.',
-    cta: 'Enter the story',
-  },
 } as const;
 
 export const builders = {
@@ -144,7 +123,7 @@ export const builders = {
   title: ['A better handoff.', 'A lasting homeowner channel.'],
   lede:
     'Nationals already have homeowner apps. Home Passport is the property-bound record underneath — born from systems you already run, handed over at closing, and still useful for services long after warranty ends.',
-  cta: { label: 'See how it fits your stack', href: '/for-builders/' },
+  cta: { label: 'Talk to our team', href: '#contact' },
   steps: [
     {
       title: 'Connect once, read-only.',
@@ -175,11 +154,11 @@ export const answers = {
     },
     {
       q: 'What can we use today?',
-      a: 'The home record, activation, and care experiences run in our prototype today. Ownership transfer arrives with the first resale on a Passport. Builder close-path views — seeing what’s blocking a closing across systems — are covered on For builders.',
+      a: 'The home record, activation, and care experiences are available to walk through today. Ownership transfer arrives with the first resale on a Passport. For how close-path views fit your stack, talk to us.',
     },
     {
       q: 'Do we have to replace our systems?',
-      a: 'No. Tessera connects through authorised, read-only access. Onboarding still includes access approval, security review, and data mapping; your existing systems stay exactly where they are.',
+      a: 'No. Tessera connects through authorised, read-only access. Your existing systems stay exactly where they are.',
     },
     {
       q: 'What does activation mean?',
@@ -191,7 +170,7 @@ export const answers = {
     },
     {
       q: 'Who owns the data?',
-      a: 'You do. We read through authorised, read-only connections and never write back, so your systems remain the record of truth. What we add is the link between them — and a verifiable fingerprint of each entry, so a home’s history can still be checked long after any one party stops answering the phone.',
+      a: 'You do. We read through authorised, read-only connections and never write back, so your systems remain the record of truth. What we add is the link between them — and a durable check that each entry can still be verified later, even if one party’s systems are gone.',
     },
   ],
 } as const;
@@ -208,32 +187,11 @@ export const why = {
   reasons: [
     {
       title: 'We know the stack because we ran it.',
-      body: 'Our team came out of a national builder’s operations and investment side, advised by a former Lennar VP. We are not learning your workflows on your time.',
+      body: 'Our team came out of a national builder’s operations and investment side. We are not learning your workflows on your time.',
     },
     {
       title: 'Nothing in your systems changes.',
       body: 'Authorised, read-only connections. Your systems stay the record of truth, your teams take on no new data entry, and we never write back.',
-    },
-    {
-      title: 'Adopting it costs access, not a project.',
-      body: 'Onboarding is access approval, a security review, and data mapping — scoped work for your IT team, done once. Nobody in sales or the field learns a new tool.',
-    },
-  ],
-  tenets: [
-    {
-      label: 'Our tenets / 01',
-      title: 'Affordability for all.',
-      body: 'Reduce the waste around a home, so more value reaches the people building and living in it.',
-    },
-    {
-      label: 'Our tenets / 02',
-      title: 'Ease to connect.',
-      body: 'Work with the systems people already trust. Make every connection simpler to adopt and reuse.',
-    },
-    {
-      label: 'Our tenets / 03',
-      title: 'Trust in the record.',
-      body: 'Keep the Passport checkable on a ledger — so history stays verifiable after any one company’s systems are gone.',
     },
   ],
 } as const;
@@ -243,5 +201,4 @@ export const contact = {
   title: 'Start with your homes.',
   lede: 'See where Home Passport fits your systems, your team, and your homeowners.',
   primary: { label: 'Talk to Tessera', subject: 'Let’s talk Home Passport' },
-  secondary: { label: 'See how it fits your stack', href: '/for-builders/' },
 } as const;

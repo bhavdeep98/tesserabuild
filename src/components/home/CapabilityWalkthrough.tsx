@@ -2,7 +2,7 @@
 
 import { useCallback, useId, useRef, useState } from 'react';
 
-import { capabilities, ledger, walkthrough, type Capability } from '@/content/home';
+import { capabilities, ledger, walkthrough } from '@/content/home';
 import { CapabilityVisual } from '@/components/home/CapabilityVisual';
 
 /**
@@ -57,13 +57,21 @@ export function CapabilityWalkthrough() {
             {walkthrough.title}
           </h2>
         </div>
-        <p className="max-w-[34ch] text-[14px] leading-relaxed text-ink-2">{walkthrough.lede}</p>
+        <div className="max-w-[34ch]">
+          <p className="text-[14px] leading-relaxed text-ink-2">{walkthrough.lede}</p>
+          <a
+            href={walkthrough.story.href}
+            className="mt-4 inline-flex items-center gap-2 text-[12px] text-accent transition-opacity duration-300 hover:opacity-70"
+          >
+            {walkthrough.story.label}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
 
       <div className="mt-12 overflow-hidden rounded-card bg-accent-deep p-3 shadow-lift sm:p-4">
-        <div className="flex items-center justify-between px-2 py-2.5 text-[9px] uppercase tracking-[0.1em] text-lime/50">
+        <div className="px-2 py-2.5 text-[9px] uppercase tracking-[0.1em] text-lime/50">
           <span>{walkthrough.label}</span>
-          <span className="hidden sm:inline">{walkthrough.note}</span>
         </div>
 
         {/* Tabs. Roving tabindex: one stop for the whole set, arrows inside. */}
@@ -114,10 +122,7 @@ export function CapabilityWalkthrough() {
             tabIndex={-1}
             className="flex flex-col rounded-[10px] bg-bg p-6 sm:p-9"
           >
-            <div className="flex flex-wrap items-center justify-between gap-3 text-eyebrow uppercase">
-              <span className="text-ink-2">{capability.stage}</span>
-              <RolloutStamp capability={capability} isEntry={active === 0} />
-            </div>
+            <div className="text-eyebrow uppercase text-ink-2">{capability.stage}</div>
 
             {/* Keyed so the chapter animates in on change rather than the
                 browser silently swapping text under a static frame. */}
@@ -173,24 +178,6 @@ export function CapabilityWalkthrough() {
         </div>
       </div>
     </section>
-  );
-}
-
-/**
- * Where the chapter sits in a rollout — not how finished it is.
- *
- * The entry point is marked because a builder's first question is where the
- * product starts (the record at handoff), not what is shipping.
- */
-function RolloutStamp({ capability, isEntry }: { capability: Capability; isEntry: boolean }) {
-  return (
-    <span
-      className={`rounded-[3px] border px-2.5 py-1 text-eyebrow uppercase ${
-        isEntry ? 'border-accent-bright bg-lime/40 text-accent' : 'border-line/30 text-ink-2'
-      }`}
-    >
-      {capability.rollout}
-    </span>
   );
 }
 

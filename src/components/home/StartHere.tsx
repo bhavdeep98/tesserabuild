@@ -14,22 +14,12 @@ export function StartHere() {
         {contact.lede}
       </p>
 
-      <div className="mt-9 flex flex-wrap items-center justify-center gap-6">
+      <div className="mt-9">
         <a
           href={`mailto:${brand.email}?subject=${encodeURIComponent(contact.primary.subject)}`}
           className="inline-flex items-center gap-7 rounded-tile bg-ink px-5 py-3.5 text-[12px] font-medium text-bg transition-colors duration-300 hover:bg-accent"
         >
           {contact.primary.label}
-          <span aria-hidden="true">↗</span>
-        </a>
-
-        <a
-          href={contact.secondary.href}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-4 border-b border-line/40 py-2 text-[12px] text-ink-2 transition-colors duration-300 hover:text-ink"
-        >
-          {contact.secondary.label}
           <span aria-hidden="true">↗</span>
         </a>
       </div>

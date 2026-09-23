@@ -15,10 +15,10 @@ export default function StoryPage() {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-[#f7f4ed]">
       <div className="flex h-11 shrink-0 items-center justify-between border-b border-black/10 px-4 sm:h-12 sm:px-6">
-        <a href="/#life" className="text-[12px] text-[#202c2b] transition-opacity hover:opacity-70">
+        <a href="/#product" className="text-[12px] text-[#202c2b] transition-opacity hover:opacity-70">
           ← Back to Tessera
         </a>
-        <span className="text-[10px] uppercase tracking-[0.14em] text-[#66706b]">Future experience</span>
+        <span className="text-[10px] uppercase tracking-[0.14em] text-[#66706b]">Home Passport</span>
       </div>
       <iframe
         src={story.src}
