@@ -114,19 +114,27 @@ export const walkthrough = {
   note: 'Interactive product walkthrough',
 } as const;
 
-/** Immersive scroll story — future-story.html, embedded on the homepage. */
+/** Lifetime story — full page at /story/, teaser only on the homepage. */
 export const story = {
   eyebrow: 'The life of a home',
   title: 'From first plan to the next owner.',
   lede:
     'An interactive journey through what Home Passport makes possible — construction, handoff, activation, care, and the next chapter.',
-  src: '/data-room/future-story.html?embed=1&v=20260923b',
+  src: '/data-room/future-story.html?embed=1&v=20260923c',
   iframeTitle: 'A home with a lifetime ahead',
-  hint: 'Scroll inside the frame to move through each chapter — or open full screen on a phone.',
+  hint: 'Opens as its own full-page story — one scroll, six chapters.',
   fullscreen: {
-    label: 'Open full screen',
-    mobileLabel: 'Play the full story',
+    label: 'Play the story',
+    mobileLabel: 'Play the story',
     href: '/story/',
+  },
+  preview: {
+    brand: 'Tessera / Home Passport',
+    tag: 'Future experience',
+    eyebrow: '01 / Before the first key',
+    headline: ['A home takes shape.', 'So does its story.'] as const,
+    body: 'Every plan. Every installation. A memory, built in from the beginning.',
+    cta: 'Enter the story',
   },
 } as const;
 
