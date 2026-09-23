@@ -36,7 +36,7 @@ export function WhyTessera() {
         ))}
       </ol>
 
-      <div className="mt-10 grid gap-3 sm:grid-cols-2">
+      <div className="mt-10 grid gap-3 sm:grid-cols-3">
         {why.tenets.map((tenet) => (
           <div key={tenet.title} className="rounded-card bg-surface-2/70 px-7 py-7">
             <span className="text-eyebrow uppercase text-ink-3">{tenet.label}</span>

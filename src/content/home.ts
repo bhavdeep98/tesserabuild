@@ -2,34 +2,27 @@
  * Homepage copy — the product, for the customer.
  *
  * This page and the data room have different readers. The data room is for
- * investors: the raise, the market evidence, the team's odds of winning. This
- * page is for the builder who has to decide whether to connect their systems
- * to us. It therefore links nowhere near the data room, and the case it makes
- * for Tessera is a customer's case — who we are, what we touch, what is
- * already connected — never an investor's.
+ * investors. This page is for builders and partners deciding whether Home
+ * Passport is the product they want.
  *
- * The page is one argument in five chapters. Each chapter ends by naming what
- * the next one inherits (`carry`), because the thing being sold is not five
- * capabilities — it is one record that gets more useful every time something
- * happens to the home.
- *
- * `rollout` marks where a chapter sits in adoption, not how finished it is.
- * Four of the five ship today. Ownership is last because it cannot happen
- * until a home changes hands — a fact about homes, not about our backlog.
+ * Lead with one thing: a digital identity for every home. Chapters are the
+ * life of that Passport (record → activation → care → ownership) — not a
+ * menu of separate products. Close-path intelligence for builders lives on
+ * /for-builders, not as a co-headline here.
  */
 
 export const meta = {
   title: 'Tessera — a digital identity for every home',
   description:
-    'Tessera creates a digital identity for every home, connecting the data, services, and intelligence that follow it from construction through ownership.',
+    'Home Passport is a digital identity for every home — the record, services, and history that stay with the property from construction through ownership.',
 } as const;
 
 export const hero = {
   eyebrow: 'Meet Home Passport',
   headline: { lead: 'A digital identity for', emphasis: 'every home.' },
   lede:
-    'Tessera creates a digital identity for every home, connecting the data, services, and intelligence that follow it from construction through ownership.',
-  primary: { label: 'Explore Home Passport', href: '#product' },
+    'Home Passport is one product: a living record of the home that builders hand off, owners use, and providers act on — so services and care follow the property, not a login that expires.',
+  primary: { label: 'Explore Home Passport', href: '#life' },
   secondary: { label: 'Talk to our team', href: '#contact' },
   visual: {
     label: 'One home. A continuous record.',
@@ -43,15 +36,11 @@ export const hero = {
   },
   /** Authored as two lines — at 10px with wide tracking, letting this wrap
       on its own produced four. */
-  bridge: ['One product', 'One Passport · five chapters'],
+  bridge: ['One product', 'Home Passport'],
 } as const;
 
 /* ─────────────────────────────────────────────────────────────
-   The five chapters
-
-   Ordered by the life of the home, not by what is easiest to sell.
-   Activation sits third because that is when it happens — between
-   receiving the record and living with it.
+   Passport chapters — life of the home, product-first order.
    ───────────────────────────────────────────────────────────── */
 
 export type Capability = {
@@ -70,21 +59,12 @@ export type Capability = {
 
 export const capabilities: readonly Capability[] = [
   {
-    name: 'Predictability',
-    stage: 'Before close / Builder',
-    rollout: 'Start here',
-    title: ['See the risk.', 'Know what’s blocking the close.'],
-    intro: 'Construction, financing, and title, read together.',
-    source: 'Builder signals → one home identity',
-    carry: 'The home’s milestones and source history become part of its record.',
-  },
-  {
     name: 'Home record',
     stage: 'At handoff / Builder → owner',
-    rollout: 'Next',
-    title: ['The details arrive', 'with the keys.'],
-    intro: 'Plans, installed equipment, and warranties linked to the same home.',
-    source: 'The same property identity → an organised handoff',
+    rollout: 'The product',
+    title: ['Know what’s inside', 'the home.'],
+    intro: 'Plans, installed equipment, and warranties linked to the same property identity.',
+    source: 'Builder systems → one organised handoff',
     carry: 'Property and equipment details help the owner activate the right services.',
   },
   {
@@ -92,16 +72,16 @@ export const capabilities: readonly Capability[] = [
     stage: 'Move-in / Homeowner',
     rollout: 'Then',
     title: ['From a set of keys', 'to a home that’s ready.'],
-    intro: 'The home’s details guide service setup and registration.',
+    intro: 'The home’s details guide utilities, internet, warranties, and trusted providers — the start of a lasting service channel.',
     source: 'Property + equipment records → relevant setup',
     carry: 'Activated services and registered equipment inform ongoing care.',
   },
   {
-    name: 'Maintenance',
+    name: 'Care',
     stage: 'Everyday ownership / Homeowner',
     rollout: 'Ongoing',
     title: ['The home tells you', 'what needs attention.'],
-    intro: 'Care guidance drawn from the equipment and history in the Passport.',
+    intro: 'Guidance drawn from the equipment and history already in the Passport.',
     source: 'Installed HVAC + its manual → a relevant reminder',
     carry: 'Service events enrich the record that travels with the property.',
   },
@@ -110,7 +90,7 @@ export const capabilities: readonly Capability[] = [
     stage: 'The next chapter / Same home',
     rollout: 'When the home sells',
     title: ['New owner.', 'Same home. Same history.'],
-    intro: 'Relevant property records carry forward through authorised access.',
+    intro: 'Relevant property records carry forward through authorised access — the Passport stays with the house.',
     source: 'Construction + equipment + service history → continuity',
     carry: 'A new owner adds the next chapter to the same Home Passport.',
   },
@@ -121,7 +101,7 @@ export const ledger = {
   eyebrow: 'Persistent property identity',
   id: 'Home 001',
   sub: 'The record stays with the property.',
-  rows: ['Milestones', 'Home details', 'Services', 'Care history', 'Ownership'],
+  rows: ['Home details', 'Services', 'Care history', 'Ownership'],
   footer: 'New activity enriches the same Passport.',
 } as const;
 
@@ -129,9 +109,21 @@ export const walkthrough = {
   eyebrow: 'Follow home 001',
   title: 'Every chapter builds on the last.',
   lede:
-    'The same home. The same Passport. Information captured once, put to work throughout its life.',
+    'The same home. The same Passport. Captured once at the build, put to work at move-in, care, and the next sale.',
   label: 'Tessera / Home Passport',
   note: 'Interactive product walkthrough',
+} as const;
+
+/** Immersive scroll story — future-story.html, embedded on the homepage. */
+export const story = {
+  eyebrow: 'The life of a home',
+  title: 'From first plan to the next owner.',
+  lede:
+    'An interactive journey through what Home Passport makes possible — construction, handoff, activation, care, and the next chapter.',
+  src: '/data-room/future-story.html?embed=1',
+  iframeTitle: 'A home with a lifetime ahead',
+  hint: 'Scroll inside the frame to move through each chapter — or open full screen on a phone.',
+  fullscreen: { label: 'Open full screen', href: '/story/' },
 } as const;
 
 /* ─────────────────────────────────────────────────────────────
@@ -141,7 +133,7 @@ export const walkthrough = {
 export const thread = {
   eyebrow: 'How it connects',
   title: 'The Passport is the thread.',
-  lede: 'Data, intelligence, and services work around the same property identity.',
+  lede: 'Data, services, and history work around the same property identity.',
   steps: [
     {
       title: 'Connect the data.',
@@ -149,7 +141,7 @@ export const thread = {
     },
     {
       title: 'Put it to work.',
-      body: 'Use the record to identify risk, guide setup, and support care.',
+      body: 'Turn the record into handoff, activation, and care — including trusted providers.',
     },
     {
       title: 'Keep the history.',
@@ -160,32 +152,28 @@ export const thread = {
 
 export const builders = {
   eyebrow: 'Starting with builders',
-  title: ['A better close.', 'A better handoff.'],
+  title: ['A better handoff.', 'A lasting homeowner channel.'],
   lede:
-    'AI predictability is built into Home Passport. It reads across the systems you already use to surface closing risk — and explain what’s blocking the home.',
-  cta: { label: 'Explore it on your homes', href: '/for-builders/' },
+    'Nationals already have homeowner apps. Home Passport is the property-bound record underneath — born from systems you already run, handed over at closing, and useful for services long after warranty ends.',
+  cta: { label: 'See how it fits your stack', href: '/for-builders/' },
   steps: [
     {
       title: 'Connect your existing systems.',
-      body: 'Read-only access. Your systems remain the source of truth.',
+      body: 'Read-only access. Your systems remain the source of truth — no rip-and-replace.',
     },
     {
-      title: 'See the blocking dependency.',
-      body: 'Construction, financing, and title in one view of the path to close.',
+      title: 'Hand off a real Passport.',
+      body: 'Plans, installed systems, and warranties on one property identity — not another binder to lose.',
     },
     {
-      title: 'Carry the record beyond closing.',
-      body: 'Build toward a useful handoff and a lasting homeowner relationship.',
+      title: 'Stay useful after closing.',
+      body: 'Activation and care keep owners and preferred providers connected to the same home record.',
     },
   ],
 } as const;
 
 /* ─────────────────────────────────────────────────────────────
    Practical answers
-
-   The questions a builder asks in the first meeting — what runs,
-   what it touches, what happens to the data. Not the questions an
-   investor asks.
    ───────────────────────────────────────────────────────────── */
 
 export const answers = {
@@ -193,8 +181,12 @@ export const answers = {
   title: 'Clear from the beginning.',
   items: [
     {
+      q: 'What is Home Passport?',
+      a: 'A digital identity for the home: one continuous record of what was built and installed, used at handoff, move-in, care, and the next sale. It stays with the property — not stranded in a builder login or a forked homeowner project.',
+    },
+    {
       q: 'What can we use today?',
-      a: 'Predictability, the home record, activation, and maintenance all run today. Predictability is where deployments start: source signals come into a property-level view and surface rule- and dependency-based findings. Calibrated prediction — a scored probability rather than a dependency finding — is the next milestone on that capability. Ownership transfer arrives with the first resale on a Passport.',
+      a: 'The home record, activation, and care experiences run in our prototype today. Ownership transfer arrives with the first resale on a Passport. Builder close-path views — seeing what’s blocking a closing across systems — are covered on For builders.',
     },
     {
       q: 'Do we have to replace our systems?',
@@ -202,7 +194,7 @@ export const answers = {
     },
     {
       q: 'What does activation mean?',
-      a: 'Turning the home’s record into a move-in experience: helping the owner set up utilities, internet, warranties, and relevant services using information already linked to the property.',
+      a: 'Turning the home’s record into a move-in experience: helping the owner set up utilities, internet, warranties, and relevant services using information already linked to the property — the foundation for a trusted service marketplace on that same identity.',
     },
     {
       q: 'What happens when the home is sold?',
@@ -217,12 +209,6 @@ export const answers = {
 
 /* ─────────────────────────────────────────────────────────────
    Why Tessera
-
-   A builder's version of "why you", not an investor's. No raise,
-   no market sizing, no odds of winning — those are the data
-   room's, and the data room is not linked from this site.
-   What a builder actually wants to know: who built it, what it
-   touches, and whether it already works.
    ───────────────────────────────────────────────────────────── */
 
 export const why = {
@@ -254,6 +240,11 @@ export const why = {
       label: 'Our tenets / 02',
       title: 'Ease to connect.',
       body: 'Work with the systems people already trust. Make every connection simpler to adopt and reuse.',
+    },
+    {
+      label: 'Our tenets / 03',
+      title: 'Trust in the record.',
+      body: 'Keep the Passport checkable on a ledger — so history stays verifiable after any one company’s systems are gone.',
     },
   ],
 } as const;

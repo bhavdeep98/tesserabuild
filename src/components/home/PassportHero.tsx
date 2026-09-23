@@ -4,9 +4,7 @@ import { hero, capabilities } from '@/content/home';
  * The hero states the product in one sentence, then shows it: a house and a
  * passport sharing one frame, because that pairing *is* the idea.
  *
- * The capability strip beneath is the page's table of contents and its thesis
- * at once — five names under one label, so the reader knows before scrolling
- * that these are parts of a product rather than a menu of products.
+ * The strip beneath names the Passport chapters — one product, not a menu.
  */
 export function PassportHero() {
   return (
@@ -101,8 +99,8 @@ function HeroVisual() {
 }
 
 /**
- * "One product. One Passport · five chapters." — the anti-silo claim, made before the
- * reader has seen a single capability. The connecting hairlines are the point;
+ * "One product. Home Passport." — the anti-silo claim, made before the
+ * reader has seen a single chapter. The connecting hairlines are the point;
  * without them this is a list.
  */
 function CapabilityStrip() {

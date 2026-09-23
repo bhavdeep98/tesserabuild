@@ -1,11 +1,9 @@
 /**
- * The five chapter illustrations.
+ * Passport chapter illustrations.
  *
- * Each one shows the mechanism rather than decorating the claim above it: the
- * milestone bars show *which* dependency blocks the close, the service rows
- * show *why* setup is one tap (the address and equipment are already known).
+ * Each one shows the mechanism rather than decorating the claim above it.
  * A generic icon grid would have said "we have features"; these say what the
- * feature does with the record.
+ * chapter does with the record.
  *
  * All of them are illustrative — no real property data appears on this site.
  */
@@ -24,44 +22,6 @@ function Insight({ mark, title, detail }: { mark: string; title: string; detail:
         <strong className="block text-[12.5px] font-semibold text-ink">{title}</strong>
         <small className="text-[11px] text-ink-2">{detail}</small>
       </div>
-    </div>
-  );
-}
-
-function Predictability() {
-  const rows = [
-    { label: 'Construction', state: 'Ready', start: '0%', end: '72%' },
-    { label: 'Mortgage', state: 'At risk', start: '28%', end: '96%', risk: true },
-    { label: 'Title', state: 'Ready', start: '38%', end: '72%' },
-  ] as const;
-
-  return (
-    <div>
-      <ul className="space-y-3">
-        {rows.map((row) => (
-          <li key={row.label} className="grid grid-cols-[88px_1fr_62px] items-center gap-3">
-            <span className="text-[11px] text-ink-2">{row.label}</span>
-            <span
-              className="milestone-track"
-              data-state={'risk' in row && row.risk ? 'risk' : undefined}
-              style={{ '--start': row.start, '--end': row.end } as React.CSSProperties}
-            />
-            <span
-              className={`text-right font-mono text-[9px] uppercase tracking-[0.08em] ${
-                'risk' in row && row.risk ? 'text-rust' : 'text-ink-3'
-              }`}
-            >
-              {row.state}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <Insight
-        mark="!"
-        title="The house is ready. The loan isn’t."
-        detail="Appraisal outstanding → close at risk"
-      />
     </div>
   );
 }
@@ -203,7 +163,7 @@ function Ownership() {
   );
 }
 
-const VISUALS = [Predictability, HomeRecord, Activation, Maintenance, Ownership];
+const VISUALS = [HomeRecord, Activation, Maintenance, Ownership];
 
 export function CapabilityVisual({ index }: { index: number }) {
   const Visual = VISUALS[index] ?? VISUALS[0];

@@ -69,8 +69,8 @@ export function CapabilityWalkthrough() {
         {/* Tabs. Roving tabindex: one stop for the whole set, arrows inside. */}
         <div
           role="tablist"
-          aria-label="Home Passport capabilities"
-          className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5"
+          aria-label="Home Passport chapters"
+          className="grid grid-cols-2 gap-2 sm:grid-cols-4"
         >
           {capabilities.map((item, index) => {
             const isActive = index === active;
@@ -179,10 +179,8 @@ export function CapabilityWalkthrough() {
 /**
  * Where the chapter sits in a rollout — not how finished it is.
  *
- * Four of the five capabilities run today, so a live/roadmap split would have
- * been both wrong and needlessly defensive on a page a customer reads. The
- * entry point is marked because a builder's first question is where to start,
- * not what is shipping.
+ * The entry point is marked because a builder's first question is where the
+ * product starts (the record at handoff), not what is shipping.
  */
 function RolloutStamp({ capability, isEntry }: { capability: Capability; isEntry: boolean }) {
   return (
